@@ -1,6 +1,12 @@
 """Options Alert System — main entry point."""
 import sys
 import time
+
+# Force UTF-8 output on Windows so box-drawing characters and em-dashes print cleanly
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 import json
 from datetime import datetime, date
 from zoneinfo import ZoneInfo

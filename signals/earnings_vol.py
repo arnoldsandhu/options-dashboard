@@ -23,16 +23,10 @@ def _get_client() -> RESTClient:
 
 
 def _get_earnings_date(ticker: str) -> date | None:
-    """Fetch next earnings date from Polygon."""
+    """Fetch next earnings date from Polygon ticker events endpoint."""
     client = _get_client()
+    today_str = date.today().strftime("%Y-%m-%d")
     try:
-        results = list(client.vx.list_stock_financials(
-            ticker=ticker, timeframe="quarterly", limit=1
-        ))
-        # Fall back to ticker details
-        details = client.get_ticker_details(ticker)
-        # Try the events endpoint
-        today_str = date.today().strftime("%Y-%m-%d")
         events = list(client.list_ticker_events(
             params={"ticker": ticker, "types": "earnings", "date.gte": today_str, "limit": 1}
         ))
