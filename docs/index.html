@@ -187,7 +187,7 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 05 2026 14:38 ET</span>
+    <span class="updated">Updated Mar 05 2026 14:40 ET</span>
     <span class="status-open">OPEN</span>
     <span class="count-badge">127 signals today</span>
   </div>
@@ -328,7 +328,7 @@
         <span class="ai-note">💬 &quot;META&#x27;s gamma is bone dry at $55M - any decent size flow is going to move this thing violently.&quot;</span>
         <span class="sig-time">12:47 ET</span>
       </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2242.5M</td><td>0th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1212.0M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1134.6M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-711.1M</td><td>27th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+336.1M</td><td>18th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+307.0M</td><td>17th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+261.8M</td><td>33th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+187.4M</td><td>33th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+180.3M</td><td>64th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+133.9M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+79.0M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-55.2M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+52.8M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-31.7M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+24.0M</td><td>0th</td><td class="trend">↓</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2242.5M</td><td>0th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1227.6M</td><td>8th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1134.6M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-706.6M</td><td>42th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+340.1M</td><td>42th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+307.0M</td><td>17th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+261.8M</td><td>33th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+187.4M</td><td>33th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+175.2M</td><td>58th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+133.9M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+79.7M</td><td>17th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-56.4M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+52.8M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-31.9M</td><td>8th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+27.7M</td><td>50th</td><td class="trend">→</td></tr></tbody></table>
       </div>
     </div>
   
@@ -368,10 +368,7 @@ async function triggerPoll() {
     const ngrokBase = (await urlRes.text()).trim();
     status.textContent = 'Connecting…';
     const token = document.querySelector('meta[name="poll-token"]').content;
-    const res = await fetch(ngrokBase + '/poll-now', {
-      method: 'POST',
-      headers: {'X-Poll-Token': token, 'ngrok-skip-browser-warning': '1'}
-    });
+    const res = await fetch(ngrokBase + '/poll-now?t=' + encodeURIComponent(token));
     if (res.status === 429) {
       status.textContent = '⚠ Poll already running';
       status.className = 'refresh-status refresh-warn';
