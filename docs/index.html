@@ -187,9 +187,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 05 2026 14:28 ET</span>
+    <span class="updated">Updated Mar 05 2026 14:30 ET</span>
     <span class="status-open">OPEN</span>
-    <span class="count-badge">124 signals today</span>
+    <span class="count-badge">127 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -200,6 +200,12 @@
       <div class="card-header">📊 UNUSUAL VOL</div>
       <div class="card-body scroll">
         
+      <div class="sig-row bull">
+        <span class="ticker-badge">XLE</span>
+        <span class="sig-main">XLE Mar&#x27;26 $57 Call — vol/OI: 3.1x</span>
+        <span class="ai-note">💬 &quot;XLE Mar&#x27;26 $57C seeing 3x normal activity at 3,784 contracts - fresh bullish energy positioning or someone&#x27;s covering shorts.&quot;</span>
+        <span class="sig-time">14:29 ET</span>
+      </div>
       <div class="sig-row neut">
         <span class="ticker-badge">NFLX</span>
         <span class="sig-main">PACKAGE TRADE — NFLX Mar&#x27;26 $99 calls + puts (5.3x / 4.7x) — multi-leg, no directional read</span>
@@ -254,12 +260,6 @@
         <span class="ai-note">💬 &quot;Fresh AMZN Apr&#x27;26 $255 put block just hit - someone&#x27;s paying up for 2-year downside protection, you interested in fading this flow?&quot;</span>
         <span class="sig-time">10:51 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">GOOG</span>
-        <span class="sig-main">GOOG Mar&#x27;26 $292.5 Put — vol/OI: 3.3x</span>
-        <span class="ai-note">💬 &quot;GOOG Mar&#x27;26 290 puts seeing 3.3x vol/OI ratio - fresh institutional hedging or positioning, you buying this dip?&quot;</span>
-        <span class="sig-time">10:50 ET</span>
-      </div>
         
       </div>
     </div>
@@ -268,6 +268,18 @@
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row bear">
+        <span class="ticker-badge">AMD</span>
+        <span class="sig-main">AMD GEX EXTREME — Net GEX: $-55.2M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;AMD&#x27;s sitting at zero gamma support with $55M negative GEX - any move here accelerates fast, perfect for your vol plays.&quot;</span>
+        <span class="sig-time">14:29 ET</span>
+      </div>
+      <div class="sig-row neut">
+        <span class="ticker-badge">COIN</span>
+        <span class="sig-main">COIN GEX EXTREME — Net GEX: $24.0M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;COIN&#x27;s GEX at zero percentile - massive volatility incoming, perfect setup for long vol plays or short gamma strategies.&quot;</span>
+        <span class="sig-time">14:29 ET</span>
+      </div>
       <div class="sig-row neut">
         <span class="ticker-badge">ARM</span>
         <span class="sig-main">ARM GEX EXTREME — Net GEX: $-10.0M (0th pct, 30d)</span>
@@ -316,19 +328,7 @@
         <span class="ai-note">💬 &quot;META&#x27;s gamma is bone dry at $55M - any decent size flow is going to move this thing violently.&quot;</span>
         <span class="sig-time">12:47 ET</span>
       </div>
-      <div class="sig-row neut">
-        <span class="ticker-badge">AAPL</span>
-        <span class="sig-main">AAPL GEX EXTREME — Net GEX: $137.2M (0th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;AAPL&#x27;s sitting at zero gamma support with $137M net GEX - expecting big moves, want to sell you some straddles?&quot;</span>
-        <span class="sig-time">12:46 ET</span>
-      </div>
-      <div class="sig-row neut">
-        <span class="ticker-badge">NVDA</span>
-        <span class="sig-main">NVDA GEX EXTREME — Net GEX: $284.5M (0th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;NVDA&#x27;s at zero gamma support - any directional move here could explode with minimal dealer hedging resistance.&quot;</span>
-        <span class="sig-time">12:46 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2202.1M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1244.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1108.9M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-719.5M</td><td>10th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+355.7M</td><td>90th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+287.4M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+256.7M</td><td>27th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+192.6M</td><td>45th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+180.6M</td><td>70th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+130.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+79.0M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+52.2M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-43.0M</td><td>10th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-35.3M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+27.8M</td><td>50th</td><td class="trend">→</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2202.1M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1212.0M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1108.9M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-711.1M</td><td>27th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+336.1M</td><td>18th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+287.4M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+256.7M</td><td>27th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+192.6M</td><td>45th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+180.3M</td><td>64th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+130.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+79.0M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-55.2M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+52.2M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-31.7M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+24.0M</td><td>0th</td><td class="trend">↓</td></tr></tbody></table>
       </div>
     </div>
   
@@ -364,9 +364,8 @@ async function triggerPoll() {
   status.className = 'refresh-status';
   try {
     const urlRes = await fetch('ngrok_url.txt?' + Date.now());
-    if (!urlRes.ok) throw new Error('txt:' + urlRes.status);
+    if (!urlRes.ok) throw new Error('No tunnel URL');
     const ngrokBase = (await urlRes.text()).trim();
-    status.textContent = 'Connecting…';
     const token = document.querySelector('meta[name="poll-token"]').content;
     const res = await fetch(ngrokBase + '/poll-now', {
       method: 'POST',
@@ -378,16 +377,14 @@ async function triggerPoll() {
       btn.disabled = false; btn.innerHTML = '&#9889; Refresh Now';
       return;
     }
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch(_) { throw new Error('HTTP ' + res.status + ': ' + text.slice(0, 80)); }
+    const data = await res.json();
     if (data.status === 'ok') {
       status.textContent = '✓ Poll triggered — reloading in 90s…';
       status.className = 'refresh-status refresh-ok';
       setTimeout(() => location.reload(), 90000);
     }
   } catch(e) {
-    status.textContent = '✗ ' + (e.message || 'offline');
+    status.textContent = '✗ PC may be offline';
     status.className = 'refresh-status refresh-err';
     btn.disabled = false; btn.innerHTML = '&#9889; Refresh Now';
   }
