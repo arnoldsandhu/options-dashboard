@@ -187,9 +187,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 05 2026 15:35 ET</span>
+    <span class="updated">Updated Mar 05 2026 15:40 ET</span>
     <span class="status-open">OPEN</span>
-    <span class="count-badge">237 signals today</span>
+    <span class="count-badge">251 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -268,6 +268,12 @@
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row bear">
+        <span class="ticker-badge">XLF</span>
+        <span class="sig-main">XLF GEX EXTREME — Net GEX: $-674.6M (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLF sitting at max negative gamma - any decent move here could accelerate fast, you buying protection or selling into strength?&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
       <div class="sig-row neut">
         <span class="ticker-badge">GOOG</span>
         <span class="sig-main">GOOG GEX EXTREME — Net GEX: $-8.0M (0th pct, 30d)</span>
@@ -322,20 +328,74 @@
         <span class="ai-note">💬 &quot;JPM&#x27;s at zero gamma support with $20M negative GEX - expect violent moves both ways, perfect for your vol strategies.&quot;</span>
         <span class="sig-time">12:48 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">GS</span>
-        <span class="sig-main">GS GEX EXTREME — Net GEX: $-9.0M (0th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;GS gamma extremely negative at -$9M - market makers will amplify any move, perfect setup for volatility expansion trades.&quot;</span>
-        <span class="sig-time">12:48 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2127.8M</td><td>40th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1190.9M</td><td>47th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-950.6M</td><td>42th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-686.8M</td><td>79th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+381.5M</td><td>47th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+352.8M</td><td>63th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+277.6M</td><td>63th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+202.6M</td><td>74th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+174.8M</td><td>47th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+129.5M</td><td>21th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+84.4M</td><td>42th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+69.8M</td><td>47th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-50.4M</td><td>32th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+28.0M</td><td>58th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-27.3M</td><td>58th</td><td class="trend">↑</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2115.7M</td><td>50th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1202.0M</td><td>43th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-949.3M</td><td>48th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-680.9M</td><td>90th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+397.7M</td><td>57th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+346.4M</td><td>57th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+285.9M</td><td>71th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+201.5M</td><td>71th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+169.6M</td><td>38th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+139.5M</td><td>48th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+92.4M</td><td>48th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+72.2M</td><td>48th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-49.9M</td><td>33th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-26.4M</td><td>67th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+24.5M</td><td>14th</td><td class="trend">↓</td></tr></tbody></table>
       </div>
     </div>
   
     <div class="card">
       <div class="card-header">⚡ SKEW EXTREMES</div>
       <div class="card-body scroll">
-        <p class="empty">No signals this session.</p>
+        
+      <div class="sig-row bear">
+        <span class="ticker-badge">ARM</span>
+        <span class="sig-main">ARM Apr&#x27;26 Skew ELEVATED — 25d Skew: +6.8vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;ARM put skew at +6.8 vol is screaming rich - fade this elevated put premium and sell the 25-delta puts against calls.&quot;</span>
+        <span class="sig-time">15:40 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">UBER</span>
+        <span class="sig-main">UBER Apr&#x27;26 Skew ELEVATED — 25d Skew: +4.6vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;UBER skew at +4.6 vol points is screaming rich - fade this elevated put premium and sell the skew back to normal levels.&quot;</span>
+        <span class="sig-time">15:39 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">COIN</span>
+        <span class="sig-main">COIN Apr&#x27;26 Skew ELEVATED — 25d Skew: +5.3vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 COIN put skew at +5.3 vol (100th percentile) screams sell protection - fade this fear premium before it collapses.</span>
+        <span class="sig-time">15:39 ET</span>
+      </div>
+      <div class="sig-row neut">
+        <span class="ticker-badge">IWM</span>
+        <span class="sig-main">IWM Apr&#x27;26 Skew CROSSED — 25d Skew: +8.6vol (60th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;IWM 25-delta skew at +8.6 vol points signals a vol selling opportunity - that put premium looks rich relative to calls.&quot;</span>
+        <span class="sig-time">15:39 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">XLE</span>
+        <span class="sig-main">XLE Apr&#x27;26 Skew ELEVATED — 25d Skew: +3.5vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLE skew at +3.5 vol points (100th percentile) - time to sell that fat put premium and buy calls against it.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">XLK</span>
+        <span class="sig-main">XLK Apr&#x27;26 Skew ELEVATED — 25d Skew: +11.2vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLK put skew at +11.2 vol points is screaming rich - time to sell that elevated put vol and buy calls against it.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">XLF</span>
+        <span class="sig-main">XLF Apr&#x27;26 Skew ELEVATED — 25d Skew: +10.5vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLF skew at +10.5 vol is screaming rich - sell that put vol and buy calls, this downside protection is massively overpriced.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">JPM</span>
+        <span class="sig-main">JPM Apr&#x27;26 Skew ELEVATED — 25d Skew: +9.1vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;JPM put skew at +9.1 vol points is screaming rich - time to sell that elevated put vol and buy calls.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">GS</span>
+        <span class="sig-main">GS Apr&#x27;26 Skew ELEVATED — 25d Skew: +7.5vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;GS put skew at +7.5 vol points is screaming rich - sell that 43% put vol and buy calls, this is extreme even for earnings season.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
+      <div class="sig-row neut">
+        <span class="ticker-badge">QQQ</span>
+        <span class="sig-main">QQQ Apr&#x27;26 Skew CROSSED — 25d Skew: +11.2vol (83th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;QQQ skew at +11.2 vol points (83rd percentile) - time to sell that fat put premium and buy cheap calls.&quot;</span>
+        <span class="sig-time">15:37 ET</span>
+      </div>
         
       </div>
     </div>
