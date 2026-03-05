@@ -187,7 +187,7 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 05 2026 13:52 ET</span>
+    <span class="updated">Updated Mar 05 2026 14:20 ET</span>
     <span class="status-open">OPEN</span>
     <span class="count-badge">124 signals today</span>
   </div>
@@ -369,7 +369,7 @@ async function triggerPoll() {
     const token = document.querySelector('meta[name="poll-token"]').content;
     const res = await fetch(ngrokBase + '/poll-now', {
       method: 'POST',
-      headers: {'X-Poll-Token': token}
+      headers: {'X-Poll-Token': token, 'ngrok-skip-browser-warning': '1'}
     });
     if (res.status === 429) {
       status.textContent = '⚠ Poll already running';
