@@ -187,9 +187,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 05 2026 16:51 ET</span>
+    <span class="updated">Updated Mar 05 2026 17:14 ET</span>
     <span class="status-closed">CLOSED</span>
-    <span class="count-badge">269 signals today</span>
+    <span class="count-badge">270 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -236,25 +236,25 @@
         <span class="ai-note">💬 &quot;XLF June &#x27;26 $50 puts trading 6x open interest - someone&#x27;s making a big bearish bet on financials, you want in?&quot;</span>
         <span class="sig-time">15:22 ET</span>
       </div>
-      <div class="sig-row neut">
+      <div class="sig-row neut" style="opacity:0.45">
         <span class="ticker-badge">AMD</span>
         <span class="sig-main">PACKAGE TRADE — AMD Mar&#x27;26 $202.5 calls + puts (4.1x / 6.8x) — multi-leg, no directional read</span>
         
         <span class="sig-time">15:03 ET</span>
       </div>
-      <div class="sig-row bull">
+      <div class="sig-row bull" style="opacity:0.45">
         <span class="ticker-badge">COIN</span>
         <span class="sig-main">COIN Mar&#x27;26 $215 Call — vol/OI: 4.8x</span>
         <span class="ai-note">💬 &quot;COIN Mar&#x27;26 $215 calls seeing 5x normal volume - someone&#x27;s making a big crypto recovery bet, you interested?&quot;</span>
         <span class="sig-time">15:03 ET</span>
       </div>
-      <div class="sig-row bull">
+      <div class="sig-row bull" style="opacity:0.45">
         <span class="ticker-badge">IWM</span>
         <span class="sig-main">IWM Mar&#x27;26 $260 Call — vol/OI: 83.4x</span>
         <span class="ai-note">💬 &quot;Massive 116K IWM Mar&#x27;26 260C flow today - someone&#x27;s making a huge leveraged bet on small caps ripping 25% higher.&quot;</span>
         <span class="sig-time">15:02 ET</span>
       </div>
-      <div class="sig-row neut">
+      <div class="sig-row neut" style="opacity:0.45">
         <span class="ticker-badge">TSLA</span>
         <span class="sig-main">PACKAGE TRADE — TSLA Mar&#x27;26 $405 calls + puts (22.1x / 13.8x) — multi-leg, no directional read</span>
         
@@ -268,6 +268,12 @@
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row neut">
+        <span class="ticker-badge">IWM</span>
+        <span class="sig-main">IWM GEX EXTREME — Net GEX: $-1253.8M (3th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;IWM gamma is absolutely crushed at -$1.25B - this thing&#x27;s gonna move like a pinball, perfect for your vol strategies.&quot;</span>
+        <span class="sig-time">17:13 ET</span>
+      </div>
       <div class="sig-row bear">
         <span class="ticker-badge">QQQ</span>
         <span class="sig-main">QQQ GEX EXTREME — Net GEX: $-1273.5M (0th pct, 30d)</span>
@@ -322,13 +328,7 @@
         <span class="ai-note">💬 &quot;IWM&#x27;s sitting at extreme negative gamma - any decent move here could accelerate fast, you buying protection or selling premium?&quot;</span>
         <span class="sig-time">12:49 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">XLK</span>
-        <span class="sig-main">XLK GEX EXTREME — Net GEX: $-35.3M (0th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;XLK gamma is completely blown out negative - this tech selloff could accelerate hard without any cushion.&quot;</span>
-        <span class="sig-time">12:48 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2097.3M</td><td>44th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1218.4M</td><td>23th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1178.6M</td><td>3th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-649.1M</td><td>94th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+474.5M</td><td>52th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+350.7M</td><td>52th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+272.0M</td><td>32th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+213.3M</td><td>65th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+173.2M</td><td>35th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+150.9M</td><td>55th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+107.2M</td><td>68th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+75.2M</td><td>61th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-37.7M</td><td>45th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+28.3M</td><td>65th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-28.0M</td><td>32th</td><td class="trend">↓</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2161.7M</td><td>24th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1253.8M</td><td>3th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1123.0M</td><td>12th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-655.3M</td><td>88th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+429.2M</td><td>42th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+355.4M</td><td>70th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+261.5M</td><td>15th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+215.4M</td><td>73th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+176.7M</td><td>55th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+164.1M</td><td>64th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+102.0M</td><td>45th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+82.5M</td><td>73th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-39.1M</td><td>45th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+28.6M</td><td>79th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-27.1M</td><td>48th</td><td class="trend">↑</td></tr></tbody></table>
       </div>
     </div>
   
