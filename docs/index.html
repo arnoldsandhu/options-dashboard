@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="refresh" content="300">
-  <meta name="poll-token" content="options_refresh_2026">
+  <meta name="poll-token" content="options_refresh_2026"><meta name="ntfy-topic" content="options-flow-3b7f19a4">
   <title>Options Flow Dashboard</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -187,7 +187,7 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 05 2026 14:40 ET</span>
+    <span class="updated">Updated Mar 05 2026 14:43 ET</span>
     <span class="status-open">OPEN</span>
     <span class="count-badge">127 signals today</span>
   </div>
@@ -363,25 +363,18 @@ async function triggerPoll() {
   status.textContent = '';
   status.className = 'refresh-status';
   try {
-    const urlRes = await fetch('ngrok_url.txt?' + Date.now());
-    if (!urlRes.ok) throw new Error('txt:' + urlRes.status);
-    const ngrokBase = (await urlRes.text()).trim();
-    status.textContent = 'Connecting…';
     const token = document.querySelector('meta[name="poll-token"]').content;
-    const res = await fetch(ngrokBase + '/poll-now?t=' + encodeURIComponent(token));
-    if (res.status === 429) {
-      status.textContent = '⚠ Poll already running';
-      status.className = 'refresh-status refresh-warn';
-      btn.disabled = false; btn.innerHTML = '&#9889; Refresh Now';
-      return;
-    }
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch(_) { throw new Error('HTTP ' + res.status + ': ' + text.slice(0, 80)); }
-    if (data.status === 'ok') {
+    const topic = document.querySelector('meta[name="ntfy-topic"]').content;
+    const res = await fetch('https://ntfy.sh/' + topic, {
+      method: 'POST',
+      body: token
+    });
+    if (res.ok) {
       status.textContent = '✓ Poll triggered — reloading in 90s…';
       status.className = 'refresh-status refresh-ok';
       setTimeout(() => location.reload(), 90000);
+    } else {
+      throw new Error('ntfy HTTP ' + res.status);
     }
   } catch(e) {
     status.textContent = '✗ ' + (e.message || 'offline');
