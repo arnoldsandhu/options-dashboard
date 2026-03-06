@@ -167,6 +167,62 @@
       font-size: 11px;
     }
 
+    /* ── OVI full-width card ───────────────── */
+    .ovi-full  { grid-column: 1 / -1; }
+    .pos-full  { grid-column: 1 / -1; }
+
+    .ovi-section-lbl {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      padding: 6px 4px 4px; text-transform: uppercase;
+    }
+    .call-lbl { color: #3fb950; }
+    .put-lbl  { color: #f85149; margin-top: 10px; }
+
+    .ovi-scroll { overflow-x: auto; }
+    .ovi-tbl {
+      width: 100%; border-collapse: collapse;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 11px; white-space: nowrap;
+    }
+    .ovi-tbl th {
+      color: var(--muted); text-align: right; padding: 3px 8px;
+      border-bottom: 1px solid var(--border); font-weight: 600;
+      background: var(--bg3);
+    }
+    .ovi-tbl th:first-child { text-align: left; }
+    .ovi-tbl td { padding: 3px 8px; text-align: right; border-bottom: 1px solid #1a1f27; }
+    .ovi-tbl td:first-child { text-align: left; }
+    .ovi-alt { background: #0d1117; }
+    .pct-pos  { color: #3fb950; }
+    .pct-neg  { color: #f85149; }
+    .pct-oi-high { color: #e3b341; }
+    .pct-na   { color: var(--muted); }
+
+    /* ── AI Analysis box ───────────────────── */
+    .ai-box {
+      margin-top: 12px; border: 1px solid #2d333b;
+      border-radius: 6px; background: #0d1117;
+    }
+    .ai-box-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 7px 12px; border-bottom: 1px solid #2d333b;
+      background: #161b22; border-radius: 6px 6px 0 0;
+    }
+    .ai-box-title { font-size: 10px; font-weight: 700; letter-spacing: .5px; color: var(--muted); }
+    .ai-text {
+      margin: 0; padding: 10px 12px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 11px; line-height: 1.6; color: #c9d1d9;
+      white-space: pre-wrap; word-wrap: break-word;
+    }
+    .ai-ts { padding: 4px 12px 7px; font-size: 10px; color: var(--muted); }
+    .copy-btn {
+      background: #21262d; color: #8b949e; border: 1px solid #30363d;
+      border-radius: 4px; padding: 3px 10px; font-size: 10px;
+      cursor: pointer; white-space: nowrap;
+    }
+    .copy-btn:hover { background: #30363d; color: var(--text); }
+
     /* ── Refresh button ────────────────────── */
     .refresh-wrap { display: flex; align-items: center; gap: 10px; }
     #refresh-btn {
@@ -187,7 +243,7 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 06 2026 12:34 ET</span>
+    <span class="updated">Updated Mar 06 2026 12:55 ET</span>
     <span class="status-open">OPEN</span>
     <span class="count-badge">236 signals today</span>
   </div>
@@ -196,71 +252,21 @@
 
 <div class="grid">
   
-    <div class="card">
-      <div class="card-header">📊 UNUSUAL VOL</div>
-      <div class="card-body scroll">
-        
-      <div class="sig-row bull">
-        <span class="ticker-badge">COIN</span>
-        <span class="sig-main">COIN Mar&#x27;26 $202.5 Call — vol/OI: 3.1x</span>
-        <span class="ai-note">💬 &quot;COIN March &#x27;26 $202.5 calls seeing 3x normal volume at 2,311 contracts - fresh money betting on crypto rally.&quot;</span>
-        <span class="sig-time">11:25 ET</span>
-      </div>
-      <div class="sig-row bull">
-        <span class="ticker-badge">COIN</span>
-        <span class="sig-main">COIN Mar&#x27;26 $202.5 Call — vol/OI: 3.1x</span>
-        <span class="ai-note">💬 &quot;COIN March &#x27;26 $202.5 calls showing 3x vol/OI ratio - someone&#x27;s building a serious long-term bullish position.&quot;</span>
-        <span class="sig-time">11:25 ET</span>
-      </div>
-      <div class="sig-row bull">
-        <span class="ticker-badge">XLF</span>
-        <span class="sig-main">XLF Jan&#x27;27 $54 Call — vol/OI: 12.2x</span>
-        <span class="ai-note">💬 &quot;XLF Jan&#x27;27 $54 calls seeing massive 12x vol spike today - someone&#x27;s making a big directional bet on financials.&quot;</span>
-        <span class="sig-time">11:13 ET</span>
-      </div>
-      <div class="sig-row bull">
-        <span class="ticker-badge">GOOG</span>
-        <span class="sig-main">GOOG Mar&#x27;26 $300 Call — vol/OI: 3.2x</span>
-        <span class="ai-note">💬 &quot;Fresh 9K GOOG Mar&#x27;26 $300 calls hit today at 3.2x normal volume - someone&#x27;s betting big on a 75% move.&quot;</span>
-        <span class="sig-time">11:07 ET</span>
-      </div>
-      <div class="sig-row bull">
-        <span class="ticker-badge">NFLX</span>
-        <span class="sig-main">NFLX Mar&#x27;26 $98 Call — vol/OI: 3.2x</span>
-        <span class="ai-note">💬 &quot;Heavy 3.2x vol/OI on NFLX Mar&#x27;26 $98 calls - someone&#x27;s building a massive long position, you want in?&quot;</span>
-        <span class="sig-time">10:44 ET</span>
-      </div>
-      <div class="sig-row bear">
-        <span class="ticker-badge">AMZN</span>
-        <span class="sig-main">AMZN Mar&#x27;26 $205 Put — vol/OI: 4.3x</span>
-        <span class="ai-note">💬 &quot;Fresh 4,837 AMZN Mar&#x27;26 $205 puts hit today at 4.3x normal volume - someone&#x27;s buying serious downside protection.&quot;</span>
-        <span class="sig-time">10:42 ET</span>
-      </div>
-      <div class="sig-row bull">
-        <span class="ticker-badge">MSFT</span>
-        <span class="sig-main">MSFT Mar&#x27;26 $417.5 Call — vol/OI: 3.9x</span>
-        <span class="ai-note">💬 &quot;MSFT Mar&#x27;26 $418 calls seeing massive 4x vol/OI ratio - someone&#x27;s making a big directional bet, you buying or selling this flow?&quot;</span>
-        <span class="sig-time">10:41 ET</span>
-      </div>
-      <div class="sig-row bear">
-        <span class="ticker-badge">NVDA</span>
-        <span class="sig-main">NVDA Mar&#x27;26 $120 Put — vol/OI: 10.0x</span>
-        <span class="ai-note">💬 &quot;NVDA Mar&#x27;26 $120 puts seeing massive 10x vol/OI ratio - someone&#x27;s betting big on a 50% crash, you buying this dip signal?&quot;</span>
-        <span class="sig-time">10:40 ET</span>
-      </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">AMD</span>
-        <span class="sig-main">AMD Mar&#x27;26 $160 Put — vol/OI: 3.3x</span>
-        <span class="ai-note">💬 &quot;AMD March &#x27;26 $160 puts seeing 3.3x volume-to-OI - someone&#x27;s building a massive downside hedge, want to fade or follow?&quot;</span>
-        <span class="sig-time">10:16 ET</span>
-      </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">IWM</span>
-        <span class="sig-main">IWM Mar&#x27;26 $238 Put — vol/OI: 14.1x</span>
-        <span class="ai-note">💬 &quot;Massive 14x vol/OI on IWM Mar&#x27;26 238 puts - someone&#x27;s building a huge 2-year downside hedge, you buying this dip?&quot;</span>
-        <span class="sig-time">10:16 ET</span>
-      </div>
-        
+    <div class="card ovi-full">
+      <div class="card-header">📊 OPTION VOLUME INTELLIGENCE</div>
+      <div class="card-body">
+        <div class="ovi-section-lbl call-lbl">🟢 Top By Calls — Equity / ETF</div>
+        <p class="empty">No data yet — building history.</p>
+        <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
+        <p class="empty">No data yet — building history.</p>
+        <div class="ai-box">
+          <div class="ai-box-hdr">
+            <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
+            <button id="copy-btn" class="copy-btn" data-ts="—" onclick="copyAnalysis()">📋 Copy Analysis</button>
+          </div>
+          <pre id="ai-text" class="ai-text"></pre>
+          <div class="ai-ts">Analysis as of —</div>
+        </div>
       </div>
     </div>
   
@@ -400,7 +406,7 @@
       </div>
     </div>
   
-    <div class="card">
+    <div class="card pos-full">
       <div class="card-header">📊 13F FLOW MATCH</div>
       <div class="card-body scroll">
         <p class="empty">No signals this session.</p>
@@ -441,6 +447,23 @@ async function triggerPoll() {
     status.className = 'refresh-status refresh-err';
     btn.disabled = false; btn.innerHTML = '&#9889; Refresh Now';
   }
+}
+</script>
+<script>
+function copyAnalysis() {
+  var btn = document.getElementById('copy-btn');
+  var ts = btn.getAttribute('data-ts') || '';
+  var text = document.getElementById('ai-text').innerText;
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
+  var full = 'OPTIONS FLOW PULSE — ' + dateStr + ' ' + ts + '\n\n' + text + '\n\nData: Polygon.io | Analysis: Claude AI';
+  navigator.clipboard.writeText(full).then(function() {
+    btn.textContent = '✓ Copied!';
+    setTimeout(function() { btn.textContent = '📋 Copy Analysis'; }, 2000);
+  }).catch(function() {
+    btn.textContent = '✗ Failed';
+    setTimeout(function() { btn.textContent = '📋 Copy Analysis'; }, 2000);
+  });
 }
 </script>
 </body>
