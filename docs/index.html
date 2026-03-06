@@ -197,6 +197,21 @@
     .pct-neg  { color: #f85149; }
     .pct-oi-high { color: #e3b341; }
     .pct-na   { color: var(--muted); }
+    .also-notable { color: var(--muted); font-size: 10px; padding: 2px 4px 6px; font-style: italic; }
+    /* Index badges */
+    .idx-badge { display: inline-block; margin-left: 3px; padding: 0 4px;
+                  border-radius: 3px; font-size: 9px; font-weight: 700; vertical-align: middle; }
+    .idx-badge.sp500 { background: #1a3a5c; color: #60a5fa; }
+    .idx-badge.ndx   { background: #1a3a2a; color: #4ade80; }
+    .idx-badge.rut   { background: #3a1a3a; color: #c084fc; }
+    /* Extreme alerts */
+    .extreme-alerts-box { margin-bottom: 8px; }
+    .extreme-alert { background: #3a1a00; border-left: 3px solid #f97316;
+                      padding: 5px 10px; margin-bottom: 4px; border-radius: 4px;
+                      font-size: 12px; }
+    /* Universe coverage line */
+    .universe-coverage { color: var(--muted); font-size: 10px; padding: 2px 4px 6px;
+                          font-style: italic; }
 
     /* ── AI Analysis box ───────────────────── */
     .ai-box {
@@ -215,7 +230,11 @@
       font-size: 11px; line-height: 1.6; color: #c9d1d9;
       white-space: pre-wrap; word-wrap: break-word;
     }
-    .ai-ts { padding: 4px 12px 7px; font-size: 10px; color: var(--muted); }
+    .ai-ts { padding: 4px 12px 4px; font-size: 10px; color: var(--muted); }
+    .ai-disclaimer {
+      padding: 3px 12px 8px; font-size: 9px; color: #484f58;
+      font-style: italic; border-top: 1px solid #1e2530; margin-top: 2px;
+    }
     .copy-btn {
       background: #21262d; color: #8b949e; border: 1px solid #30363d;
       border-radius: 4px; padding: 3px 10px; font-size: 10px;
@@ -257,9 +276,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 06 2026 17:40 ET</span>
+    <span class="updated">Updated Mar 06 2026 17:56 ET</span>
     <span class="status-closed">CLOSED</span>
-    <span class="count-badge">300 signals today</span>
+    <span class="count-badge">302 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -269,29 +288,46 @@
     <div class="card ovi-full">
       <div class="card-header">📊 OPTION VOLUME INTELLIGENCE</div>
       <div class="card-body">
+        
+        <p class="universe-coverage">Scanned 1,220 tickers | 0 exceeded 50% threshold | Showing top 10 each side | SP500: 0 | NDX: 0 | RUT: 0</p>
         <div class="ovi-section-lbl call-lbl">🟢 Top By Calls — Equity / ETF</div>
-        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>C Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>C OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">SPY</span></td><td>5.4M</td><td>5.4M</td><td><span class="pct-pos">+1%</span></td><td>1.17</td><td>$672.10</td><td><span class="pct-na">—</span></td><td>5.4M</td><td>5.4M</td><td><span class="pct-na">+0%</span></td><td>11.8M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">QQQ</span></td><td>2.8M</td><td>2.7M</td><td><span class="pct-pos">+1%</span></td><td>1.20</td><td>$599.92</td><td><span class="pct-na">—</span></td><td>3.6M</td><td>3.6M</td><td><span class="pct-na">+0%</span></td><td>6.1M</td></tr><tr><td><span class="ticker-badge">IWM</span></td><td>850K</td><td>845K</td><td><span class="pct-pos">+1%</span></td><td>2.40</td><td>$250.82</td><td><span class="pct-na">—</span></td><td>2.9M</td><td>2.9M</td><td><span class="pct-na">+0%</span></td><td>2.9M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XLE</span></td><td>110K</td><td>110K</td><td><span class="pct-pos">+0%</span></td><td>0.74</td><td>$56.70</td><td><span class="pct-na">—</span></td><td>2.3M</td><td>2.3M</td><td><span class="pct-na">+0%</span></td><td>192K</td></tr><tr><td><span class="ticker-badge">XLK</span></td><td>8K</td><td>8K</td><td><span class="pct-pos">+0%</span></td><td>2.14</td><td>$137.27</td><td><span class="pct-na">—</span></td><td>265K</td><td>265K</td><td><span class="pct-na">+0%</span></td><td>26K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XLF</span></td><td>151K</td><td>150K</td><td><span class="pct-pos">+0%</span></td><td>1.56</td><td>$50.54</td><td><span class="pct-na">—</span></td><td>2.0M</td><td>2.0M</td><td><span class="pct-na">+0%</span></td><td>386K</td></tr><tr><td><span class="ticker-badge">NVDA</span></td><td>1.9M</td><td>1.9M</td><td><span class="pct-neg">+0%</span></td><td>0.90</td><td>$177.82</td><td><span class="pct-na">—</span></td><td>9.4M</td><td>9.4M</td><td><span class="pct-na">+0%</span></td><td>3.6M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AAPL</span></td><td>496K</td><td>496K</td><td><span class="pct-neg">+0%</span></td><td>0.79</td><td>$257.26</td><td><span class="pct-na">—</span></td><td>2.8M</td><td>2.8M</td><td><span class="pct-na">+0%</span></td><td>887K</td></tr><tr><td><span class="ticker-badge">MSFT</span></td><td>482K</td><td>482K</td><td><span class="pct-neg">+0%</span></td><td>0.81</td><td>$409.00</td><td><span class="pct-na">—</span></td><td>2.5M</td><td>2.5M</td><td><span class="pct-na">+0%</span></td><td>871K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">META</span></td><td>270K</td><td>270K</td><td><span class="pct-neg">+0%</span></td><td>0.67</td><td>$642.70</td><td><span class="pct-na">—</span></td><td>1.4M</td><td>1.4M</td><td><span class="pct-na">+0%</span></td><td>452K</td></tr></tbody></table></div>
+        <p class="empty">No unusual activity exceeding threshold today.</p>
+        
         <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
-        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>P Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>P OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">IWM</span></td><td>2.0M</td><td>2.0M</td><td><span class="pct-pos">+3%</span></td><td>2.40</td><td>$250.82</td><td><span class="pct-na">—</span></td><td>7.0M</td><td>7.0M</td><td><span class="pct-na">+0%</span></td><td>2.9M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">QQQ</span></td><td>3.3M</td><td>3.3M</td><td><span class="pct-pos">+2%</span></td><td>1.20</td><td>$599.92</td><td><span class="pct-na">—</span></td><td>6.1M</td><td>6.1M</td><td><span class="pct-na">+0%</span></td><td>6.1M</td></tr><tr><td><span class="ticker-badge">SPY</span></td><td>6.4M</td><td>6.3M</td><td><span class="pct-pos">+2%</span></td><td>1.17</td><td>$672.10</td><td><span class="pct-na">—</span></td><td>11.1M</td><td>11.1M</td><td><span class="pct-na">+0%</span></td><td>11.8M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XLE</span></td><td>82K</td><td>82K</td><td><span class="pct-pos">+1%</span></td><td>0.74</td><td>$56.70</td><td><span class="pct-na">—</span></td><td>3.3M</td><td>3.3M</td><td><span class="pct-na">+0%</span></td><td>192K</td></tr><tr><td><span class="ticker-badge">XLK</span></td><td>18K</td><td>18K</td><td><span class="pct-pos">+0%</span></td><td>2.14</td><td>$137.27</td><td><span class="pct-na">—</span></td><td>515K</td><td>515K</td><td><span class="pct-na">+0%</span></td><td>26K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XLF</span></td><td>235K</td><td>235K</td><td><span class="pct-pos">+0%</span></td><td>1.56</td><td>$50.54</td><td><span class="pct-na">—</span></td><td>3.6M</td><td>3.6M</td><td><span class="pct-na">+0%</span></td><td>386K</td></tr><tr><td><span class="ticker-badge">NVDA</span></td><td>1.7M</td><td>1.7M</td><td><span class="pct-neg">+0%</span></td><td>0.90</td><td>$177.82</td><td><span class="pct-na">—</span></td><td>8.0M</td><td>8.0M</td><td><span class="pct-na">+0%</span></td><td>3.6M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AAPL</span></td><td>391K</td><td>391K</td><td><span class="pct-neg">+0%</span></td><td>0.79</td><td>$257.26</td><td><span class="pct-na">—</span></td><td>1.8M</td><td>1.8M</td><td><span class="pct-na">+0%</span></td><td>887K</td></tr><tr><td><span class="ticker-badge">MSFT</span></td><td>389K</td><td>389K</td><td><span class="pct-neg">+0%</span></td><td>0.81</td><td>$409.00</td><td><span class="pct-na">—</span></td><td>1.2M</td><td>1.2M</td><td><span class="pct-na">+0%</span></td><td>871K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">META</span></td><td>182K</td><td>182K</td><td><span class="pct-neg">+0%</span></td><td>0.67</td><td>$642.70</td><td><span class="pct-na">—</span></td><td>888K</td><td>888K</td><td><span class="pct-na">+0%</span></td><td>452K</td></tr></tbody></table></div>
+        <p class="empty">No unusual activity exceeding threshold today.</p>
+        
         <div class="ctx-section"><button class="ctx-toggle" onclick="toggleCtx(event)">📰 Context fed to AI ▼</button><pre id="ctx-text" class="ctx-text">MARKET CONTEXT (recent headlines):
-- [wsj_markets] Arabica Coffee Prices Hit Record on U.S., Colombia Tariff Spat</pre></div>
+- [marketwatch] Oil surge sparks Treasury market’s worst weekly rout since ‘liberation day’ chaos
+- [marketwatch] Crude-oil futures haven’t been this overbought since 1990. That doesn’t mean the rally is over.
+- [cnbc_markets] San Francisco Fed&#x27;s Daly says jobs report complicates interest rate call
+- [cnbc_markets] U.S. payrolls unexpectedly fell by 92,000 in February; unemployment rate rises to 4.4%
+- [marketwatch] Oil prices are surging. Will that help Tesla and others sell more EVs?
+- [marketwatch] U.S. oil prices notch record weekly gain of nearly 36%, as Middle East conflict spurs worries over production cuts
+- [marketwatch] Gold prices post worst week since January. The dollar gets part of the blame.
+- [cnbc_markets] The February jobs numbers are coming out Friday. Here&#x27;s what to expect</pre></div>
         <div class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
-            <button id="copy-btn" class="copy-btn" data-ts="17:18 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+            <button id="copy-btn" class="copy-btn" data-ts="17:54 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
           </div>
-          <pre id="ai-text" class="ai-text">**FLOW PULSE | Daily Options Commentary**
+          <pre id="ai-text" class="ai-text">OPTIONS FLOW PULSE | March 06, 2026 | 4:00 PM ET
 
-**HEADLINE:** Small-cap protection buying surges as IWM put volume spikes 3% above 20-day average with an extreme 2.40 put/call ratio, signaling broad risk-off positioning despite muted mega-cap flow.
+HEADLINE:
+Options flow remains notably subdued across all major indices and single names despite oil&#x27;s historic surge and mixed employment data creating cross-currents in rates and equity positioning.
 
-**CALL FLOW ANALYSIS:** Broad market call activity remains flat across SPY (+1%) and QQQ (+1%) with balanced P/C ratios near 1.20, suggesting consolidation rather than aggressive directional positioning. Mega-cap tech shows no unusual call demand with NVDA, AAPL, MSFT, and META all registering flat volume changes, indicating institutional hesitation ahead of potential volatility catalysts. The lack of call conviction in XLE despite energy sector headlines suggests traders are waiting for clearer directional signals.
+CALL FLOW ANALYSIS:
+The absence of elevated call flow in any screened ticker is worth noting against the backdrop of oil&#x27;s 36% weekly gain and its potential EV adoption implications. With 1,220 universe names scanned and zero exceeding the 50% threshold, upside participation appears limited rather than broad-based. This suggests the oil surge may be viewed more as an inflation concern than a catalyst for rotational plays into energy-adjacent sectors. The lack of single-name call activity is consistent with positioning that remains cautious pending clearer direction from the Fed&#x27;s rate path following February&#x27;s unexpected payroll weakness.
 
-**PUT FLOW ANALYSIS:** Russell 2000 (IWM) leads defensive positioning with puts spiking 3% and a concerning 2.40 P/C ratio, reflecting anxiety over small-cap vulnerability to economic uncertainty. Broad market hedging is evident across SPY (+2%) and QQQ (+2%) put volumes, though P/C ratios remain relatively contained, suggesting tactical protection rather than panic. This divergence between small-cap fear and large-cap complacency highlights a two-tier market structure.
+PUT FLOW ANALYSIS:
+Defensive positioning is similarly absent from the tape, with no index ETF or single-name put volumes registering above baseline thresholds. This quiet defensive backdrop appears inconsistent with Treasury markets posting their worst weekly performance since prior volatility episodes. The muted put demand may reflect either well-hedged portfolios already positioned for oil-driven inflation concerns, or a wait-and-see approach ahead of clearer Fed communication. Without broadening put activity in growth sectors that would typically be sensitive to renewed inflation pressures, current defensive flow looks more contained than regime-shift driven.
 
-**SECOND ORDER EFFECTS:** The IWM put surge with SPY/QQQ defensive flow creates a negative gamma environment that could amplify small-cap volatility while mega-caps remain range-bound. This positioning suggests institutional flows are preparing for potential policy uncertainty or economic data that disproportionately impacts domestic-focused small caps. The energy sector&#x27;s muted response despite coffee tariff headlines indicates broader macro concerns are overriding sector-specific catalysts.
+SECOND ORDER EFFECTS:
+The combination of historically elevated oil prices and subdued options flow across both directions suggests positioning may be more neutral than headlines would imply. Without concentrated flow to analyze strike distribution or tenor, claims about dealer positioning or gamma effects would be unsupported. The notable absence of activity would need to reverse significantly — with either defensive flow broadening into rate-sensitive sectors or upside participation emerging in energy-adjacent names — before flow analysis could provide clearer directional signals.
 
-**TRADE IDEA:** Sell IWM call spreads (250/255) and buy SPY puts as a ratio trade to capitalize on small-cap underperformance expectations while positioning for broader market weakness if the risk-off tone accelerates.</pre>
-          <div class="ai-ts">Analysis as of 17:18 ET</div>
+TRADE FRAMEWORK:
+Given the absence of directional flow signals, the cleaner expression is relative — watch whether oil&#x27;s continued advance begins generating defensive flow in long-duration growth names or participation flow in traditional energy beneficiaries before sizing into sector-specific positioning.</pre>
+          <div class="ai-ts">Analysis as of 17:54 ET</div>
+          <div class="ai-disclaimer">Flow observations only. Inferences require confirmation from strike, tenor, and opening/closing data.</div>
         </div>
       </div>
     </div>
@@ -300,6 +336,12 @@
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row neut">
+        <span class="ticker-badge">COIN</span>
+        <span class="sig-main">COIN GEX EXTREME — Net GEX: $65.4M (98th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;COIN&#x27;s sitting on $65M in gamma - any size you&#x27;re looking to do will move this thing, let&#x27;s talk flow.&quot;</span>
+        <span class="sig-time">17:56 ET</span>
+      </div>
       <div class="sig-row neut">
         <span class="ticker-badge">NFLX</span>
         <span class="sig-main">NFLX GEX EXTREME — Net GEX: $372.5M (96th pct, 30d)</span>
@@ -336,13 +378,13 @@
         <span class="ai-note">💬 &quot;QQQ gamma is massively negative at zero percentile - we&#x27;re setting up for explosive moves, want to discuss vol strategies?&quot;</span>
         <span class="sig-time">16:05 ET</span>
       </div>
-      <div class="sig-row neut">
+      <div class="sig-row neut" style="opacity:0.45">
         <span class="ticker-badge">UBER</span>
         <span class="sig-main">UBER GEX CONCENTRATION — Strike $75 has 25% of total GEX ($54.5M)</span>
         <span class="ai-note">💬 &quot;UBER&#x27;s got $54M gamma wall at $75 strike - expect serious pin action into expiry, trade the range.&quot;</span>
         <span class="sig-time">15:43 ET</span>
       </div>
-      <div class="sig-row bear">
+      <div class="sig-row bear" style="opacity:0.45">
         <span class="ticker-badge">XLK</span>
         <span class="sig-main">XLK GEX EXTREME — Net GEX: $-70.8M (0th pct, 30d)</span>
         <span class="ai-note">💬 &quot;XLK gamma is completely blown out negative - we&#x27;re seeing massive convexity selling opportunities as dealers chase every move.&quot;</span>
@@ -354,13 +396,7 @@
         <span class="ai-note">💬 &quot;MSFT&#x27;s at max gamma wall - $304M net GEX means dealers will aggressively hedge any move, expect muted volatility.&quot;</span>
         <span class="sig-time">15:34 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">NVDA</span>
-        <span class="sig-main">NVDA GEX EXTREME — Net GEX: $163.1M (2th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;NVDA&#x27;s at 2nd percentile GEX - expect massive volatility with minimal dealer hedging support, perfect setup for your momentum plays.&quot;</span>
-        <span class="sig-time">15:24 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2268.9M</td><td>27th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1977.9M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1567.7M</td><td>12th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-720.1M</td><td>33th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+367.6M</td><td>95th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+210.5M</td><td>27th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+171.8M</td><td>16th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+167.2M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+163.1M</td><td>57th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-111.7M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+69.5M</td><td>98th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-55.8M</td><td>7th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-50.7M</td><td>8th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+41.1M</td><td>2th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+34.4M</td><td>50th</td><td class="trend">→</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2244.6M</td><td>29th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1992.2M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1601.4M</td><td>6th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-735.9M</td><td>31th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+361.0M</td><td>72th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+257.9M</td><td>85th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+175.4M</td><td>17th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+164.3M</td><td>65th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+163.1M</td><td>13th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-118.9M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+65.4M</td><td>97th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-57.8M</td><td>6th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">META</td><td>$-57.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-52.0M</td><td>8th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">GOOG</td><td>$-50.6M</td><td>1th</td><td class="trend">↓</td></tr></tbody></table>
       </div>
     </div>
   
@@ -368,6 +404,12 @@
       <div class="card-header">⚡ SKEW EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row bear">
+        <span class="ticker-badge">AMZN</span>
+        <span class="sig-main">AMZN Apr&#x27;26 Skew ELEVATED — 25d Skew: +8.9vol (96th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;AMZN put skew at +8.9 vol points (96th percentile) - time to sell this elevated put premium and buy calls against it.&quot;</span>
+        <span class="sig-time">17:55 ET</span>
+      </div>
       <div class="sig-row bear">
         <span class="ticker-badge">IWM</span>
         <span class="sig-main">IWM Apr&#x27;26 Skew ELEVATED — 25d Skew: +10.3vol (92th pct, 30d)</span>
@@ -422,12 +464,6 @@
         <span class="ai-note">💬 MSFT put skew at +4.9 vol points (91st percentile) screams sell puts/buy calls - this elevated put premium is ripe for mean reversion.</span>
         <span class="sig-time">15:25 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">META</span>
-        <span class="sig-main">META Apr&#x27;26 Skew ELEVATED — 25d Skew: +7.2vol (94th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;META&#x27;s +7.2 vol skew at 94th percentile screams sell puts/buy calls - this elevated put premium is gift-wrapped profit.&quot;</span>
-        <span class="sig-time">14:21 ET</span>
-      </div>
         
       </div>
     </div>
@@ -442,7 +478,7 @@
 </div>
 
 <footer>
-  <span class="wl-badge">SPY</span> <span class="wl-badge">QQQ</span> <span class="wl-badge">NVDA</span> <span class="wl-badge">AAPL</span> <span class="wl-badge">MSFT</span> <span class="wl-badge">META</span> <span class="wl-badge">GOOG</span> <span class="wl-badge">AMZN</span> <span class="wl-badge">TSLA</span> <span class="wl-badge">GS</span> <span class="wl-badge">JPM</span> <span class="wl-badge">XLF</span> <span class="wl-badge">XLK</span> <span class="wl-badge">XLE</span> <span class="wl-badge">IWM</span> <span class="wl-badge">COIN</span> <span class="wl-badge">AMD</span> <span class="wl-badge">NFLX</span> <span class="wl-badge">UBER</span> <span class="wl-badge">ARM</span>
+  <span class="wl-badge">SPY</span> <span class="wl-badge">QQQ</span> <span class="wl-badge">NVDA</span> <span class="wl-badge">AAPL</span> <span class="wl-badge">MSFT</span> <span class="wl-badge">META</span> <span class="wl-badge">GOOG</span> <span class="wl-badge">AMZN</span> <span class="wl-badge">TSLA</span> <span class="wl-badge">GS</span> <span class="wl-badge">JPM</span> <span class="wl-badge">XLF</span> <span class="wl-badge">XLK</span> <span class="wl-badge">XLE</span> <span class="wl-badge">IWM</span> <span class="wl-badge">COIN</span> <span class="wl-badge">AMD</span> <span class="wl-badge">NFLX</span> <span class="wl-badge">UBER</span> <span class="wl-badge">ARM</span> <span class="wl-badge">MRVL</span>
   <span class="footer-right">Powered by Polygon.io + Claude</span>
 </footer>
 
