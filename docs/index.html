@@ -215,11 +215,7 @@
       font-size: 11px; line-height: 1.6; color: #c9d1d9;
       white-space: pre-wrap; word-wrap: break-word;
     }
-    .ai-ts { padding: 4px 12px 4px; font-size: 10px; color: var(--muted); }
-    .ai-disclaimer {
-      padding: 3px 12px 8px; font-size: 9px; color: #484f58;
-      font-style: italic; border-top: 1px solid #1e2530; margin-top: 2px;
-    }
+    .ai-ts { padding: 4px 12px 7px; font-size: 10px; color: var(--muted); }
     .copy-btn {
       background: #21262d; color: #8b949e; border: 1px solid #30363d;
       border-radius: 4px; padding: 3px 10px; font-size: 10px;
@@ -261,9 +257,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 06 2026 15:36 ET</span>
+    <span class="updated">Updated Mar 06 2026 15:43 ET</span>
     <span class="status-open">OPEN</span>
-    <span class="count-badge">286 signals today</span>
+    <span class="count-badge">288 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -274,41 +270,27 @@
       <div class="card-header">📊 OPTION VOLUME INTELLIGENCE</div>
       <div class="card-body">
         <div class="ovi-section-lbl call-lbl">🟢 Top By Calls — Equity / ETF</div>
-        <p class="empty">No unusual activity exceeding threshold today.</p>
+        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>C Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>C OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">AAPL</span></td><td>436K</td><td>293K</td><td><span class="pct-pos">+49%</span></td><td>0.75</td><td>$257.16</td><td><span class="pct-na">—</span></td><td>2.8M</td><td>330K</td><td><span class="pct-oi-high">+749%</span></td><td>765K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">ARM</span></td><td>13K</td><td>11K</td><td><span class="pct-pos">+12%</span></td><td>1.14</td><td>$114.47</td><td><span class="pct-na">—</span></td><td>314K</td><td>314K</td><td><span class="pct-na">+0%</span></td><td>27K</td></tr><tr><td><span class="ticker-badge">COIN</span></td><td>135K</td><td>126K</td><td><span class="pct-pos">+7%</span></td><td>0.73</td><td>$196.16</td><td><span class="pct-na">—</span></td><td>774K</td><td>774K</td><td><span class="pct-na">+0%</span></td><td>235K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">NVDA</span></td><td>1.6M</td><td>1.5M</td><td><span class="pct-pos">+7%</span></td><td>0.91</td><td>$178.07</td><td><span class="pct-na">—</span></td><td>9.4M</td><td>9.4M</td><td><span class="pct-na">+0%</span></td><td>3.0M</td></tr><tr><td><span class="ticker-badge">AMD</span></td><td>284K</td><td>267K</td><td><span class="pct-pos">+6%</span></td><td>0.98</td><td>$192.86</td><td><span class="pct-na">—</span></td><td>1.7M</td><td>1.7M</td><td><span class="pct-na">+0%</span></td><td>561K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">QQQ</span></td><td>2.4M</td><td>2.2M</td><td><span class="pct-pos">+6%</span></td><td>1.18</td><td>$600.70</td><td><span class="pct-na">—</span></td><td>3.6M</td><td>3.6M</td><td><span class="pct-na">+0%</span></td><td>5.1M</td></tr><tr><td><span class="ticker-badge">NFLX</span></td><td>310K</td><td>295K</td><td><span class="pct-pos">+5%</span></td><td>0.65</td><td>$99.33</td><td><span class="pct-na">—</span></td><td>3.8M</td><td>3.8M</td><td><span class="pct-na">+0%</span></td><td>513K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XLE</span></td><td>98K</td><td>94K</td><td><span class="pct-pos">+4%</span></td><td>0.78</td><td>$56.66</td><td><span class="pct-na">—</span></td><td>2.3M</td><td>2.3M</td><td><span class="pct-na">+0%</span></td><td>174K</td></tr><tr><td><span class="ticker-badge">SPY</span></td><td>4.7M</td><td>4.5M</td><td><span class="pct-pos">+4%</span></td><td>1.14</td><td>$673.57</td><td><span class="pct-na">—</span></td><td>5.4M</td><td>5.4M</td><td><span class="pct-na">+0%</span></td><td>10.1M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">META</span></td><td>241K</td><td>233K</td><td><span class="pct-pos">+4%</span></td><td>0.63</td><td>$645.93</td><td><span class="pct-na">—</span></td><td>1.4M</td><td>1.4M</td><td><span class="pct-na">+0%</span></td><td>393K</td></tr></tbody></table></div>
         <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
-        <p class="empty">No unusual activity exceeding threshold today.</p>
+        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>P Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>P OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">AAPL</span></td><td>329K</td><td>234K</td><td><span class="pct-pos">+41%</span></td><td>0.75</td><td>$257.16</td><td><span class="pct-na">—</span></td><td>1.8M</td><td>151K</td><td><span class="pct-oi-high">+1099%</span></td><td>765K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AMD</span></td><td>278K</td><td>246K</td><td><span class="pct-pos">+13%</span></td><td>0.98</td><td>$192.86</td><td><span class="pct-na">—</span></td><td>1.9M</td><td>1.9M</td><td><span class="pct-na">+0%</span></td><td>561K</td></tr><tr><td><span class="ticker-badge">ARM</span></td><td>15K</td><td>13K</td><td><span class="pct-pos">+11%</span></td><td>1.14</td><td>$114.47</td><td><span class="pct-na">—</span></td><td>373K</td><td>373K</td><td><span class="pct-na">+0%</span></td><td>27K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">NVDA</span></td><td>1.4M</td><td>1.3M</td><td><span class="pct-pos">+7%</span></td><td>0.91</td><td>$178.07</td><td><span class="pct-na">—</span></td><td>8.0M</td><td>8.0M</td><td><span class="pct-na">+0%</span></td><td>3.0M</td></tr><tr><td><span class="ticker-badge">SPY</span></td><td>5.4M</td><td>5.1M</td><td><span class="pct-pos">+6%</span></td><td>1.14</td><td>$673.57</td><td><span class="pct-na">—</span></td><td>11.1M</td><td>11.1M</td><td><span class="pct-na">+0%</span></td><td>10.1M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">NFLX</span></td><td>202K</td><td>192K</td><td><span class="pct-pos">+5%</span></td><td>0.65</td><td>$99.33</td><td><span class="pct-na">—</span></td><td>3.0M</td><td>3.0M</td><td><span class="pct-na">+0%</span></td><td>513K</td></tr><tr><td><span class="ticker-badge">QQQ</span></td><td>2.8M</td><td>2.6M</td><td><span class="pct-pos">+5%</span></td><td>1.18</td><td>$600.70</td><td><span class="pct-na">—</span></td><td>6.1M</td><td>6.1M</td><td><span class="pct-na">+0%</span></td><td>5.1M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AMZN</span></td><td>369K</td><td>356K</td><td><span class="pct-pos">+4%</span></td><td>0.98</td><td>$213.69</td><td><span class="pct-na">—</span></td><td>2.0M</td><td>2.0M</td><td><span class="pct-na">+0%</span></td><td>748K</td></tr><tr><td><span class="ticker-badge">COIN</span></td><td>99K</td><td>96K</td><td><span class="pct-pos">+4%</span></td><td>0.73</td><td>$196.16</td><td><span class="pct-na">—</span></td><td>559K</td><td>559K</td><td><span class="pct-na">+0%</span></td><td>235K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">MSFT</span></td><td>271K</td><td>262K</td><td><span class="pct-pos">+3%</span></td><td>0.63</td><td>$409.93</td><td><span class="pct-na">—</span></td><td>1.2M</td><td>1.2M</td><td><span class="pct-na">+0%</span></td><td>699K</td></tr></tbody></table></div>
         <div class="ctx-section"><button class="ctx-toggle" onclick="toggleCtx(event)">📰 Context fed to AI ▼</button><pre id="ctx-text" class="ctx-text">MARKET CONTEXT (recent headlines):
-- [cnbc_markets] San Francisco Fed&#x27;s Daly says jobs report complicates interest rate call
-- [cnbc_markets] U.S. payrolls unexpectedly fell by 92,000 in February; unemployment rate rises to 4.4%
-- [marketwatch] Gold prices post worst week since January. The dollar gets part of the blame.
-- [marketwatch] Stagflation? $150 oil? Not all 401(k)s are losing money.
-- [marketwatch] Why you shouldn’t blame AI for the weak jobs data
-- [marketwatch] U.S. oil surges over 11% toward a record weekly gain, as the Middle East conflict spurs worries over production cuts
-- [cnbc_markets] The February jobs numbers are coming out Friday. Here&#x27;s what to expect
-- [ft_markets] Oil hits highest level since 2023 as Iran war triggers historic surge</pre></div>
+- [The Motley Fool] [VOO, BRK.A, BRK.B] Warren Buffett Recommends This 1 Investment to All Investors. Here&#x27;s How It Could Help Build a Million-Dollar Portfolio.
+- [wsj_markets] Arabica Coffee Prices Hit Record on U.S., Colombia Tariff Spat</pre></div>
         <div class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
-            <button id="copy-btn" class="copy-btn" data-ts="15:33 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+            <button id="copy-btn" class="copy-btn" data-ts="15:40 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
           </div>
-          <pre id="ai-text" class="ai-text">OPTIONS FLOW PULSE | March 06, 2026 | 4:00 PM ET
+          <pre id="ai-text" class="ai-text">**HEADLINE**: AAPL leads risk-off positioning with +49% call spike and +41% put surge, signaling heightened two-way volatility ahead of potential catalyst event.
 
-HEADLINE:
-Options flow remains notably subdued despite oil&#x27;s historic surge and weak payrolls data, suggesting either positioning fatigue or risk managers waiting for clearer directional confirmation before deploying significant premium.
+**CALL FLOW ANALYSIS**: Tech megacaps dominate call activity with AAPL&#x27;s massive 435K volume (+49%) leading semiconductor strength in ARM (+12%) and NVDA (+7%). The broad-based call buying across QQQ (2.35M contracts) and SPY (4.7M) suggests institutional positioning for upside breakouts, while crypto proxy COIN&#x27;s elevated activity (+7%) indicates risk-on appetite extending to digital assets.
 
-CALL FLOW ANALYSIS:
-Single name call activity has been conspicuously absent from today&#x27;s tape, with no ticker registering meaningful deviation from recent baselines. This is worth noting given oil&#x27;s 11% surge and the payrolls miss — the kind of macro volatility that typically generates either hedging demand or opportunistic positioning. Index ETF call flow has similarly remained muted, consistent with institutional caution rather than conviction around either the reflation or recession narrative emerging from today&#x27;s data cross-currents.
+**PUT FLOW ANALYSIS**: AAPL&#x27;s dual-sided flow (0.75 P/C ratio with elevated put volume) suggests event-driven hedging rather than directional bearishness. The synchronized put activity in SPY (5.4M contracts) and QQQ (2.8M) with elevated P/C ratios (1.14 and 1.18 respectively) indicates systematic portfolio protection being layered on at current levels.
 
-PUT FLOW ANALYSIS:
-Defensive positioning has been equally restrained, with no significant put demand visible across major indices or single names. This absence is more striking in index ETFs, where the combination of stagflation fears and geopolitical risk would typically generate macro hedging activity. The lack of protective flow suggests either existing hedge positions remain adequate or risk managers are waiting for technical confirmation of trend breaks before adding downside protection. Single name put activity has been similarly quiet, pointing to selective rather than broad-based concern.
+**SECOND ORDER EFFECTS**: The bifurcated AAPL flow likely reflects pre-earnings positioning, creating potential gamma squeeze dynamics given the stock&#x27;s index weighting. Elevated put activity across broad indices suggests dealers are short gamma, amplifying downside volatility if market breaks key support levels. Energy&#x27;s modest XLE call interest (+4%) provides portfolio diversification signal as institutions hedge tech concentration risk.
 
-SECOND ORDER EFFECTS:
-Without meaningful flow deviation in either direction, today&#x27;s tape suggests volatility demand may be satisfied by existing positioning rather than active rebalancing. The disconnect between macro headline risk (oil spike, payrolls miss, Fed uncertainty) and options activity is worth monitoring — historically, such gaps either resolve with delayed flow or signal that current positioning already reflects these risks. What would need to happen for this to become a more significant signal: sustained flow deviation above 150% of baseline in either energy names or broad index protection.
-
-TRADE FRAMEWORK:
-The cleaner expression is relative — watch whether energy sector leadership broadens into sustained call demand before sizing into XLE or individual energy names, as current flow levels suggest institutional positioning may already be established rather than building.</pre>
-          <div class="ai-ts">Analysis as of 15:33 ET</div>
-          <div class="ai-disclaimer">Flow observations only. Inferences require confirmation from strike, tenor, and opening/closing data.</div>
+**TRADE IDEA**: Sell AAPL straddles into the elevated IV environment, targeting the 255-260 strike zone where dealer gamma is likely concentrated, as the two-way flow suggests range-bound resolution post-catalyst rather than directional breakout.</pre>
+          <div class="ai-ts">Analysis as of 15:40 ET</div>
         </div>
       </div>
     </div>
@@ -317,6 +299,18 @@ The cleaner expression is relative — watch whether energy sector leadership br
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row neut">
+        <span class="ticker-badge">UBER</span>
+        <span class="sig-main">UBER GEX CONCENTRATION — Strike $75 has 25% of total GEX ($54.5M)</span>
+        <span class="ai-note">💬 &quot;UBER&#x27;s got $54M gamma wall at $75 strike - expect serious pin action into expiry, trade the range.&quot;</span>
+        <span class="sig-time">15:43 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">XLK</span>
+        <span class="sig-main">XLK GEX EXTREME — Net GEX: $-70.8M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLK gamma is completely blown out negative - we&#x27;re seeing massive convexity selling opportunities as dealers chase every move.&quot;</span>
+        <span class="sig-time">15:42 ET</span>
+      </div>
       <div class="sig-row neut">
         <span class="ticker-badge">MSFT</span>
         <span class="sig-main">MSFT GEX EXTREME — Net GEX: $304.5M (100th pct, 30d)</span>
@@ -365,19 +359,7 @@ The cleaner expression is relative — watch whether energy sector leadership br
         <span class="ai-note">💬 &quot;GOOG&#x27;s at 4th percentile GEX with massive negative gamma - expect violent moves, perfect for straddle buying.&quot;</span>
         <span class="sig-time">13:59 ET</span>
       </div>
-      <div class="sig-row neut">
-        <span class="ticker-badge">COIN</span>
-        <span class="sig-main">COIN GEX EXTREME — Net GEX: $35.9M (97th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;COIN&#x27;s sitting on massive gamma support at $35.9M - prime for a volatility crush if you&#x27;re looking to fade implied.&quot;</span>
-        <span class="sig-time">13:48 ET</span>
-      </div>
-      <div class="sig-row neut">
-        <span class="ticker-badge">JPM</span>
-        <span class="sig-main">JPM GEX EXTREME — Net GEX: $-50.0M (3th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;JPM&#x27;s at 3rd percentile GEX with -$50M net - massive gamma flip risk, expect violent moves on any catalyst.&quot;</span>
-        <span class="sig-time">13:47 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2425.5M</td><td>7th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1552.5M</td><td>9th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1374.1M</td><td>8th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-999.0M</td><td>1th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+335.7M</td><td>29th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+304.5M</td><td>99th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+220.1M</td><td>88th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+195.6M</td><td>3th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+183.9M</td><td>16th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+123.3M</td><td>18th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-73.6M</td><td>6th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-54.4M</td><td>3th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">TSLA</td><td>$-46.4M</td><td>3th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-44.0M</td><td>7th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+36.9M</td><td>93th</td><td class="trend">↓</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2289.4M</td><td>21th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1559.4M</td><td>9th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1555.5M</td><td>5th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-1309.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+395.2M</td><td>99th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+268.4M</td><td>94th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+209.5M</td><td>27th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+208.2M</td><td>79th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+168.4M</td><td>93th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-112.0M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+73.4M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-70.8M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-47.7M</td><td>13th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+43.5M</td><td>96th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">META</td><td>$+15.9M</td><td>6th</td><td class="trend">↑</td></tr></tbody></table>
       </div>
     </div>
   
