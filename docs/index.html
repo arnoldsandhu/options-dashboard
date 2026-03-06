@@ -197,6 +197,7 @@
     .pct-neg  { color: #f85149; }
     .pct-oi-high { color: #e3b341; }
     .pct-na   { color: var(--muted); }
+    .also-notable { color: var(--muted); font-size: 10px; padding: 2px 4px 6px; font-style: italic; }
 
     /* ── AI Analysis box ───────────────────── */
     .ai-box {
@@ -215,7 +216,11 @@
       font-size: 11px; line-height: 1.6; color: #c9d1d9;
       white-space: pre-wrap; word-wrap: break-word;
     }
-    .ai-ts { padding: 4px 12px 7px; font-size: 10px; color: var(--muted); }
+    .ai-ts { padding: 4px 12px 4px; font-size: 10px; color: var(--muted); }
+    .ai-disclaimer {
+      padding: 3px 12px 8px; font-size: 9px; color: #484f58;
+      font-style: italic; border-top: 1px solid #1e2530; margin-top: 2px;
+    }
     .copy-btn {
       background: #21262d; color: #8b949e; border: 1px solid #30363d;
       border-radius: 4px; padding: 3px 10px; font-size: 10px;
@@ -257,9 +262,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 06 2026 15:52 ET</span>
-    <span class="status-open">OPEN</span>
-    <span class="count-badge">288 signals today</span>
+    <span class="updated">Updated Mar 06 2026 16:07 ET</span>
+    <span class="status-closed">CLOSED</span>
+    <span class="count-badge">290 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -270,29 +275,30 @@
       <div class="card-header">📊 OPTION VOLUME INTELLIGENCE</div>
       <div class="card-body">
         <div class="ovi-section-lbl call-lbl">🟢 Top By Calls — Equity / ETF</div>
-        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>C Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>C OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">AAPL</span></td><td>446K</td><td>293K</td><td><span class="pct-pos">+52%</span></td><td>0.78</td><td>$256.62</td><td><span class="pct-na">—</span></td><td>2.8M</td><td>330K</td><td><span class="pct-oi-high">+749%</span></td><td>793K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">COIN</span></td><td>144K</td><td>126K</td><td><span class="pct-pos">+14%</span></td><td>0.71</td><td>$196.09</td><td><span class="pct-na">—</span></td><td>774K</td><td>774K</td><td><span class="pct-na">+0%</span></td><td>246K</td></tr><tr><td><span class="ticker-badge">NVDA</span></td><td>1.6M</td><td>1.5M</td><td><span class="pct-pos">+11%</span></td><td>0.91</td><td>$177.31</td><td><span class="pct-na">—</span></td><td>9.4M</td><td>9.4M</td><td><span class="pct-na">+0%</span></td><td>3.1M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AMD</span></td><td>294K</td><td>267K</td><td><span class="pct-pos">+10%</span></td><td>0.99</td><td>$192.03</td><td><span class="pct-na">—</span></td><td>1.7M</td><td>1.7M</td><td><span class="pct-na">+0%</span></td><td>585K</td></tr><tr><td><span class="ticker-badge">QQQ</span></td><td>2.4M</td><td>2.2M</td><td><span class="pct-pos">+10%</span></td><td>1.18</td><td>$599.24</td><td><span class="pct-na">—</span></td><td>3.6M</td><td>3.6M</td><td><span class="pct-na">+0%</span></td><td>5.3M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">NFLX</span></td><td>323K</td><td>295K</td><td><span class="pct-pos">+10%</span></td><td>0.65</td><td>$98.90</td><td><span class="pct-na">—</span></td><td>3.8M</td><td>3.8M</td><td><span class="pct-na">+0%</span></td><td>532K</td></tr><tr><td><span class="ticker-badge">AMZN</span></td><td>395K</td><td>365K</td><td><span class="pct-pos">+8%</span></td><td>0.95</td><td>$213.21</td><td><span class="pct-na">—</span></td><td>2.8M</td><td>2.8M</td><td><span class="pct-na">+0%</span></td><td>770K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XLE</span></td><td>101K</td><td>94K</td><td><span class="pct-pos">+7%</span></td><td>0.76</td><td>$56.60</td><td><span class="pct-na">—</span></td><td>2.3M</td><td>2.3M</td><td><span class="pct-na">+0%</span></td><td>177K</td></tr><tr><td><span class="ticker-badge">SPY</span></td><td>4.8M</td><td>4.5M</td><td><span class="pct-pos">+7%</span></td><td>1.15</td><td>$672.13</td><td><span class="pct-na">—</span></td><td>5.4M</td><td>5.4M</td><td><span class="pct-na">+0%</span></td><td>10.4M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">META</span></td><td>246K</td><td>233K</td><td><span class="pct-pos">+6%</span></td><td>0.64</td><td>$642.45</td><td><span class="pct-na">—</span></td><td>1.4M</td><td>1.4M</td><td><span class="pct-na">+0%</span></td><td>403K</td></tr></tbody></table></div>
+        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>C Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>C OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">AAPL</span></td><td>466K</td><td>293K</td><td><span class="pct-pos">+59%</span></td><td>0.81</td><td>$256.74</td><td><span class="pct-na">—</span></td><td>2.8M</td><td>330K</td><td><span class="pct-oi-high">+749%</span></td><td>845K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">ARM</span></td><td>14K</td><td>11K</td><td><span class="pct-pos">+23%</span></td><td>1.28</td><td>$114.47</td><td><span class="pct-na">—</span></td><td>314K</td><td>314K</td><td><span class="pct-na">+0%</span></td><td>32K</td></tr><tr><td><span class="ticker-badge">COIN</span></td><td>155K</td><td>126K</td><td><span class="pct-pos">+23%</span></td><td>0.71</td><td>$196.81</td><td><span class="pct-na">—</span></td><td>774K</td><td>774K</td><td><span class="pct-na">+0%</span></td><td>266K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">NVDA</span></td><td>1.8M</td><td>1.5M</td><td><span class="pct-pos">+21%</span></td><td>0.90</td><td>$177.98</td><td><span class="pct-na">—</span></td><td>9.4M</td><td>9.4M</td><td><span class="pct-na">+0%</span></td><td>3.4M</td></tr><tr><td><span class="ticker-badge">QQQ</span></td><td>2.6M</td><td>2.2M</td><td><span class="pct-pos">+19%</span></td><td>1.18</td><td>$599.68</td><td><span class="pct-na">—</span></td><td>3.6M</td><td>3.6M</td><td><span class="pct-na">+0%</span></td><td>5.7M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AMD</span></td><td>315K</td><td>267K</td><td><span class="pct-pos">+18%</span></td><td>1.02</td><td>$193.10</td><td><span class="pct-na">—</span></td><td>1.7M</td><td>1.7M</td><td><span class="pct-na">+0%</span></td><td>637K</td></tr><tr><td><span class="ticker-badge">AMZN</span></td><td>429K</td><td>365K</td><td><span class="pct-pos">+18%</span></td><td>0.93</td><td>$213.74</td><td><span class="pct-na">—</span></td><td>2.8M</td><td>2.8M</td><td><span class="pct-na">+0%</span></td><td>828K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">NFLX</span></td><td>343K</td><td>295K</td><td><span class="pct-pos">+16%</span></td><td>0.65</td><td>$99.14</td><td><span class="pct-na">—</span></td><td>3.8M</td><td>3.8M</td><td><span class="pct-na">+0%</span></td><td>565K</td></tr><tr><td><span class="ticker-badge">XLE</span></td><td>108K</td><td>94K</td><td><span class="pct-pos">+15%</span></td><td>0.74</td><td>$56.45</td><td><span class="pct-na">—</span></td><td>2.3M</td><td>2.3M</td><td><span class="pct-na">+0%</span></td><td>188K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">SPY</span></td><td>5.2M</td><td>4.5M</td><td><span class="pct-pos">+14%</span></td><td>1.15</td><td>$672.66</td><td><span class="pct-na">—</span></td><td>5.4M</td><td>5.4M</td><td><span class="pct-na">+0%</span></td><td>11.1M</td></tr></tbody></table></div>
+        
         <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
-        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>P Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>P OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">AAPL</span></td><td>347K</td><td>234K</td><td><span class="pct-pos">+49%</span></td><td>0.78</td><td>$256.62</td><td><span class="pct-na">—</span></td><td>1.8M</td><td>151K</td><td><span class="pct-oi-high">+1099%</span></td><td>793K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AMD</span></td><td>291K</td><td>246K</td><td><span class="pct-pos">+18%</span></td><td>0.99</td><td>$192.03</td><td><span class="pct-na">—</span></td><td>1.9M</td><td>1.9M</td><td><span class="pct-na">+0%</span></td><td>585K</td></tr><tr><td><span class="ticker-badge">NVDA</span></td><td>1.5M</td><td>1.3M</td><td><span class="pct-pos">+13%</span></td><td>0.91</td><td>$177.31</td><td><span class="pct-na">—</span></td><td>8.0M</td><td>8.0M</td><td><span class="pct-na">+0%</span></td><td>3.1M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">MSFT</span></td><td>295K</td><td>262K</td><td><span class="pct-pos">+13%</span></td><td>0.68</td><td>$409.37</td><td><span class="pct-na">—</span></td><td>1.2M</td><td>1.2M</td><td><span class="pct-na">+0%</span></td><td>732K</td></tr><tr><td><span class="ticker-badge">SPY</span></td><td>5.6M</td><td>5.1M</td><td><span class="pct-pos">+9%</span></td><td>1.15</td><td>$672.13</td><td><span class="pct-na">—</span></td><td>11.1M</td><td>11.1M</td><td><span class="pct-na">+0%</span></td><td>10.4M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">QQQ</span></td><td>2.9M</td><td>2.6M</td><td><span class="pct-pos">+9%</span></td><td>1.18</td><td>$599.24</td><td><span class="pct-na">—</span></td><td>6.1M</td><td>6.1M</td><td><span class="pct-na">+0%</span></td><td>5.3M</td></tr><tr><td><span class="ticker-badge">NFLX</span></td><td>209K</td><td>192K</td><td><span class="pct-pos">+9%</span></td><td>0.65</td><td>$98.90</td><td><span class="pct-na">—</span></td><td>3.0M</td><td>3.0M</td><td><span class="pct-na">+0%</span></td><td>532K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">GS</span></td><td>29K</td><td>27K</td><td><span class="pct-pos">+9%</span></td><td>1.22</td><td>$818.52</td><td><span class="pct-na">—</span></td><td>193K</td><td>193K</td><td><span class="pct-na">+0%</span></td><td>52K</td></tr><tr><td><span class="ticker-badge">META</span></td><td>157K</td><td>147K</td><td><span class="pct-pos">+7%</span></td><td>0.64</td><td>$642.45</td><td><span class="pct-na">—</span></td><td>888K</td><td>888K</td><td><span class="pct-na">+0%</span></td><td>403K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">TSLA</span></td><td>1.3M</td><td>1.2M</td><td><span class="pct-pos">+7%</span></td><td>0.75</td><td>$396.60</td><td><span class="pct-na">—</span></td><td>3.0M</td><td>3.0M</td><td><span class="pct-na">+0%</span></td><td>3.1M</td></tr></tbody></table></div>
+        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>P Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>P OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">AAPL</span></td><td>378K</td><td>234K</td><td><span class="pct-pos">+62%</span></td><td>0.81</td><td>$256.74</td><td><span class="pct-na">—</span></td><td>1.8M</td><td>151K</td><td><span class="pct-oi-high">+1099%</span></td><td>845K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">MSFT</span></td><td>372K</td><td>262K</td><td><span class="pct-pos">+42%</span></td><td>0.80</td><td>$409.16</td><td><span class="pct-na">—</span></td><td>1.2M</td><td>1.2M</td><td><span class="pct-na">+0%</span></td><td>838K</td></tr><tr><td><span class="ticker-badge">ARM</span></td><td>18K</td><td>13K</td><td><span class="pct-pos">+37%</span></td><td>1.28</td><td>$114.47</td><td><span class="pct-na">—</span></td><td>373K</td><td>373K</td><td><span class="pct-na">+0%</span></td><td>32K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">AMD</span></td><td>322K</td><td>246K</td><td><span class="pct-pos">+31%</span></td><td>1.02</td><td>$193.10</td><td><span class="pct-na">—</span></td><td>1.9M</td><td>1.9M</td><td><span class="pct-na">+0%</span></td><td>637K</td></tr><tr><td><span class="ticker-badge">NVDA</span></td><td>1.6M</td><td>1.3M</td><td><span class="pct-pos">+22%</span></td><td>0.90</td><td>$177.98</td><td><span class="pct-na">—</span></td><td>8.0M</td><td>8.0M</td><td><span class="pct-na">+0%</span></td><td>3.4M</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">QQQ</span></td><td>3.1M</td><td>2.6M</td><td><span class="pct-pos">+18%</span></td><td>1.18</td><td>$599.68</td><td><span class="pct-na">—</span></td><td>6.1M</td><td>6.1M</td><td><span class="pct-na">+0%</span></td><td>5.7M</td></tr><tr><td><span class="ticker-badge">XLK</span></td><td>18K</td><td>15K</td><td><span class="pct-pos">+17%</span></td><td>2.22</td><td>$137.33</td><td><span class="pct-na">—</span></td><td>515K</td><td>515K</td><td><span class="pct-na">+0%</span></td><td>26K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">SPY</span></td><td>5.9M</td><td>5.1M</td><td><span class="pct-pos">+16%</span></td><td>1.15</td><td>$672.66</td><td><span class="pct-na">—</span></td><td>11.1M</td><td>11.1M</td><td><span class="pct-na">+0%</span></td><td>11.1M</td></tr><tr><td><span class="ticker-badge">UBER</span></td><td>33K</td><td>29K</td><td><span class="pct-pos">+16%</span></td><td>1.00</td><td>$74.89</td><td><span class="pct-na">—</span></td><td>708K</td><td>708K</td><td><span class="pct-na">+0%</span></td><td>67K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">COIN</span></td><td>111K</td><td>96K</td><td><span class="pct-pos">+16%</span></td><td>0.71</td><td>$196.81</td><td><span class="pct-na">—</span></td><td>559K</td><td>559K</td><td><span class="pct-na">+0%</span></td><td>266K</td></tr></tbody></table></div>
+        
         <div class="ctx-section"><button class="ctx-toggle" onclick="toggleCtx(event)">📰 Context fed to AI ▼</button><pre id="ctx-text" class="ctx-text">MARKET CONTEXT (recent headlines):
-- [Investing.com] [SHAK, CAVA] 2 Restaurant Stocks, 2 Earnings Beats, 2 Very Different Setups
-- [GlobeNewswire Inc.] [ATLC, ATLCL, ATLCP] Atlanticus to Host Fourth Quarter 2025 Earnings Call and Webcast on March 12, 2026 at 5:00 p.m. ET
 - [The Motley Fool] [VOO, BRK.A, BRK.B] Warren Buffett Recommends This 1 Investment to All Investors. Here&#x27;s How It Could Help Build a Million-Dollar Portfolio.
 - [wsj_markets] Arabica Coffee Prices Hit Record on U.S., Colombia Tariff Spat</pre></div>
         <div class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
-            <button id="copy-btn" class="copy-btn" data-ts="15:48 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+            <button id="copy-btn" class="copy-btn" data-ts="16:06 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
           </div>
-          <pre id="ai-text" class="ai-text">**HEADLINE:** AAPL leads dual-sided vol explosion with +52% call spike matched by +49% put surge, signaling major event positioning ahead of likely earnings catalyst.
+          <pre id="ai-text" class="ai-text">**HEADLINE:** Massive two-way flow in mega-cap tech signals institutional repositioning ahead of earnings season, with AAPL leading 60%+ volume spikes in both calls and puts.
 
-**CALL FLOW ANALYSIS:** Tech mega-caps dominate upside positioning with AAPL&#x27;s massive 446K call volume surge leading a broad-based tech rally play across NVDA (+11%), AMD (+10%), and AMZN (+8%). The inclusion of QQQ and SPY in top call spikes with relatively elevated P/C ratios (1.18 and 1.15 respectively) suggests institutional accumulation of upside exposure rather than retail FOMO. Energy&#x27;s XLE appearance signals sector rotation expectations, likely tied to policy uncertainty around energy infrastructure.
+**CALL FLOW ANALYSIS:** The call surge is dominated by tech momentum plays, with AAPL (+59%), NVDA (+21%), and broad tech exposure via QQQ (+19%) driving institutional FOMO positioning. COIN&#x27;s +23% call spike alongside crypto-adjacent names suggests risk-on appetite extending beyond traditional tech. The breadth from mega-caps to energy (XLE +15%) indicates cross-sector momentum chasing rather than defensive rotation.
 
-**PUT FLOW ANALYSIS:** The symmetric AAPL put spike (+49% to 347K volume) alongside elevated semiconductor put activity (NVDA +13%, AMD +18%) indicates sophisticated straddle/strangle positioning rather than directional bearish bets. MSFT&#x27;s notable +13% put volume surge with a low 0.68 P/C ratio suggests targeted hedging of concentrated long positions. The broad-market put activity in SPY and QQQ appears more defensive given their elevated P/C ratios above 1.0.
+**PUT FLOW ANALYSIS:** Heavy put accumulation in the same names—AAPL (+62%), MSFT (+42%), NVDA (+22%)—signals sophisticated hedging of existing longs rather than outright bearish bets given the concurrent call activity. The elevated P/C ratios in QQQ (1.18) and XLK (2.22) suggest institutions are aggressively protecting tech exposure while maintaining upside participation.
 
-**SECOND ORDER EFFECTS:** This vol pattern suggests significant gamma exposure building in mega-cap tech names, particularly AAPL where dual-sided flow creates potential for amplified price moves. The concentration in 0DTE-heavy names like SPY/QQQ with elevated put/call ratios indicates dealers may be short gamma heading into potential volatility events. Cross-asset implications point to increased correlation risk as options positioning becomes concentrated in index-heavy tech names.
+**SECOND ORDER EFFECTS:** This two-way mega-cap tech flow will amplify gamma effects around key strikes, creating potential volatility compression in a narrow range before violent moves on earnings catalysts. The SPY P/C ratio of 1.15 combined with 6M+ put volume suggests broad market hedging is intensifying. Cross-asset implications point to reduced bond hedge effectiveness as tech correlation dominates.
 
-**TRADE IDEA:** Sell AAPL straddles in the front month expiry, capitalizing on elevated implied volatility from the dual-sided volume spike while positioning for vol compression post-catalyst. Target strikes around $255-260 to capture premium from both call and put buyers positioning for binary outcomes.</pre>
-          <div class="ai-ts">Analysis as of 15:48 ET</div>
+**TRADE IDEA:** Sell AAPL iron condors in the nearest expiry to capitalize on elevated IV from the 60%+ volume spike while positioning for range-bound action before earnings, targeting the $250-$265 range given the balanced two-way flow.</pre>
+          <div class="ai-ts">Analysis as of 16:06 ET</div>
+          <div class="ai-disclaimer">Flow observations only. Inferences require confirmation from strike, tenor, and opening/closing data.</div>
         </div>
       </div>
     </div>
@@ -301,6 +307,18 @@
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row neut">
+        <span class="ticker-badge">SPY</span>
+        <span class="sig-main">SPY GEX EXTREME — Net GEX: $-2527.1M (4th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;SPY gamma is extremely short at -$2.5B - expect violent moves both ways as dealers chase price action.&quot;</span>
+        <span class="sig-time">16:06 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">QQQ</span>
+        <span class="sig-main">QQQ GEX EXTREME — Net GEX: $-1963.8M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;QQQ gamma is massively negative at zero percentile - we&#x27;re setting up for explosive moves, want to discuss vol strategies?&quot;</span>
+        <span class="sig-time">16:05 ET</span>
+      </div>
       <div class="sig-row neut">
         <span class="ticker-badge">UBER</span>
         <span class="sig-main">UBER GEX CONCENTRATION — Strike $75 has 25% of total GEX ($54.5M)</span>
@@ -349,19 +367,7 @@
         <span class="ai-note">💬 &quot;TSLA GEX just flipped negative at -$12.4M - dealers are now long gamma, expect elevated volatility and momentum acceleration.&quot;</span>
         <span class="sig-time">14:22 ET</span>
       </div>
-      <div class="sig-row bear">
-        <span class="ticker-badge">ARM</span>
-        <span class="sig-main">ARM GEX EXTREME — Net GEX: $-13.1M (4th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;ARM&#x27;s sitting at extreme low GEX of -$13.1M - dealers will amplify any move, perfect setup for your directional plays.&quot;</span>
-        <span class="sig-time">14:12 ET</span>
-      </div>
-      <div class="sig-row bear">
-        <span class="ticker-badge">GOOG</span>
-        <span class="sig-main">GOOG GEX EXTREME — Net GEX: $-24.7M (4th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;GOOG&#x27;s at 4th percentile GEX with massive negative gamma - expect violent moves, perfect for straddle buying.&quot;</span>
-        <span class="sig-time">13:59 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2367.7M</td><td>12th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1552.3M</td><td>6th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1529.5M</td><td>13th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-1032.9M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+342.7M</td><td>38th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+262.2M</td><td>91th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+167.5M</td><td>5th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+111.8M</td><td>5th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-107.0M</td><td>1th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+102.6M</td><td>2th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+72.8M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-66.9M</td><td>1th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-58.7M</td><td>1th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+37.0M</td><td>92th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">GOOG</td><td>$-26.2M</td><td>4th</td><td class="trend">↓</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2527.1M</td><td>4th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1688.3M</td><td>6th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1585.1M</td><td>6th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-1056.7M</td><td>1th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+361.1M</td><td>99th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+286.8M</td><td>98th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+174.5M</td><td>14th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+172.1M</td><td>9th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+116.4M</td><td>4th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+104.0M</td><td>4th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-94.5M</td><td>1th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">COIN</td><td>$+58.7M</td><td>99th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-56.7M</td><td>3th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-48.1M</td><td>7th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+38.1M</td><td>22th</td><td class="trend">↑</td></tr></tbody></table>
       </div>
     </div>
   
@@ -393,19 +399,19 @@
         <span class="ai-note">💬 &quot;META&#x27;s +7.2 vol skew at 94th percentile screams sell puts/buy calls - this elevated put premium is gift-wrapped profit.&quot;</span>
         <span class="sig-time">14:21 ET</span>
       </div>
-      <div class="sig-row bear">
+      <div class="sig-row bear" style="opacity:0.45">
         <span class="ticker-badge">AMD</span>
         <span class="sig-main">AMD Apr&#x27;26 Skew ELEVATED — 25d Skew: +8.6vol (95th pct, 30d)</span>
         <span class="ai-note">💬 &quot;AMD&#x27;s +8.6 vol skew is screaming rich at 95th percentile - sell puts, buy calls to fade this extreme downside fear premium.&quot;</span>
         <span class="sig-time">14:01 ET</span>
       </div>
-      <div class="sig-row bull">
+      <div class="sig-row bull" style="opacity:0.45">
         <span class="ticker-badge">XLE</span>
         <span class="sig-main">XLE Apr&#x27;26 Skew COMPRESSED — 25d Skew: +1.8vol (6th pct, 30d)</span>
         <span class="ai-note">💬 &quot;XLE skew at +1.8 vol (6th percentile) is historically compressed - sell puts, buy calls to fade this mean-reverting spread.&quot;</span>
         <span class="sig-time">14:00 ET</span>
       </div>
-      <div class="sig-row bear">
+      <div class="sig-row bear" style="opacity:0.45">
         <span class="ticker-badge">QQQ</span>
         <span class="sig-main">QQQ Apr&#x27;26 Skew ELEVATED — 25d Skew: +11.1vol (93th pct, 30d)</span>
         <span class="ai-note">💬 &quot;QQQ put skew at +11.1 vol is screaming rich - time to sell that elevated put vol and buy calls.&quot;</span>
@@ -443,7 +449,7 @@
 </div>
 
 <footer>
-  <span class="wl-badge">SPY</span> <span class="wl-badge">QQQ</span> <span class="wl-badge">NVDA</span> <span class="wl-badge">AAPL</span> <span class="wl-badge">MSFT</span> <span class="wl-badge">META</span> <span class="wl-badge">GOOG</span> <span class="wl-badge">AMZN</span> <span class="wl-badge">TSLA</span> <span class="wl-badge">GS</span> <span class="wl-badge">JPM</span> <span class="wl-badge">XLF</span> <span class="wl-badge">XLK</span> <span class="wl-badge">XLE</span> <span class="wl-badge">IWM</span> <span class="wl-badge">COIN</span> <span class="wl-badge">AMD</span> <span class="wl-badge">NFLX</span> <span class="wl-badge">UBER</span> <span class="wl-badge">ARM</span>
+  <span class="wl-badge">SPY</span> <span class="wl-badge">QQQ</span> <span class="wl-badge">NVDA</span> <span class="wl-badge">AAPL</span> <span class="wl-badge">MSFT</span> <span class="wl-badge">META</span> <span class="wl-badge">GOOG</span> <span class="wl-badge">AMZN</span> <span class="wl-badge">TSLA</span> <span class="wl-badge">GS</span> <span class="wl-badge">JPM</span> <span class="wl-badge">XLF</span> <span class="wl-badge">XLK</span> <span class="wl-badge">XLE</span> <span class="wl-badge">IWM</span> <span class="wl-badge">COIN</span> <span class="wl-badge">AMD</span> <span class="wl-badge">NFLX</span> <span class="wl-badge">UBER</span> <span class="wl-badge">ARM</span> <span class="wl-badge">MRVL</span>
   <span class="footer-right">Powered by Polygon.io + Claude</span>
 </footer>
 
