@@ -257,9 +257,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 06 2026 22:01 ET</span>
+    <span class="updated">Updated Mar 06 2026 22:22 ET</span>
     <span class="status-closed">CLOSED</span>
-    <span class="count-badge">16 signals today</span>
+    <span class="count-badge">17 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -278,20 +278,20 @@
         <div class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
-            <button id="copy-btn" class="copy-btn" data-ts="21:39 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+            <button id="copy-btn" class="copy-btn" data-ts="22:22 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
           </div>
-          <pre id="ai-text" class="ai-text">**FLOW PULSE - Daily Options Commentary**
+          <pre id="ai-text" class="ai-text">## Flow Pulse Daily Commentary
 
-**HEADLINE:** Small-cap hedging surge dominates as IWM put volume spikes +3% while mega-cap tech options activity normalizes lower.
+**HEADLINE:** Small-cap hedging dominates as IWM put volume spikes +3% with extreme 2.40 P/C ratio, signaling defensive positioning into Russell rebalancing ahead of year-end.
 
-**CALL FLOW ANALYSIS:** Broad market call flows remain elevated but flat, with SPY/QQQ call volumes at 5.4M/2.8M respectively showing no meaningful acceleration. The standout is IWM&#x27;s 2.40 P/C ratio despite small-cap strength, suggesting institutional caution around Russell 2000 momentum sustainability. Energy (XLE) and financials (XLF) showing stable call interest with neutral P/C ratios, indicating sector rotation themes remain muted.
+**CALL FLOW ANALYSIS:** Broad market call activity remains elevated but flat across SPY/QQQ/IWM, suggesting systematic rebalancing rather than directional conviction. The absence of meaningful spikes in mega-cap tech calls (NVDA -1%, TSLA -1%, MSFT -2%) indicates profit-taking or reduced bullish positioning after recent runs. Energy (XLE) and financials (XLF) showing steady institutional call flow reflects sector rotation themes into value.
 
-**PUT FLOW ANALYSIS:** The story is defensive positioning in small-caps, with IWM put volume spiking +3% to 2.0M contracts while maintaining that extreme 2.40 P/C ratio. Broad market puts (SPY +2%, QQQ +2%) outpacing calls suggests portfolio hedging rather than directional bearishness. Notably, mega-cap tech puts are cooling significantly (NVDA -2%, TSLA -4%, AMD -5%), indicating reduced single-name volatility demand after recent moves.
+**PUT FLOW ANALYSIS:** The Russell 2000&#x27;s explosive put activity (+3% vs 20d avg, 2.40 P/C) dominates defensive flows, likely driven by institutional hedging ahead of Russell reconstitution and small-cap vulnerability to tariff headlines. Broad market puts (SPY +2%, QQQ +2%) suggest portfolio insurance rather than outright bearish positioning. Notably, mega-cap tech put flows are cooling (NVDA -2%, TSLA -4%), indicating hedging fatigue or covered call unwinds.
 
-**SECOND ORDER EFFECTS:** The IWM put surge against a backdrop of cooling tech volatility suggests institutional flows are rotating hedging focus from growth names to small-cap exposure ahead of potential policy uncertainty. This defensive small-cap positioning could create negative gamma effects around key IWM levels. The normalization in NVDA/TSLA put premiums may signal peak vol regime in mega-caps, potentially reducing overall market GEX sensitivity.
+**SECOND ORDER EFFECTS:** The IWM put surge creates negative gamma exposure that amplifies downside moves in small-caps, potentially triggering systematic deleveraging. This defensive posturing in domestically-focused names aligns with tariff uncertainty while mega-cap tech option flows normalize. The broad market P/C ratios (SPY 1.17, QQQ 1.20) suggest balanced positioning, but small-cap vulnerability could spark contagion if Russell weakness accelerates.
 
-**TRADE IDEA:** Sell IWM put spreads targeting the 240-235 strike zone, capitalizing on elevated put premiums while the small-cap rally remains intact but hedge flows create attractive entry levels for contrarian positioning.</pre>
-          <div class="ai-ts">Analysis as of 21:39 ET</div>
+**TRADE IDEA:** Fade the IWM put panic by selling Jan 2025 240/230 put spreads (currently ~$2.50 credit) targeting oversold RSI levels and excessive defensive positioning, while hedging with small QQQ put positions against systematic deleveraging risk.</pre>
+          <div class="ai-ts">Analysis as of 22:22 ET</div>
         </div>
       </div>
     </div>
@@ -318,19 +318,19 @@
         <span class="ai-note">💬 &quot;AMZN&#x27;s gamma extremely light at $92M - expect big moves with minimal dealer hedging resistance.&quot;</span>
         <span class="sig-time">20:35 ET</span>
       </div>
-      <div class="sig-row neut">
+      <div class="sig-row neut" style="opacity:0.45">
         <span class="ticker-badge">XLE</span>
         <span class="sig-main">XLE GEX EXTREME — Net GEX: $124.9M (1th pct, 30d)</span>
         <span class="ai-note">💬 &quot;XLE gamma is basically dead at 1st percentile - any directional move here could rip hard with zero hedging flow.&quot;</span>
         <span class="sig-time">20:14 ET</span>
       </div>
-      <div class="sig-row bear">
+      <div class="sig-row bear" style="opacity:0.45">
         <span class="ticker-badge">XLF</span>
         <span class="sig-main">XLF GEX EXTREME — Net GEX: $-522.8M (100th pct, 30d)</span>
         <span class="ai-note">💬 &quot;XLF&#x27;s sitting on a $523M negative gamma bomb - any decent move here could trigger explosive acceleration either way.&quot;</span>
         <span class="sig-time">20:14 ET</span>
       </div>
-      <div class="sig-row neut">
+      <div class="sig-row neut" style="opacity:0.45">
         <span class="ticker-badge">MSFT</span>
         <span class="sig-main">MSFT GEX EXTREME — Net GEX: $117.8M (2th pct, 30d)</span>
         <span class="ai-note">💬 &quot;MSFT&#x27;s at 2nd percentile GEX - minimal dealer hedging means explosive moves likely, perfect for your vol strategies.&quot;</span>
@@ -348,7 +348,7 @@
         <span class="ai-note">💬 &quot;NVDA&#x27;s gamma just flipped negative at $-2.2M - expect higher volatility as dealers start selling into rallies.&quot;</span>
         <span class="sig-time">19:31 ET</span>
       </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-1583.5M</td><td>66th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1098.2M</td><td>64th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-769.5M</td><td>61th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-522.8M</td><td>97th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+259.1M</td><td>0th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+201.8M</td><td>15th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+127.4M</td><td>21th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+120.0M</td><td>3th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+114.8M</td><td>2th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+91.9M</td><td>4th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-57.2M</td><td>24th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-31.8M</td><td>41th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-24.8M</td><td>7th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-22.4M</td><td>61th</td><td class="trend">↑</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-1583.6M</td><td>65th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1098.2M</td><td>63th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-769.5M</td><td>61th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-522.9M</td><td>96th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+259.1M</td><td>0th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+201.8M</td><td>15th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+127.3M</td><td>21th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+120.0M</td><td>3th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+114.8M</td><td>2th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+91.9M</td><td>4th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-57.2M</td><td>24th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-31.8M</td><td>41th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-24.8M</td><td>7th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-22.4M</td><td>61th</td><td class="trend">↑</td></tr></tbody></table>
       </div>
     </div>
   
@@ -374,13 +374,13 @@
         <span class="ai-note">💬 &quot;Skew at +12.0 vol points is screaming rich - time to sell that elevated put vol at 28.4% and fade the fear.&quot;</span>
         <span class="sig-time">21:39 ET</span>
       </div>
-      <div class="sig-row bull">
+      <div class="sig-row bull" style="opacity:0.45">
         <span class="ticker-badge">NFLX</span>
         <span class="sig-main">NFLX Apr&#x27;26 Skew COMPRESSED — 25d Skew: +1.8vol (5th pct, 30d)</span>
         <span class="ai-note">💬 &quot;NFLX put/call skew at +1.8 vol points is extremely compressed - time to buy put spreads and sell call spreads.&quot;</span>
         <span class="sig-time">20:14 ET</span>
       </div>
-      <div class="sig-row neut">
+      <div class="sig-row neut" style="opacity:0.45">
         <span class="ticker-badge">XLK</span>
         <span class="sig-main">XLK Apr&#x27;26 Skew CROSSED — 25d Skew: +9.3vol (24th pct, 30d)</span>
         <span class="ai-note">💬 &quot;XLK skew at +9.3 vol points (24th percentile) - cheap puts here, I&#x27;d be buying vol on the downside protection.&quot;</span>
