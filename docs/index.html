@@ -8,53 +8,138 @@
   <title>Options Flow Dashboard</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0d1117;
-      --bg2:      #161b22;
-      --bg3:      #21262d;
-      --border:   #30363d;
-      --text:     #e6edf3;
-      --muted:    #8b949e;
-      --bull:     #238636;
-      --bull-fg:  #3fb950;
-      --bear:     #6e1a1a;
-      --bear-fg:  #f85149;
-      --neut:     #7d6a00;
-      --neut-fg:  #e3b341;
-      --badge-bg: #1f2937;
-      --badge-fg: #93c5fd;
-      --ai-fg:    #a78bfa;
+      /* ── Backgrounds ── */
+      --bg:        #0D1117;
+      --bg2:       #161B22;
+      --bg3:       #1C2128;
+      --bg-hover:  #21262D;
+      --border:    #30363D;
+      --border2:   #2D333B;
+
+      /* ── Text ── */
+      --text:      #E6EDF3;
+      --muted:     #8B949E;
+      --muted2:    #484F58;
+
+      /* ── Liquidnet Accent ── */
+      --accent:    #E8588C;
+      --accent2:   #F5A623;
+      --accent3:   #C13584;
+
+      /* ── Z-Score diverging scale ── */
+      --z-xneg:   #8B0000;
+      --z-sneg:   #CC3333;
+      --z-mneg:   #E06040;
+      --z-lneg:   #E88830;
+      --z-slneg:  #F0B030;
+      --z-neut1:  #E8D040;
+      --z-neut:   #D0D860;
+      --z-spos:   #A8C840;
+      --z-mpos:   #70B030;
+      --z-spos2:  #409030;
+      --z-xpos:   #207020;
+
+      /* ── Legacy aliases (keep existing code working) ── */
+      --bull:      #1a3d20;
+      --bull-fg:   #70B030;
+      --bear:      #3d1a1a;
+      --bear-fg:   #CC3333;
+      --neut:      #2a2200;
+      --neut-fg:   #E8D040;
+      --badge-bg:  #1C2128;
+      --badge-fg:  #93c5fd;
+      --ai-fg:     #E8588C;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 13px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
+    /* Monospace for all data values */
+    td, .data-num, .ai-text, .hero-val {
+      font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+    }
+
     /* ── Header ─────────────────────────── */
     header {
       background: var(--bg2);
       border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      padding: 0;
     }
-    header h1 { font-size: 18px; font-weight: 600; letter-spacing: .3px; flex: 1; }
-    .meta { display: flex; align-items: center; gap: 12px; }
+    .hdr-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px 10px; gap: 16px; flex-wrap: wrap;
+    }
+    .hdr-brand { display: flex; align-items: center; gap: 12px; }
+    .hdr-logo { height: 32px; width: auto; display: block; }
+    .hdr-logo-text {
+      font-size: 13px; font-weight: 700; letter-spacing: 2px;
+      color: var(--accent); text-transform: uppercase;
+    }
+    .hdr-title-wrap { display: flex; flex-direction: column; gap: 1px; }
+    .hdr-title {
+      font-size: 16px; font-weight: 700; letter-spacing: .5px; color: var(--text);
+      text-transform: uppercase;
+    }
+    .hdr-subtitle { font-size: 10px; color: var(--muted); letter-spacing: .3px; }
+    .hdr-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .hdr-time { color: var(--muted); font-size: 11px; font-family: 'JetBrains Mono', monospace; }
+    .market-dot {
+      display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; margin-right: 5px; vertical-align: middle;
+    }
+    .status-open  {
+      background: rgba(112,176,48,0.12); color: var(--z-mpos);
+      padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+      border: 1px solid rgba(112,176,48,0.3);
+    }
+    .status-open .market-dot  { background: var(--z-mpos); box-shadow: 0 0 5px var(--z-mpos); }
+    .status-closed {
+      background: rgba(204,51,51,0.12); color: var(--z-sneg);
+      padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+      border: 1px solid rgba(204,51,51,0.3);
+    }
+    .status-closed .market-dot { background: var(--z-sneg); }
+    .count-badge {
+      background: rgba(232,88,140,0.1); color: var(--accent);
+      padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+      border: 1px solid rgba(232,88,140,0.25);
+    }
+    /* ── Header Stat Cards ── */
+    .hdr-stats {
+      display: flex; gap: 1px; background: var(--border);
+      border-top: 1px solid var(--border); overflow-x: auto;
+    }
+    .hdr-stat {
+      flex: 1; min-width: 110px; background: var(--bg2);
+      padding: 8px 16px; display: flex; flex-direction: column; gap: 2px;
+    }
+    .hdr-stat-label {
+      font-size: 9px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .hdr-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px; font-weight: 700; line-height: 1.1;
+    }
+    .hdr-stat-ctx { font-size: 10px; color: var(--muted); }
+    .stat-neg { color: var(--z-sneg); }
+    .stat-pos { color: var(--z-mpos); }
+    .stat-neut { color: var(--z-neut1); }
     .updated { color: var(--muted); font-size: 11px; }
-    .status-open  { background: #1c3a20; color: #4ade80; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-    .status-closed{ background: #3a1c1c; color: #f87171; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-    .count-badge  { background: #1e3a5f; color: #60a5fa;  padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .meta { display: flex; align-items: center; gap: 12px; }
 
     /* ── Grid ───────────────────────────── */
     .grid {
@@ -71,103 +156,125 @@
     .card {
       background: var(--bg2);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
     .card-header {
       background: var(--bg3);
-      padding: 10px 14px;
-      font-weight: 600;
-      font-size: 12px;
-      letter-spacing: .5px;
+      padding: 9px 14px;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .07em;
       border-bottom: 1px solid var(--border);
       text-transform: uppercase;
+      color: var(--muted);
     }
     .card-body { padding: 10px; flex: 1; overflow-y: auto; }
     .scroll { max-height: 340px; }
-    .empty { color: var(--muted); font-style: italic; padding: 8px 4px; font-size: 12px; }
+    .empty { color: var(--muted2); font-style: italic; padding: 10px 4px; font-size: 12px; }
 
-    /* ── Signal rows ────────────────────── */
+    /* ── Signal / Alert rows ────────────────────── */
     .sig-row {
       display: grid;
-      grid-template-columns: 60px 1fr auto;
+      grid-template-columns: 54px 1fr auto;
       grid-template-rows: auto auto;
-      column-gap: 8px;
+      column-gap: 10px;
       row-gap: 2px;
-      padding: 7px 8px;
-      border-radius: 6px;
-      margin-bottom: 5px;
+      padding: 8px 10px 8px 0;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 4px;
       border-left: 3px solid transparent;
+      transition: background .12s;
     }
-    .sig-row.bull { background: #0f2d14; border-left-color: var(--bull-fg); }
-    .sig-row.bear { background: #2d0f0f; border-left-color: var(--bear-fg); }
-    .sig-row.neut { background: #2a2000; border-left-color: var(--neut-fg); }
+    .sig-row:hover { background: var(--bg-hover); }
+    .sig-row.bull { background: rgba(112,176,48,0.06); border-left-color: var(--z-mpos); }
+    .sig-row.bear { background: rgba(204,51,51,0.06); border-left-color: var(--z-sneg); }
+    .sig-row.neut { background: rgba(232,208,64,0.05); border-left-color: var(--z-neut1); }
 
+    /* ── Ticker badges (base + sector overrides) ── */
     .ticker-badge {
+      display: inline-block;
       background: var(--badge-bg);
       color: var(--badge-fg);
+      font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 2px 7px;
+      border-radius: 3px;
       white-space: nowrap;
-      align-self: center;
       text-align: center;
+      border: 1px solid rgba(148,163,184,0.2);
+      min-width: 44px;
     }
-    .sig-main  { font-size: 12px; line-height: 1.4; align-self: center; }
-    .sig-time  { color: var(--muted); font-size: 10px; white-space: nowrap; align-self: center; }
-    .ai-note   {
-      grid-column: 2 / 4;
-      color: var(--ai-fg);
-      font-size: 11px;
-      font-style: italic;
-      line-height: 1.3;
+    /* Mega-cap tech */
+    .tk-NVDA,.tk-AAPL,.tk-MSFT,.tk-GOOG,.tk-GOOGL,.tk-AMZN,.tk-META,.tk-ARM,.tk-MRVL {
+      background: rgba(59,130,246,0.13); color: #60A5FA;
+      border-color: rgba(59,130,246,0.28);
+    }
+    /* ETFs / Index */
+    .tk-SPY,.tk-QQQ,.tk-IWM,.tk-XLK,.tk-XLE,.tk-XLF,.tk-XLRE,.tk-XLV,.tk-XLI,.tk-XLP,.tk-XLU,.tk-XLB,.tk-XLY,.tk-TQQQ,.tk-SQQQ,.tk-SPXL,.tk-SPXS {
+      background: rgba(139,92,246,0.13); color: #A78BFA;
+      border-color: rgba(139,92,246,0.28);
+    }
+    /* High-vol singles */
+    .tk-TSLA,.tk-COIN,.tk-AMD,.tk-UBER,.tk-NFLX,.tk-GS,.tk-JPM {
+      background: rgba(245,158,11,0.13); color: #FBBF24;
+      border-color: rgba(245,158,11,0.28);
     }
 
-    /* ── GEX table ──────────────────────── */
+    .sig-main  { font-size: 12px; line-height: 1.4; align-self: center; color: var(--text); }
+    .sig-time  { color: var(--muted); font-size: 10px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; align-self: center; text-align: right; }
+    .ai-note   {
+      grid-column: 2 / 4;
+      color: var(--accent);
+      font-size: 11px;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* ── GEX Extremes table ──────────────────────── */
     .gex-tbl {
       width: 100%;
       border-collapse: collapse;
       margin-top: 12px;
       font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
     }
     .gex-tbl th {
       color: var(--muted);
       text-align: left;
-      padding: 4px 6px;
+      padding: 4px 8px;
       border-bottom: 1px solid var(--border);
-      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
     }
-    .gex-tr td { padding: 4px 6px; border-bottom: 1px solid #1e2530; }
-    .gex-tr.neg-gex { background: #2a0f0f; }
-    .gex-tr.pos-gex { background: #0f2a12; }
-    .trend { font-size: 14px; }
+    .gex-tr { transition: background .1s; cursor: default; }
+    .gex-tr:hover { background: var(--bg-hover) !important; }
+    .gex-tr td { padding: 5px 8px; border-bottom: 1px solid var(--bg3); }
+    .gex-tr.neg-gex { background: rgba(204,51,51,0.07); border-left: 2px solid var(--z-sneg); }
+    .gex-tr.pos-gex { background: rgba(112,176,48,0.07); border-left: 2px solid var(--z-mpos); }
+    .trend { font-size: 13px; }
 
     /* ── Footer ─────────────────────────── */
     footer {
       background: var(--bg2);
       border-top: 1px solid var(--border);
-      padding: 12px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
     }
-    .wl-badge {
-      background: #1c2840;
-      color: #94a3b8;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 10px;
+    .footer-tickers {
+      padding: 10px 24px 8px;
+      display: flex; flex-wrap: wrap; gap: 6px;
+      border-bottom: 1px solid var(--border2);
     }
-    .footer-right {
-      margin-left: auto;
-      color: var(--muted);
-      font-size: 11px;
+    .footer-bar {
+      padding: 10px 24px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
     }
+    .footer-credits { color: var(--muted); font-size: 11px; }
+    .footer-logo { height: 22px; width: auto; opacity: 0.8; margin-left: auto; }
+    .footer-disc { color: var(--muted2); font-size: 10px; }
+    .wl-badge { font-size: 10px; min-width: unset; padding: 1px 6px; }
 
     /* ── OVI full-width card ───────────────── */
     .ovi-full  { grid-column: 1 / -1; }
@@ -182,23 +289,24 @@
 
     .ovi-scroll { overflow-x: auto; }
     .ovi-tbl {
-      width: 100%; border-collapse: collapse;
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 11px; white-space: nowrap;
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; white-space: nowrap;
     }
     .ovi-tbl th {
-      color: var(--muted); text-align: right; padding: 3px 8px;
-      border-bottom: 1px solid var(--border); font-weight: 600;
-      background: var(--bg3);
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 6px 10px; text-align: right;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg3); position: sticky; top: 0;
     }
     .ovi-tbl th:first-child { text-align: left; }
-    .ovi-tbl td { padding: 3px 8px; text-align: right; border-bottom: 1px solid #1a1f27; }
-    .ovi-tbl td:first-child { text-align: left; }
-    .ovi-alt { background: #0d1117; }
-    .pct-pos  { color: #3fb950; }
-    .pct-neg  { color: #f85149; }
-    .pct-oi-high { color: #e3b341; }
-    .pct-na   { color: var(--muted); }
+    .ovi-tbl td { padding: 5px 10px; text-align: right; border-bottom: 1px solid var(--bg3); }
+    .ovi-tbl td:first-child { font-family: 'Inter', sans-serif; font-weight: 600; text-align: left; }
+    .ovi-tbl tr:nth-child(even) { background: rgba(255,255,255,0.012); }
+    .ovi-tbl tr:hover { background: var(--bg-hover); }
+    .ovi-alt { background: transparent; }
     .also-notable { color: var(--muted); font-size: 10px; padding: 2px 4px 6px; font-style: italic; }
     /* Index badges */
     .idx-badge { display: inline-block; margin-left: 3px; padding: 0 4px;
@@ -207,35 +315,48 @@
     .idx-badge.ndx   { background: #1a3a2a; color: #4ade80; }
     .idx-badge.rut   { background: #3a1a3a; color: #c084fc; }
     /* Extreme alerts */
-    .extreme-alerts-box { margin-bottom: 8px; }
-    .extreme-alert { background: #3a1a00; border-left: 3px solid #f97316;
-                      padding: 5px 10px; margin-bottom: 4px; border-radius: 4px;
-                      font-size: 12px; }
+    .extreme-alerts-box { margin-bottom: 10px; }
+    .extreme-alert {
+      background: var(--bg2); border-left: 3px solid var(--accent2);
+      border-radius: 0 4px 4px 0; padding: 8px 12px; margin-bottom: 5px;
+      display: flex; align-items: center; gap: 12px; font-size: 12px;
+      transition: background .12s;
+    }
+    .extreme-alert:hover { background: var(--bg-hover); }
+    .extreme-badge {
+      margin-left: 8px; padding: 1px 6px; border-radius: 3px; font-size: 9px;
+      font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      background: rgba(245,166,35,0.15); color: var(--accent2);
+      border: 1px solid rgba(245,166,35,0.3);
+    }
     /* Universe coverage line */
     .universe-coverage { color: var(--muted); font-size: 10px; padding: 2px 4px 6px;
                           font-style: italic; }
 
-    /* ── AI Analysis box ───────────────────── */
+    /* ── AI Analysis box (research note style) ─── */
     .ai-box {
-      margin-top: 12px; border: 1px solid #2d333b;
-      border-radius: 6px; background: #0d1117;
+      margin-top: 12px; border: 1px solid var(--border);
+      border-radius: 6px; background: var(--bg);
     }
     .ai-box-hdr {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 7px 12px; border-bottom: 1px solid #2d333b;
-      background: #161b22; border-radius: 6px 6px 0 0;
+      padding: 10px 16px; border-bottom: 1px solid var(--border);
+      background: var(--bg3); border-radius: 6px 6px 0 0;
     }
-    .ai-box-title { font-size: 10px; font-weight: 700; letter-spacing: .5px; color: var(--muted); }
+    .ai-box-title {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--accent);
+    }
     .ai-text {
-      margin: 0; padding: 10px 12px;
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 11px; line-height: 1.6; color: #c9d1d9;
+      margin: 0; padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; line-height: 1.65; color: var(--text);
       white-space: pre-wrap; word-wrap: break-word;
     }
-    .ai-ts { padding: 4px 12px 4px; font-size: 10px; color: var(--muted); }
+    .ai-ts { padding: 4px 16px; font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
     .ai-disclaimer {
-      padding: 3px 12px 8px; font-size: 9px; color: #484f58;
-      font-style: italic; border-top: 1px solid #1e2530; margin-top: 2px;
+      padding: 4px 16px 10px; font-size: 9px; color: var(--muted2);
+      font-style: italic; border-top: 1px solid var(--border2); margin-top: 4px;
     }
     .copy-btn {
       background: #21262d; color: #8b949e; border: 1px solid #30363d;
@@ -345,13 +466,44 @@
 <body>
 
 <header>
-  <h1>📈 Options Flow Dashboard</h1>
-  <div class="meta">
-    <span class="updated">Updated Mar 09 2026 14:35 ET</span>
-    <span class="status-open">OPEN</span>
-    <span class="count-badge">99 signals today</span>
+  <div class="hdr-top">
+    <div class="hdr-brand">
+      <img src="assets/LNlogo2.png" alt="Liquidnet" class="hdr-logo" onerror="this.style.display='none'">
+      <div class="hdr-title-wrap">
+        <div class="hdr-title">Options Flow Dashboard</div>
+        <div class="hdr-subtitle">Powered by Polygon.io + Claude</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <span class="hdr-time">Mar 09 2026 16:03 ET</span>
+      <span class="status-closed"><span class="market-dot"></span>CLOSED</span>
+    </div>
   </div>
-  <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
+  <div class="hdr-stats">
+    <div class="hdr-stat">
+      <div class="hdr-stat-label">Net GEX (SPY)</div>
+      <div class="hdr-stat-val stat-neg">$-1519.9M</div>
+      <div class="hdr-stat-ctx">put-dominated</div>
+    </div>
+    <div class="hdr-stat">
+      <div class="hdr-stat-label">Avg P/C Ratio</div>
+      <div class="hdr-stat-val stat-pos">0.24</div>
+      <div class="hdr-stat-ctx">call bias</div>
+    </div>
+    <div class="hdr-stat">
+      <div class="hdr-stat-label">Signals Today</div>
+      <div class="hdr-stat-val stat-neut">114</div>
+      <div class="hdr-stat-ctx">15 in last hour</div>
+    </div>
+    <div class="hdr-stat" style="flex:2;">
+      <div class="hdr-stat-label">Last Analysis</div>
+      <div class="hdr-stat-val" style="font-size:13px;color:var(--text);">15:34 ET</div>
+      <div class="hdr-stat-ctx">Flow Pulse scan</div>
+    </div>
+    <div class="hdr-stat" style="justify-content:center;align-items:center;display:flex;flex-direction:row;gap:0;">
+      <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
+    </div>
+  </div>
 </header>
 
 <div class="grid">
@@ -362,14 +514,14 @@
         <button onclick="exportPanel('ovi-panel','OVI_Table')" class="export-btn">📸 Save Table</button>
       </div>
       <div class="card-body">
-        <div class="extreme-alerts-box"><div class="extreme-alert">🚨 <strong>EXTREME:</strong> <span class="ticker-badge">GIII</span> <span class="pct-pos">+10860%</span> PUT vol vs 20d avg</div><div class="extreme-alert">🚨 <strong>EXTREME:</strong> <span class="ticker-badge">ADEA</span> <span class="pct-pos">+5669%</span> PUT vol vs 20d avg</div><div class="extreme-alert">🚨 <strong>EXTREME:</strong> <span class="ticker-badge">PAYO</span> <span class="pct-pos">+1633%</span> CALL vol vs 20d avg</div><div class="extreme-alert">🚨 <strong>EXTREME:</strong> <span class="ticker-badge">ECPG</span> <span class="pct-pos">+1504%</span> PUT vol vs 20d avg</div><div class="extreme-alert">🚨 <strong>EXTREME:</strong> <span class="ticker-badge">HLX</span> <span class="pct-pos">+1183%</span> PUT vol vs 20d avg</div></div>
-        <p class="universe-coverage">Scanned 1,218 tickers | 35 exceeded 50% threshold | Showing top 10 each side | SP500: 15 | NDX: 0 | RUT: 20</p>
+        <div class="extreme-alerts-box"><div class="extreme-alert"><span class="ticker-badge tk-GIII">GIII</span><div><strong style="color:#207020">+10860%</strong> PUT vs 20d avg<span class="extreme-badge">EXTREME SPIKE</span></div></div><div class="extreme-alert"><span class="ticker-badge tk-ADEA">ADEA</span><div><strong style="color:#207020">+7003%</strong> PUT vs 20d avg<span class="extreme-badge">EXTREME SPIKE</span></div></div><div class="extreme-alert"><span class="ticker-badge tk-PAYO">PAYO</span><div><strong style="color:#207020">+1637%</strong> CALL vs 20d avg<span class="extreme-badge">EXTREME SPIKE</span></div></div><div class="extreme-alert"><span class="ticker-badge tk-ECPG">ECPG</span><div><strong style="color:#207020">+1504%</strong> PUT vs 20d avg<span class="extreme-badge">EXTREME SPIKE</span></div></div><div class="extreme-alert"><span class="ticker-badge tk-WD">WD</span><div><strong style="color:#207020">+1423%</strong> CALL vs 20d avg<span class="extreme-badge">EXTREME SPIKE</span></div></div></div>
+        <p class="universe-coverage">Scanned 1,233 tickers | 48 exceeded 50% threshold | Showing top 10 each side | SP500: 22 | NDX: 2 | RUT: 26</p>
         <div class="ovi-section-lbl call-lbl">🟢 Top By Calls — Equity / ETF</div>
-        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>C Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>C OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">NAT</span><span class="idx-badge rut">R</span></td><td>32K</td><td>5K</td><td><span class="pct-pos">+542%</span></td><td>0.02</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>32K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">HLF</span><span class="idx-badge rut">R</span></td><td>9K</td><td>2K</td><td><span class="pct-pos">+336%</span></td><td>0.01</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>9K</td></tr><tr><td><span class="ticker-badge">HIMS</span><span class="idx-badge rut">R</span></td><td>322K</td><td>75K</td><td><span class="pct-pos">+329%</span></td><td>0.43</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>460K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">DCH</span><span class="idx-badge rut">R</span></td><td>8K</td><td>2K</td><td><span class="pct-pos">+275%</span></td><td>0.00</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>8K</td></tr><tr><td><span class="ticker-badge">GT</span><span class="idx-badge rut">R</span></td><td>13K</td><td>4K</td><td><span class="pct-pos">+239%</span></td><td>0.20</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>16K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">WFC</span><span class="idx-badge sp500">S</span></td><td>96K</td><td>33K</td><td><span class="pct-pos">+192%</span></td><td>0.34</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>129K</td></tr><tr><td><span class="ticker-badge">BLDR</span><span class="idx-badge sp500">S</span></td><td>6K</td><td>3K</td><td><span class="pct-pos">+132%</span></td><td>0.15</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>7K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">VERA</span><span class="idx-badge rut">R</span></td><td>3K</td><td>1K</td><td><span class="pct-pos">+127%</span></td><td>0.00</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>3K</td></tr><tr><td><span class="ticker-badge">KSS</span><span class="idx-badge rut">R</span></td><td>15K</td><td>7K</td><td><span class="pct-pos">+117%</span></td><td>0.89</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>28K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">PTEN</span><span class="idx-badge rut">R</span></td><td>3K</td><td>1K</td><td><span class="pct-pos">+109%</span></td><td>0.05</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>3K</td></tr></tbody></table></div>
-        <p class="also-notable">Also notable: ORC +94%, SHOO +94%, GRAL +84%, C +70%, PPTA +68%</p>
+        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>C Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>C OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge tk-NAT">NAT</span><span class="idx-badge rut">R</span></td><td>53K</td><td>5K</td><td><span style="color:#207020;font-weight:600">+986%</span></td><td>0.01</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>54K</td></tr><tr><td><span class="ticker-badge tk-HIMS">HIMS</span><span class="idx-badge rut">R</span></td><td>338K</td><td>75K</td><td><span style="color:#207020;font-weight:600">+350%</span></td><td>0.45</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>490K</td></tr><tr><td><span class="ticker-badge tk-HLF">HLF</span><span class="idx-badge rut">R</span></td><td>9K</td><td>2K</td><td><span style="color:#207020;font-weight:600">+338%</span></td><td>0.01</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>9K</td></tr><tr><td><span class="ticker-badge tk-CME">CME</span><span class="idx-badge sp500">S</span></td><td>12K</td><td>3K</td><td><span style="color:#207020;font-weight:600">+293%</span></td><td>0.18</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>14K</td></tr><tr><td><span class="ticker-badge tk-DCH">DCH</span><span class="idx-badge rut">R</span></td><td>8K</td><td>2K</td><td><span style="color:#207020;font-weight:600">+277%</span></td><td>0.00</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>8K</td></tr><tr><td><span class="ticker-badge tk-LEN">LEN</span><span class="idx-badge sp500">S</span></td><td>24K</td><td>7K</td><td><span style="color:#207020;font-weight:600">+262%</span></td><td>0.19</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>29K</td></tr><tr><td><span class="ticker-badge tk-GT">GT</span><span class="idx-badge rut">R</span></td><td>13K</td><td>4K</td><td><span style="color:#207020;font-weight:600">+245%</span></td><td>0.20</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>16K</td></tr><tr><td><span class="ticker-badge tk-DX">DX</span><span class="idx-badge rut">R</span></td><td>3K</td><td>815</td><td><span style="color:#207020;font-weight:600">+231%</span></td><td>0.23</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>3K</td></tr><tr><td><span class="ticker-badge tk-WFC">WFC</span><span class="idx-badge sp500">S</span></td><td>105K</td><td>33K</td><td><span style="color:#207020;font-weight:600">+218%</span></td><td>0.39</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>146K</td></tr><tr><td><span class="ticker-badge tk-KSS">KSS</span><span class="idx-badge rut">R</span></td><td>21K</td><td>7K</td><td><span style="color:#207020;font-weight:600">+210%</span></td><td>0.76</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>37K</td></tr></tbody></table></div>
+        <p class="also-notable">Also notable: SPG +170%, ABR +163%, BLDR +134%, VERA +133%, PTEN +119%</p>
         <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
-        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>P Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>P OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge">TAP</span><span class="idx-badge sp500">S</span></td><td>6K</td><td>699</td><td><span class="pct-pos">+719%</span></td><td>38.17</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>6K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">XENE</span><span class="idx-badge rut">R</span></td><td>23K</td><td>4K</td><td><span class="pct-pos">+423%</span></td><td>2.76</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>32K</td></tr><tr><td><span class="ticker-badge">ROK</span><span class="idx-badge sp500">S</span></td><td>3K</td><td>721</td><td><span class="pct-pos">+382%</span></td><td>36.98</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>4K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">ARR</span><span class="idx-badge rut">R</span></td><td>4K</td><td>862</td><td><span class="pct-pos">+357%</span></td><td>1.31</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>7K</td></tr><tr><td><span class="ticker-badge">LOW</span><span class="idx-badge sp500">S</span></td><td>19K</td><td>5K</td><td><span class="pct-pos">+272%</span></td><td>11.89</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>21K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">VMC</span><span class="idx-badge sp500">S</span></td><td>3K</td><td>953</td><td><span class="pct-pos">+233%</span></td><td>7.68</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>4K</td></tr><tr><td><span class="ticker-badge">HPE</span><span class="idx-badge sp500">S</span></td><td>19K</td><td>6K</td><td><span class="pct-pos">+219%</span></td><td>1.21</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>34K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">OLMA</span><span class="idx-badge rut">R</span></td><td>3K</td><td>1K</td><td><span class="pct-pos">+195%</span></td><td>2.41</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>5K</td></tr><tr><td><span class="ticker-badge">HIMS</span><span class="idx-badge rut">R</span></td><td>138K</td><td>53K</td><td><span class="pct-pos">+161%</span></td><td>0.43</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>460K</td></tr><tr class="ovi-alt"><td><span class="ticker-badge">HD</span><span class="idx-badge sp500">S</span></td><td>23K</td><td>9K</td><td><span class="pct-pos">+141%</span></td><td>3.04</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span class="pct-na">n/a</span></td><td>30K</td></tr></tbody></table></div>
-        <p class="also-notable">Also notable: AES +92%, SRRK +89%, NKE +80%, WULF +67%, PII +60%</p>
+        <div class="ovi-scroll"><table class="ovi-tbl"><thead><tr><th>Security</th><th>P Vol</th><th>Avg</th><th>%Chg</th><th>P/C</th><th>Price</th><th>Px%Chg</th><th>P OI</th><th>Avg OI</th><th>OI%Chg</th><th>Opt Vol</th></tr></thead><tbody><tr><td><span class="ticker-badge tk-TAP">TAP</span><span class="idx-badge sp500">S</span></td><td>6K</td><td>699</td><td><span style="color:#207020;font-weight:600">+721%</span></td><td>31.02</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>6K</td></tr><tr><td><span class="ticker-badge tk-HPE">HPE</span><span class="idx-badge sp500">S</span></td><td>36K</td><td>6K</td><td><span style="color:#207020;font-weight:600">+512%</span></td><td>1.32</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>63K</td></tr><tr><td><span class="ticker-badge tk-XENE">XENE</span><span class="idx-badge rut">R</span></td><td>23K</td><td>4K</td><td><span style="color:#207020;font-weight:600">+426%</span></td><td>2.76</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>32K</td></tr><tr><td><span class="ticker-badge tk-ROK">ROK</span><span class="idx-badge sp500">S</span></td><td>3K</td><td>721</td><td><span style="color:#207020;font-weight:600">+383%</span></td><td>17.61</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>4K</td></tr><tr><td><span class="ticker-badge tk-ARR">ARR</span><span class="idx-badge rut">R</span></td><td>4K</td><td>862</td><td><span style="color:#207020;font-weight:600">+364%</span></td><td>1.31</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>7K</td></tr><tr><td><span class="ticker-badge tk-LOW">LOW</span><span class="idx-badge sp500">S</span></td><td>19K</td><td>5K</td><td><span style="color:#207020;font-weight:600">+275%</span></td><td>10.04</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>21K</td></tr><tr><td><span class="ticker-badge tk-VMC">VMC</span><span class="idx-badge sp500">S</span></td><td>3K</td><td>953</td><td><span style="color:#207020;font-weight:600">+239%</span></td><td>6.67</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>4K</td></tr><tr><td><span class="ticker-badge tk-OLMA">OLMA</span><span class="idx-badge rut">R</span></td><td>3K</td><td>1K</td><td><span style="color:#409030;font-weight:600">+198%</span></td><td>2.41</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>5K</td></tr><tr><td><span class="ticker-badge tk-HIMS">HIMS</span><span class="idx-badge rut">R</span></td><td>153K</td><td>53K</td><td><span style="color:#409030;font-weight:600">+189%</span></td><td>0.45</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>490K</td></tr><tr><td><span class="ticker-badge tk-HD">HD</span><span class="idx-badge sp500">S</span></td><td>23K</td><td>9K</td><td><span style="color:#409030;font-weight:600">+147%</span></td><td>2.79</td><td>—</td><td><span class="pct-na">—</span></td><td>0</td><td>—</td><td><span style="color:#484F58">n/a</span></td><td>32K</td></tr></tbody></table></div>
+        <p class="also-notable">Also notable: AES +93%, SRRK +89%, NKE +89%, BANC +81%, WULF +77%</p>
         <div class="ctx-section"><button class="ctx-toggle" onclick="toggleCtx(event)">📰 Context fed to AI ▼</button><pre id="ctx-text" class="ctx-text">MARKET CONTEXT (recent headlines):
 - [marketwatch] Short-term Treasury yields climb as investors fear the surge in oil prices and risk of stagflation
 - [marketwatch] Higher oil prices will push U.S. inflation rate to 3% this year, El-Erian says
@@ -377,38 +529,46 @@
 - [ft_markets] Crude oil price shock inflicts pain on motorists around world
 - [Benzinga] [SPY, QQQ, HIMS] Stock Market Today: Dow, Nasdaq 100, S&amp;P 500 Futures Plunge As Oil Prices Jump, Trump Dismisses &#x27;Short Term&#x27; Spike— Hims &amp; Hers In Focus (UPDATED)
 - [marketwatch] Gold prices end lower as investors, rattled by Iran conflict, continue to shelter in the dollar
-- [marketwatch] Airline stocks dive as oil-price spike could trigger a tipping point for travelers
-- [cnbc_markets] Fears of 1970s-style stagflation arise with oil spike to $100. How big a threat is it?</pre></div>
+- [cnbc_markets] Fears of 1970s-style stagflation arise with oil spike to $100. How big a threat is it?
+- [ft_markets] Oil slips back below $100 a barrel</pre></div>
         <div id="flow-pulse-panel" class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
             <div style="display:flex;gap:6px;align-items:center;">
-              <button id="copy-btn" class="copy-btn" data-ts="14:25 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+              <button id="copy-btn" class="copy-btn" data-ts="15:34 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
               <button onclick="exportPanel('flow-pulse-panel','Flow_Pulse')" class="export-btn">📸 Save Analysis</button>
             </div>
           </div>
-          <pre id="ai-text" class="ai-text">OPTIONS FLOW PULSE | March 09, 2026 | 2:25 PM ET
+          <pre id="ai-text" class="ai-text">OPTIONS FLOW PULSE | March 09, 2026 | 3:34 PM ET
 
 HEADLINE:
-Oil shock fears drive defensive positioning across materials and consumer discretionary names while small-cap energy calls surge, suggesting tactical plays amid broader market caution.
+Call demand dominates oil-exposed sectors while defensive positioning clusters in consumer discretionary and tech names, suggesting selective hedging rather than broad risk-off repositioning.
 
 CALL FLOW ANALYSIS:
-Small-cap energy names dominate the call side — NAT (+542%) and HLF (+336%) lead with extremely low P/C ratios of 0.02 and 0.01 respectively, consistent with directional upside plays on the oil spike. HIMS call volume runs +329% above baseline with a 0.43 P/C, suggesting mixed positioning rather than pure bullish conviction. The energy theme extends to PTEN (+109%) in oilfield services. Outside energy, WFC banking calls (+192%, 0.34 P/C) look more like tactical rotation rather than sector conviction given the mixed flow profile. The Russell-heavy composition (20 of 35 elevated tickers) points to small-cap specific opportunities rather than broad market optimism.
+Single name call flow is concentrated in energy and commodity-exposed sectors, consistent with directional positioning around the oil price shock. NAT (P/C: 0.01) and HLF (P/C: 0.01) show overwhelming call dominance at +986% and +338% above baseline respectively. Energy infrastructure and shipping names are seeing targeted upside participation, which looks more like event-driven positioning than broad sector rotation. 
+
+Financial call flow in CME (+293%, P/C: 0.18) and WFC (+218%, P/C: 0.39) suggests positioning around volatility beneficiaries rather than credit cycle plays. Construction-related LEN (+262%, P/C: 0.19) call demand appears disconnected from the macro backdrop, pointing to name-specific factors.
+
+HIMS (+350% calls, +189% puts, P/C: 0.45) represents the session&#x27;s clearest two-way flow, consistent with volatility demand around a specific catalyst rather than directional conviction.
 
 PUT FLOW ANALYSIS:
-Defensive flow concentrates in materials and consumer-facing names most vulnerable to stagflation concerns. TAP beverage puts spike +719% with a 38.17 P/C, suggesting targeted downside expression rather than hedge activity. Home improvement retailers show significant put demand — LOW +272% and HD +141% — consistent with consumer spending concerns as oil prices pressure discretionary income. Materials names ROK (+382%) and VMC (+233%) see elevated put activity, likely reflecting input cost pressures. The single-name concentration suggests event-specific concerns rather than broad portfolio hedging, though the consumer discretionary clustering is worth noting if it broadens.
+Put demand is more scattered across sectors, suggesting selective de-risking rather than systematic portfolio hedging. Consumer discretionary names TAP (P/C: 31.02) and LOW (P/C: 10.04) show concentrated defensive positioning, which is consistent with margin compression concerns from higher input costs.
+
+Technology put flows in HPE (+512%, P/C: 1.32) and HIMS (+189% puts) appear more tactical than the broad-based defensive positioning typical of macro regime shifts. The absence of significant index ETF put demand reinforces that current defensive flows look contained to specific names rather than reflecting broad portfolio protection needs.
+
+Home improvement retailers HD (+147% puts, P/C: 2.79) and LOW (+275% puts) clustering suggests sector-specific concern about consumer spending under higher energy costs.
 
 SECOND ORDER EFFECTS:
-The two-way flow in HIMS (calls +329%, puts +161%) and MGY (calls +413%, puts +955%) is consistent with volatility demand around specific events rather than directional conviction. Without GEX data, the gamma implications remain unclear, but the concentration in smaller-cap names suggests limited systematic market impact. The energy call surge would matter more if confirmed by strike concentration data showing persistent positioning rather than day-trading activity.
+The concentration of call flow in commodity-exposed names while defensive positioning remains name-specific suggests traders are positioning for dispersion rather than broad directional moves. Without accompanying index ETF defensive flows, current put demand appears more tactical than structural. This setup would become more significant if defensive positioning broadens into growth sectors or if index put demand materializes, signaling transition from stock-picking environment to macro hedging regime.
 
 TRADE FRAMEWORK:
-The cleaner expression is relative — watch whether oil-sensitive consumer names broaden their put demand before sizing into retail/materials downside structures. The energy call theme looks more tactical than structural given the small-cap concentration.</pre>
-          <div class="ai-ts">Analysis as of 14:25 ET</div>
+The cleaner expression is relative — watch whether energy sector call flow sustains above baseline levels while monitoring if consumer discretionary put demand broadens beyond current retail concentration before sizing into directional energy exposure.</pre>
+          <div class="ai-ts">Analysis as of 15:34 ET</div>
           <div class="ai-disclaimer">Flow observations only. Inferences require confirmation from strike, tenor, and opening/closing data.</div>
         </div>
       </div>
     </div>
-  <div id="gex-chart-panel" class="card gex-viz-full"><div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><span>⚡ GAMMA EXPOSURE — STRIKE BREAKDOWN</span><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><button id="gex-toggle-net" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('net')" title="Toggle net GEX vs split call/put bars">Net GEX</button><button id="gex-toggle-levels" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('levels')" title="Show/hide key gamma levels">Key Levels</button><button id="gex-toggle-zdte" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('zdte')" title="Show/hide 0DTE gamma">0DTE</button><button onclick="exportPanel('gex-chart-panel','GEX_Chart')" class="export-btn">📸 Save Chart</button></div></div><div class="card-body"><div class="gex-tabs"><button class="gex-tab  gex-tab-active" data-t="SPY" onclick="switchGexTicker('SPY')">SPY</button><button class="gex-tab" data-t="QQQ" onclick="switchGexTicker('QQQ')">QQQ</button><button class="gex-tab" data-t="SPX" onclick="switchGexTicker('SPX')">SPX</button></div><div id="gex-regime-box" class="gex-regime-box">Loading…</div><div id="gex-key-levels-bar" class="gex-key-levels-bar"></div><div class="gex-chart-grid"><div><div class="gex-sub-lbl">GEX by Strike</div><div id="gex-strike-chart"></div></div><div><div class="gex-sub-lbl">Intraday Price Path</div><div id="gex-price-chart"></div></div><div id="gex-zdte-col"><div class="gex-sub-lbl">0DTE Gamma</div><div id="gex-0dte-chart"></div></div></div><div class="gex-heatmap-section"><div class="gex-sub-lbl">GEX Heatmap — Strike Profile Over Time</div><div id="gex-heatmap-chart" class="gex-heatmap-canvas-wrap"></div></div></div></div><script>const GEX_DATA = {"SPY": {"ticker": "SPY", "spot": 669.41, "net_gex_m": -2165.01, "regime": "negative", "regime_summary": "Negative GEX  $-2165.0M \u2014 Dealer long gamma \u2192 mean-reversion, vol expansion", "stability_pct": 36.5, "strikes": [{"strike": 639.0, "call_gex_m": 0.1539, "put_gex_m": 8.3011, "net_gex_m": -8.1472}, {"strike": 640.0, "call_gex_m": 7.4676, "put_gex_m": 98.324, "net_gex_m": -90.8564}, {"strike": 641.0, "call_gex_m": 0.535, "put_gex_m": 12.0213, "net_gex_m": -11.4864}, {"strike": 642.0, "call_gex_m": 0.0359, "put_gex_m": 7.445, "net_gex_m": -7.4091}, {"strike": 643.0, "call_gex_m": 0.0339, "put_gex_m": 7.9828, "net_gex_m": -7.9489}, {"strike": 644.0, "call_gex_m": 0.0772, "put_gex_m": 18.4242, "net_gex_m": -18.3469}, {"strike": 645.0, "call_gex_m": 6.6351, "put_gex_m": 101.7971, "net_gex_m": -95.1619}, {"strike": 646.0, "call_gex_m": 0.1439, "put_gex_m": 26.0741, "net_gex_m": -25.9303}, {"strike": 647.0, "call_gex_m": 0.4055, "put_gex_m": 8.7526, "net_gex_m": -8.3471}, {"strike": 648.0, "call_gex_m": 0.392, "put_gex_m": 20.2003, "net_gex_m": -19.8083}, {"strike": 649.0, "call_gex_m": 0.1666, "put_gex_m": 15.6709, "net_gex_m": -15.5043}, {"strike": 650.0, "call_gex_m": 30.1353, "put_gex_m": 190.5537, "net_gex_m": -160.4184}, {"strike": 651.0, "call_gex_m": 0.5335, "put_gex_m": 20.6182, "net_gex_m": -20.0847}, {"strike": 652.0, "call_gex_m": 0.2531, "put_gex_m": 23.5594, "net_gex_m": -23.3063}, {"strike": 653.0, "call_gex_m": 0.2388, "put_gex_m": 26.055, "net_gex_m": -25.8162}, {"strike": 654.0, "call_gex_m": 0.2045, "put_gex_m": 33.1644, "net_gex_m": -32.9599}, {"strike": 655.0, "call_gex_m": 6.8072, "put_gex_m": 119.3175, "net_gex_m": -112.5103}, {"strike": 656.0, "call_gex_m": 0.6404, "put_gex_m": 19.4298, "net_gex_m": -18.7894}, {"strike": 657.0, "call_gex_m": 0.3385, "put_gex_m": 40.8941, "net_gex_m": -40.5557}, {"strike": 658.0, "call_gex_m": 0.1574, "put_gex_m": 27.0074, "net_gex_m": -26.8501}, {"strike": 659.0, "call_gex_m": 0.2459, "put_gex_m": 27.9043, "net_gex_m": -27.6584}, {"strike": 660.0, "call_gex_m": 26.2739, "put_gex_m": 267.5372, "net_gex_m": -241.2633}, {"strike": 661.0, "call_gex_m": 0.4672, "put_gex_m": 16.3643, "net_gex_m": -15.8971}, {"strike": 662.0, "call_gex_m": 1.3089, "put_gex_m": 28.552, "net_gex_m": -27.2431}, {"strike": 663.0, "call_gex_m": 1.4964, "put_gex_m": 23.2457, "net_gex_m": -21.7493}, {"strike": 664.0, "call_gex_m": 1.1792, "put_gex_m": 27.9041, "net_gex_m": -26.7248}, {"strike": 665.0, "call_gex_m": 24.6005, "put_gex_m": 139.8796, "net_gex_m": -115.2791}, {"strike": 666.0, "call_gex_m": 2.6844, "put_gex_m": 38.5756, "net_gex_m": -35.8912}, {"strike": 667.0, "call_gex_m": 6.3249, "put_gex_m": 38.4776, "net_gex_m": -32.1527}, {"strike": 668.0, "call_gex_m": 17.5786, "put_gex_m": 57.5828, "net_gex_m": -40.0042}, {"strike": 669.0, "call_gex_m": 11.6706, "put_gex_m": 52.9281, "net_gex_m": -41.2575}, {"strike": 670.0, "call_gex_m": 85.3489, "put_gex_m": 304.9057, "net_gex_m": -219.5568}, {"strike": 671.0, "call_gex_m": 42.5754, "put_gex_m": 61.9546, "net_gex_m": -19.3792}, {"strike": 672.0, "call_gex_m": 35.5777, "put_gex_m": 55.5503, "net_gex_m": -19.9726}, {"strike": 673.0, "call_gex_m": 33.533, "put_gex_m": 42.1879, "net_gex_m": -8.6549}, {"strike": 674.0, "call_gex_m": 30.444, "put_gex_m": 37.189, "net_gex_m": -6.745}, {"strike": 675.0, "call_gex_m": 70.2515, "put_gex_m": 244.9733, "net_gex_m": -174.7219}, {"strike": 676.0, "call_gex_m": 24.8954, "put_gex_m": 18.5766, "net_gex_m": 6.3188}, {"strike": 677.0, "call_gex_m": 20.15, "put_gex_m": 28.5002, "net_gex_m": -8.3502}, {"strike": 678.0, "call_gex_m": 19.6912, "put_gex_m": 33.4894, "net_gex_m": -13.7982}, {"strike": 679.0, "call_gex_m": 18.5322, "put_gex_m": 27.6541, "net_gex_m": -9.1219}, {"strike": 680.0, "call_gex_m": 84.5223, "put_gex_m": 150.8153, "net_gex_m": -66.293}, {"strike": 692.0, "call_gex_m": 13.8074, "put_gex_m": 6.3557, "net_gex_m": 7.4517}, {"strike": 694.0, "call_gex_m": 14.0766, "put_gex_m": 4.7816, "net_gex_m": 9.295}, {"strike": 695.0, "call_gex_m": 43.0555, "put_gex_m": 25.8974, "net_gex_m": 17.1581}, {"strike": 697.0, "call_gex_m": 14.0103, "put_gex_m": 3.9339, "net_gex_m": 10.0764}, {"strike": 698.0, "call_gex_m": 12.0676, "put_gex_m": 4.3543, "net_gex_m": 7.7133}, {"strike": 699.0, "call_gex_m": 8.8367, "put_gex_m": 2.1613, "net_gex_m": 6.6755}, {"strike": 700.0, "call_gex_m": 81.6592, "put_gex_m": 31.6129, "net_gex_m": 50.0463}, {"strike": 701.0, "call_gex_m": 9.6377, "put_gex_m": 0.9315, "net_gex_m": 8.7062}], "zdtes": [{"strike": 636.0, "call_gex_m": 0.0, "put_gex_m": 0.0612, "net_gex_m": -0.0612}, {"strike": 637.0, "call_gex_m": 0.0, "put_gex_m": 0.1009, "net_gex_m": -0.1009}, {"strike": 638.0, "call_gex_m": 0.0, "put_gex_m": 0.0935, "net_gex_m": -0.0935}, {"strike": 639.0, "call_gex_m": 0.0, "put_gex_m": 0.6642, "net_gex_m": -0.6642}, {"strike": 640.0, "call_gex_m": 0.0, "put_gex_m": 0.6955, "net_gex_m": -0.6955}, {"strike": 641.0, "call_gex_m": 0.0, "put_gex_m": 0.0646, "net_gex_m": -0.0646}, {"strike": 642.0, "call_gex_m": 0.0, "put_gex_m": 0.1303, "net_gex_m": -0.1303}, {"strike": 643.0, "call_gex_m": 0.0, "put_gex_m": 0.0537, "net_gex_m": -0.0537}, {"strike": 644.0, "call_gex_m": 0.0, "put_gex_m": 0.2548, "net_gex_m": -0.2548}, {"strike": 645.0, "call_gex_m": 0.0, "put_gex_m": 1.0078, "net_gex_m": -1.0078}, {"strike": 646.0, "call_gex_m": 0.0, "put_gex_m": 0.1199, "net_gex_m": -0.1199}, {"strike": 647.0, "call_gex_m": 0.0, "put_gex_m": 0.1757, "net_gex_m": -0.1757}, {"strike": 648.0, "call_gex_m": 0.0, "put_gex_m": 0.2238, "net_gex_m": -0.2238}, {"strike": 649.0, "call_gex_m": 0.0, "put_gex_m": 0.2606, "net_gex_m": -0.2606}, {"strike": 650.0, "call_gex_m": 0.0, "put_gex_m": 3.0823, "net_gex_m": -3.0823}, {"strike": 651.0, "call_gex_m": 0.0, "put_gex_m": 0.4556, "net_gex_m": -0.4556}, {"strike": 652.0, "call_gex_m": 0.0, "put_gex_m": 0.5022, "net_gex_m": -0.5022}, {"strike": 653.0, "call_gex_m": 0.0, "put_gex_m": 0.7181, "net_gex_m": -0.7181}, {"strike": 654.0, "call_gex_m": 0.0, "put_gex_m": 1.9002, "net_gex_m": -1.9002}, {"strike": 655.0, "call_gex_m": 0.0, "put_gex_m": 4.2027, "net_gex_m": -4.2027}, {"strike": 656.0, "call_gex_m": 0.0, "put_gex_m": 0.6583, "net_gex_m": -0.6583}, {"strike": 657.0, "call_gex_m": 0.0, "put_gex_m": 8.529, "net_gex_m": -8.529}, {"strike": 658.0, "call_gex_m": 0.0, "put_gex_m": 1.7854, "net_gex_m": -1.7854}, {"strike": 659.0, "call_gex_m": 0.0, "put_gex_m": 1.6538, "net_gex_m": -1.6538}, {"strike": 660.0, "call_gex_m": 0.0, "put_gex_m": 14.2797, "net_gex_m": -14.2797}, {"strike": 661.0, "call_gex_m": 0.0, "put_gex_m": 4.1759, "net_gex_m": -4.1759}, {"strike": 662.0, "call_gex_m": 0.0, "put_gex_m": 3.6137, "net_gex_m": -3.6137}, {"strike": 663.0, "call_gex_m": 0.0, "put_gex_m": 4.9679, "net_gex_m": -4.9679}, {"strike": 664.0, "call_gex_m": 0.0, "put_gex_m": 10.229, "net_gex_m": -10.229}, {"strike": 665.0, "call_gex_m": 0.9112, "put_gex_m": 41.5151, "net_gex_m": -40.6039}, {"strike": 666.0, "call_gex_m": 0.9241, "put_gex_m": 17.0391, "net_gex_m": -16.115}, {"strike": 667.0, "call_gex_m": 1.3059, "put_gex_m": 21.5258, "net_gex_m": -20.2198}, {"strike": 668.0, "call_gex_m": 11.5013, "put_gex_m": 32.6725, "net_gex_m": -21.1711}, {"strike": 669.0, "call_gex_m": 7.6251, "put_gex_m": 31.2429, "net_gex_m": -23.6178}, {"strike": 670.0, "call_gex_m": 29.6417, "put_gex_m": 110.9215, "net_gex_m": -81.2798}, {"strike": 671.0, "call_gex_m": 31.9055, "put_gex_m": 40.6539, "net_gex_m": -8.7484}, {"strike": 672.0, "call_gex_m": 20.3663, "put_gex_m": 29.2278, "net_gex_m": -8.8615}, {"strike": 673.0, "call_gex_m": 18.7012, "put_gex_m": 19.0285, "net_gex_m": -0.3274}, {"strike": 674.0, "call_gex_m": 14.5753, "put_gex_m": 16.9037, "net_gex_m": -2.3284}, {"strike": 675.0, "call_gex_m": 20.0867, "put_gex_m": 23.0025, "net_gex_m": -2.9158}, {"strike": 676.0, "call_gex_m": 2.9872, "put_gex_m": 1.9895, "net_gex_m": 0.9977}, {"strike": 677.0, "call_gex_m": 1.4, "put_gex_m": 3.2272, "net_gex_m": -1.8272}, {"strike": 678.0, "call_gex_m": 2.3346, "put_gex_m": 3.0882, "net_gex_m": -0.7536}, {"strike": 679.0, "call_gex_m": 0.9834, "put_gex_m": 3.7068, "net_gex_m": -2.7234}, {"strike": 680.0, "call_gex_m": 4.3485, "put_gex_m": 4.5312, "net_gex_m": -0.1827}, {"strike": 681.0, "call_gex_m": 1.5212, "put_gex_m": 2.8354, "net_gex_m": -1.3142}, {"strike": 682.0, "call_gex_m": 1.6607, "put_gex_m": 1.4239, "net_gex_m": 0.2368}, {"strike": 683.0, "call_gex_m": 1.5906, "put_gex_m": 1.262, "net_gex_m": 0.3286}, {"strike": 684.0, "call_gex_m": 1.3067, "put_gex_m": 0.8512, "net_gex_m": 0.4555}, {"strike": 685.0, "call_gex_m": 2.3236, "put_gex_m": 2.4921, "net_gex_m": -0.1685}, {"strike": 686.0, "call_gex_m": 0.7363, "put_gex_m": 1.2154, "net_gex_m": -0.4791}, {"strike": 687.0, "call_gex_m": 0.9065, "put_gex_m": 0.9383, "net_gex_m": -0.0318}, {"strike": 688.0, "call_gex_m": 3.4496, "put_gex_m": 0.6406, "net_gex_m": 2.8089}, {"strike": 689.0, "call_gex_m": 3.6442, "put_gex_m": 0.292, "net_gex_m": 3.3522}, {"strike": 690.0, "call_gex_m": 2.6892, "put_gex_m": 0.0, "net_gex_m": 2.6892}, {"strike": 691.0, "call_gex_m": 0.4838, "put_gex_m": 0.0074, "net_gex_m": 0.4763}, {"strike": 692.0, "call_gex_m": 1.0547, "put_gex_m": 0.0004, "net_gex_m": 1.0544}, {"strike": 693.0, "call_gex_m": 0.5835, "put_gex_m": 0.0, "net_gex_m": 0.5835}, {"strike": 694.0, "call_gex_m": 0.5197, "put_gex_m": 0.0, "net_gex_m": 0.5197}, {"strike": 695.0, "call_gex_m": 0.5907, "put_gex_m": 0.0082, "net_gex_m": 0.5824}, {"strike": 696.0, "call_gex_m": 0.4376, "put_gex_m": 0.0, "net_gex_m": 0.4376}, {"strike": 697.0, "call_gex_m": 1.1399, "put_gex_m": 0.0, "net_gex_m": 1.1399}, {"strike": 698.0, "call_gex_m": 0.446, "put_gex_m": 0.0042, "net_gex_m": 0.4418}, {"strike": 699.0, "call_gex_m": 0.3376, "put_gex_m": 0.0, "net_gex_m": 0.3376}, {"strike": 700.0, "call_gex_m": 0.5573, "put_gex_m": 0.0056, "net_gex_m": 0.5517}, {"strike": 701.0, "call_gex_m": 0.179, "put_gex_m": 0.0, "net_gex_m": 0.179}, {"strike": 702.0, "call_gex_m": 1.0294, "put_gex_m": 0.0, "net_gex_m": 1.0294}], "key_strikes": [640.0, 645.0, 650.0, 655.0, 660.0, 665.0, 670.0, 675.0], "price_bars": [], "flip_point": 676.0, "put_wall": 670.0, "call_wall": 685.0, "max_gamma_strike": 660.0}, "QQQ": {"ticker": "QQQ", "spot": 599.28, "net_gex_m": -86.29, "regime": "negative", "regime_summary": "Negative GEX  $-86.3M \u2014 Dealer long gamma \u2192 mean-reversion, vol expansion", "stability_pct": 99.2, "strikes": [{"strike": 570.0, "call_gex_m": 0.0026, "put_gex_m": 0.3675, "net_gex_m": -0.3649}, {"strike": 575.0, "call_gex_m": 0.0045, "put_gex_m": 0.5788, "net_gex_m": -0.5742}, {"strike": 577.0, "call_gex_m": 0.0, "put_gex_m": 0.2566, "net_gex_m": -0.2566}, {"strike": 579.0, "call_gex_m": 0.0005, "put_gex_m": 0.2685, "net_gex_m": -0.268}, {"strike": 580.0, "call_gex_m": 0.0262, "put_gex_m": 2.3659, "net_gex_m": -2.3397}, {"strike": 582.0, "call_gex_m": 0.0026, "put_gex_m": 0.4397, "net_gex_m": -0.437}, {"strike": 583.0, "call_gex_m": 0.0015, "put_gex_m": 0.5335, "net_gex_m": -0.532}, {"strike": 584.0, "call_gex_m": 0.0025, "put_gex_m": 0.3911, "net_gex_m": -0.3885}, {"strike": 585.0, "call_gex_m": 0.0609, "put_gex_m": 1.6247, "net_gex_m": -1.5638}, {"strike": 586.0, "call_gex_m": 0.0245, "put_gex_m": 0.4909, "net_gex_m": -0.4664}, {"strike": 587.0, "call_gex_m": 0.0092, "put_gex_m": 0.8007, "net_gex_m": -0.7915}, {"strike": 588.0, "call_gex_m": 0.0341, "put_gex_m": 1.3851, "net_gex_m": -1.351}, {"strike": 589.0, "call_gex_m": 0.0264, "put_gex_m": 0.9052, "net_gex_m": -0.8788}, {"strike": 590.0, "call_gex_m": 0.161, "put_gex_m": 5.6117, "net_gex_m": -5.4507}, {"strike": 591.0, "call_gex_m": 0.0184, "put_gex_m": 2.0905, "net_gex_m": -2.0721}, {"strike": 592.0, "call_gex_m": 0.7773, "put_gex_m": 3.4572, "net_gex_m": -2.6799}, {"strike": 593.0, "call_gex_m": 0.1577, "put_gex_m": 5.1193, "net_gex_m": -4.9616}, {"strike": 594.0, "call_gex_m": 0.2056, "put_gex_m": 5.9173, "net_gex_m": -5.7117}, {"strike": 595.0, "call_gex_m": 2.1927, "put_gex_m": 21.2797, "net_gex_m": -19.087}, {"strike": 596.0, "call_gex_m": 2.0915, "put_gex_m": 7.9135, "net_gex_m": -5.822}, {"strike": 597.0, "call_gex_m": 2.722, "put_gex_m": 14.2114, "net_gex_m": -11.4894}, {"strike": 598.0, "call_gex_m": 10.4987, "put_gex_m": 25.8029, "net_gex_m": -15.3042}, {"strike": 599.0, "call_gex_m": 12.7658, "put_gex_m": 20.9246, "net_gex_m": -8.1588}, {"strike": 600.0, "call_gex_m": 43.0657, "put_gex_m": 94.2258, "net_gex_m": -51.16}, {"strike": 601.0, "call_gex_m": 24.5386, "put_gex_m": 12.4973, "net_gex_m": 12.0413}, {"strike": 602.0, "call_gex_m": 15.1778, "put_gex_m": 15.9212, "net_gex_m": -0.7434}, {"strike": 603.0, "call_gex_m": 8.0952, "put_gex_m": 4.3109, "net_gex_m": 3.7843}, {"strike": 604.0, "call_gex_m": 6.6862, "put_gex_m": 4.5757, "net_gex_m": 2.1105}, {"strike": 605.0, "call_gex_m": 11.5329, "put_gex_m": 0.0, "net_gex_m": 11.5329}, {"strike": 606.0, "call_gex_m": 6.3128, "put_gex_m": 2.1689, "net_gex_m": 4.1439}, {"strike": 607.0, "call_gex_m": 2.5824, "put_gex_m": 0.0, "net_gex_m": 2.5824}, {"strike": 608.0, "call_gex_m": 4.3867, "put_gex_m": 0.0, "net_gex_m": 4.3867}, {"strike": 609.0, "call_gex_m": 2.5261, "put_gex_m": 2.0276, "net_gex_m": 0.4985}, {"strike": 610.0, "call_gex_m": 7.115, "put_gex_m": 2.484, "net_gex_m": 4.631}, {"strike": 611.0, "call_gex_m": 1.9769, "put_gex_m": 0.5074, "net_gex_m": 1.4695}, {"strike": 612.0, "call_gex_m": 2.4661, "put_gex_m": 1.1148, "net_gex_m": 1.3513}, {"strike": 613.0, "call_gex_m": 1.063, "put_gex_m": 0.4517, "net_gex_m": 0.6113}, {"strike": 614.0, "call_gex_m": 1.4855, "put_gex_m": 0.158, "net_gex_m": 1.3275}, {"strike": 615.0, "call_gex_m": 2.1069, "put_gex_m": 0.8483, "net_gex_m": 1.2586}, {"strike": 616.0, "call_gex_m": 1.107, "put_gex_m": 0.353, "net_gex_m": 0.7539}, {"strike": 617.0, "call_gex_m": 0.617, "put_gex_m": 0.0, "net_gex_m": 0.617}, {"strike": 618.0, "call_gex_m": 0.718, "put_gex_m": 0.003, "net_gex_m": 0.715}, {"strike": 619.0, "call_gex_m": 0.5875, "put_gex_m": 0.0035, "net_gex_m": 0.584}, {"strike": 620.0, "call_gex_m": 0.7782, "put_gex_m": 0.0102, "net_gex_m": 0.768}, {"strike": 621.0, "call_gex_m": 0.5211, "put_gex_m": 0.0011, "net_gex_m": 0.52}, {"strike": 622.0, "call_gex_m": 0.5946, "put_gex_m": 0.0, "net_gex_m": 0.5946}, {"strike": 623.0, "call_gex_m": 0.2456, "put_gex_m": 0.0, "net_gex_m": 0.2456}, {"strike": 624.0, "call_gex_m": 0.2632, "put_gex_m": 0.0, "net_gex_m": 0.2632}, {"strike": 627.0, "call_gex_m": 0.5487, "put_gex_m": 0.0, "net_gex_m": 0.5487}, {"strike": 629.0, "call_gex_m": 0.3668, "put_gex_m": 0.0, "net_gex_m": 0.3668}], "zdtes": [{"strike": 570.0, "call_gex_m": 0.0, "put_gex_m": 0.3675, "net_gex_m": -0.3675}, {"strike": 571.0, "call_gex_m": 0.0, "put_gex_m": 0.2211, "net_gex_m": -0.2211}, {"strike": 572.0, "call_gex_m": 0.0, "put_gex_m": 0.1285, "net_gex_m": -0.1285}, {"strike": 573.0, "call_gex_m": 0.0, "put_gex_m": 0.0626, "net_gex_m": -0.0626}, {"strike": 574.0, "call_gex_m": 0.0, "put_gex_m": 0.1076, "net_gex_m": -0.1076}, {"strike": 575.0, "call_gex_m": 0.0, "put_gex_m": 0.5788, "net_gex_m": -0.5788}, {"strike": 576.0, "call_gex_m": 0.0, "put_gex_m": 0.1296, "net_gex_m": -0.1296}, {"strike": 577.0, "call_gex_m": 0.0, "put_gex_m": 0.2566, "net_gex_m": -0.2566}, {"strike": 578.0, "call_gex_m": 0.0, "put_gex_m": 0.2196, "net_gex_m": -0.2196}, {"strike": 579.0, "call_gex_m": 0.0, "put_gex_m": 0.2685, "net_gex_m": -0.2685}, {"strike": 580.0, "call_gex_m": 0.0, "put_gex_m": 2.3659, "net_gex_m": -2.3659}, {"strike": 581.0, "call_gex_m": 0.0, "put_gex_m": 0.1741, "net_gex_m": -0.1741}, {"strike": 582.0, "call_gex_m": 0.0, "put_gex_m": 0.4397, "net_gex_m": -0.4397}, {"strike": 583.0, "call_gex_m": 0.0, "put_gex_m": 0.5335, "net_gex_m": -0.5335}, {"strike": 584.0, "call_gex_m": 0.0, "put_gex_m": 0.3911, "net_gex_m": -0.3911}, {"strike": 585.0, "call_gex_m": 0.0169, "put_gex_m": 1.6247, "net_gex_m": -1.6079}, {"strike": 586.0, "call_gex_m": 0.0, "put_gex_m": 0.4909, "net_gex_m": -0.4909}, {"strike": 587.0, "call_gex_m": 0.0, "put_gex_m": 0.8007, "net_gex_m": -0.8007}, {"strike": 588.0, "call_gex_m": 0.0, "put_gex_m": 1.3851, "net_gex_m": -1.3851}, {"strike": 589.0, "call_gex_m": 0.0, "put_gex_m": 0.9052, "net_gex_m": -0.9052}, {"strike": 590.0, "call_gex_m": 0.0, "put_gex_m": 5.6117, "net_gex_m": -5.6117}, {"strike": 591.0, "call_gex_m": 0.0, "put_gex_m": 2.0905, "net_gex_m": -2.0905}, {"strike": 592.0, "call_gex_m": 0.7047, "put_gex_m": 3.4572, "net_gex_m": -2.7525}, {"strike": 593.0, "call_gex_m": 0.0, "put_gex_m": 5.1193, "net_gex_m": -5.1193}, {"strike": 594.0, "call_gex_m": 0.0, "put_gex_m": 5.9173, "net_gex_m": -5.9173}, {"strike": 595.0, "call_gex_m": 1.2298, "put_gex_m": 21.2797, "net_gex_m": -20.0499}, {"strike": 596.0, "call_gex_m": 1.5967, "put_gex_m": 7.9135, "net_gex_m": -6.3167}, {"strike": 597.0, "call_gex_m": 1.6944, "put_gex_m": 14.2114, "net_gex_m": -12.5169}, {"strike": 598.0, "call_gex_m": 9.8712, "put_gex_m": 25.8029, "net_gex_m": -15.9317}, {"strike": 599.0, "call_gex_m": 11.6557, "put_gex_m": 20.9246, "net_gex_m": -9.2689}, {"strike": 600.0, "call_gex_m": 39.4442, "put_gex_m": 94.2258, "net_gex_m": -54.7816}, {"strike": 601.0, "call_gex_m": 23.3783, "put_gex_m": 12.4973, "net_gex_m": 10.8809}, {"strike": 602.0, "call_gex_m": 13.2961, "put_gex_m": 15.9212, "net_gex_m": -2.6251}, {"strike": 603.0, "call_gex_m": 5.4806, "put_gex_m": 4.3109, "net_gex_m": 1.1697}, {"strike": 604.0, "call_gex_m": 4.2293, "put_gex_m": 4.5757, "net_gex_m": -0.3464}, {"strike": 605.0, "call_gex_m": 7.6438, "put_gex_m": 0.0, "net_gex_m": 7.6438}, {"strike": 606.0, "call_gex_m": 5.3432, "put_gex_m": 2.1689, "net_gex_m": 3.1743}, {"strike": 607.0, "call_gex_m": 1.2089, "put_gex_m": 0.0, "net_gex_m": 1.2089}, {"strike": 608.0, "call_gex_m": 2.8471, "put_gex_m": 0.0, "net_gex_m": 2.8471}, {"strike": 609.0, "call_gex_m": 1.481, "put_gex_m": 2.0276, "net_gex_m": -0.5466}, {"strike": 610.0, "call_gex_m": 2.536, "put_gex_m": 2.484, "net_gex_m": 0.052}, {"strike": 611.0, "call_gex_m": 1.035, "put_gex_m": 0.5074, "net_gex_m": 0.5276}, {"strike": 612.0, "call_gex_m": 0.7616, "put_gex_m": 1.1148, "net_gex_m": -0.3532}, {"strike": 613.0, "call_gex_m": 0.7069, "put_gex_m": 0.4517, "net_gex_m": 0.2552}, {"strike": 614.0, "call_gex_m": 0.7745, "put_gex_m": 0.158, "net_gex_m": 0.6166}, {"strike": 615.0, "call_gex_m": 1.203, "put_gex_m": 0.8483, "net_gex_m": 0.3546}, {"strike": 616.0, "call_gex_m": 0.7639, "put_gex_m": 0.353, "net_gex_m": 0.4109}, {"strike": 617.0, "call_gex_m": 0.3864, "put_gex_m": 0.0, "net_gex_m": 0.3864}, {"strike": 618.0, "call_gex_m": 0.4455, "put_gex_m": 0.003, "net_gex_m": 0.4425}, {"strike": 619.0, "call_gex_m": 0.4109, "put_gex_m": 0.0035, "net_gex_m": 0.4075}, {"strike": 620.0, "call_gex_m": 0.5705, "put_gex_m": 0.0102, "net_gex_m": 0.5604}, {"strike": 621.0, "call_gex_m": 0.4215, "put_gex_m": 0.0011, "net_gex_m": 0.4204}, {"strike": 622.0, "call_gex_m": 0.4338, "put_gex_m": 0.0, "net_gex_m": 0.4338}, {"strike": 623.0, "call_gex_m": 0.1682, "put_gex_m": 0.0, "net_gex_m": 0.1682}, {"strike": 624.0, "call_gex_m": 0.2074, "put_gex_m": 0.0, "net_gex_m": 0.2074}, {"strike": 625.0, "call_gex_m": 0.1647, "put_gex_m": 0.0019, "net_gex_m": 0.1629}, {"strike": 626.0, "call_gex_m": 0.1062, "put_gex_m": 0.0, "net_gex_m": 0.1062}, {"strike": 627.0, "call_gex_m": 0.2818, "put_gex_m": 0.0, "net_gex_m": 0.2818}, {"strike": 628.0, "call_gex_m": 0.0546, "put_gex_m": 0.0, "net_gex_m": 0.0546}, {"strike": 629.0, "call_gex_m": 0.0927, "put_gex_m": 0.0, "net_gex_m": 0.0927}], "key_strikes": [595.0, 597.0, 598.0, 599.0, 600.0, 601.0, 605.0], "price_bars": [], "flip_point": 623.0, "put_wall": 600.0, "call_wall": 600.0, "max_gamma_strike": 600.0}, "SPX": {"ticker": "SPX", "error": "no spot price", "spot": 0, "net_gex_m": 0, "regime": "unknown", "regime_summary": "no spot price", "strikes": [], "zdtes": [], "key_strikes": [], "price_bars": []}}; const GEX_DEFAULT = "SPY"; const GEX_HEATMAP = {"SPY": {"timestamps": ["2026-03-09T15:18:40.327869", "2026-03-09T15:20:54.685304", "2026-03-09T15:39:29.042710", "2026-03-09T18:14:35.363400", "2026-03-09T18:19:18.254107", "2026-03-09T18:29:34.002591"], "strikes": [635.0, 638.0, 639.0, 640.0, 641.0, 642.0, 643.0, 644.0, 645.0, 646.0, 647.0, 648.0, 649.0, 650.0, 651.0, 652.0, 653.0, 654.0, 655.0, 656.0, 657.0, 658.0, 659.0, 660.0, 661.0, 662.0, 663.0, 664.0, 665.0, 666.0, 667.0, 668.0, 669.0, 670.0, 671.0, 672.0, 673.0, 674.0, 675.0, 676.0, 677.0, 678.0, 679.0, 680.0, 681.0, 692.0, 694.0, 695.0, 696.0, 697.0, 698.0, 699.0, 700.0, 701.0, 702.0], "matrix": [[-73.7938, 0.0, 0.0, 0.0, 0.0, 0.0], [-5.0505, 0.0, 0.0, 0.0, 0.0, 0.0], [-8.7541, -8.6121, -8.208, -8.2291, -8.1806, -8.1472], [-93.8124, -92.7639, -91.5301, -91.5438, -91.1578, -90.8564], [-11.8537, -11.7189, -11.4561, -11.5595, -11.4895, -11.4864], [-7.7475, -7.6253, -7.4976, -7.4765, -7.4306, -7.4091], [-8.395, -8.2376, -8.0447, -8.0566, -7.9933, -7.9489], [-19.5006, -19.0704, -18.7039, -18.5706, -18.4576, -18.3469], [-98.7874, -97.2978, -95.959, -95.8092, -95.4024, -95.1619], [-26.3686, -26.088, -25.8996, -25.9682, -25.9238, -25.9303], [-8.785, -8.6392, -8.4854, -8.4081, -8.3623, -8.3471], [-20.4701, -20.1328, -19.8219, -19.8138, -19.7317, -19.8083], [-16.1285, -15.8606, -15.6848, -15.5475, -15.4958, -15.5043], [-170.0336, -166.6082, -164.0194, -162.806, -161.9461, -160.4184], [-21.337, -20.8478, -20.4967, -20.3112, -20.2327, -20.0847], [-24.3074, -23.835, -23.6375, -23.4146, -23.3209, -23.3063], [-27.4015, -26.8071, -26.1537, -25.8948, -25.7736, -25.8162], [-40.3771, -38.5912, -36.8738, -34.9035, -34.3012, -32.9599], [-120.6111, -118.0673, -116.0305, -113.873, -113.44, -112.5103], [-20.1867, -19.6444, -19.3215, -18.9831, -18.8688, -18.7894], [-55.9359, -53.2125, -51.3618, -42.8195, -42.523, -40.5557], [-29.8374, -28.8951, -28.4112, -27.198, -26.9968, -26.8501], [-30.6318, -29.7738, -28.9375, -27.8685, -27.7662, -27.6584], [-267.2901, -258.5566, -253.5246, -244.9217, -244.6184, -241.2633], [-21.876, -20.7726, -19.7388, -16.4662, -16.2574, -15.8971], [-31.8234, -29.9051, -29.1461, -27.8594, -27.4442, -27.2431], [-26.4869, -25.0075, -24.7481, -22.7075, -22.2454, -21.7493], [-33.289, -31.169, -30.3403, -28.3778, -27.4436, -26.7248], [-127.1673, -119.6431, -121.6828, -123.8118, -120.2009, -115.2791], [-36.0998, -32.7637, -33.7833, -37.9333, -37.1318, -35.8912], [-27.6526, -24.1573, -25.7725, -33.5358, -33.3168, -32.1527], [-31.7446, -25.7424, -28.999, -40.4947, -41.1552, -40.0042], [-24.1236, -22.9649, -27.7145, -39.3874, -40.4997, -41.2575], [-173.9485, -164.3877, -184.9698, -226.0769, -233.3306, -219.5568], [-14.5554, -7.5531, -14.2862, -19.5072, -20.0758, -19.3792], [-15.7467, -10.9499, -13.4926, -19.2735, -19.3037, -19.9726], [-7.4906, 0.0, 0.0, -8.8775, -7.5248, -8.6549], [0.0, 0.0, 0.0, 0.0, 0.0, -6.745], [-160.5407, -150.4845, -153.8356, -165.5419, -161.2431, -174.7219], [8.5176, 5.5016, 5.8193, 0.0, 7.8961, 6.3188], [0.0, -6.658, -6.6319, -7.1527, -6.6692, -8.3502], [-8.4022, -11.5009, -11.4808, -11.9419, -10.792, -13.7982], [0.0, -8.2549, -8.3826, -6.6144, 0.0, -9.1219], [-55.0108, -61.565, -64.7604, -62.8949, -61.4306, -66.293], [0.0, 0.0, 0.0, 0.0, 6.0077, 0.0], [6.8755, 7.1416, 7.7084, 7.3076, 7.6014, 7.4517], [9.0015, 9.0421, 9.6399, 9.2953, 9.4621, 9.295], [16.8549, 16.1102, 17.144, 17.3625, 17.7452, 17.1581], [5.6674, 5.8167, 6.0714, 5.6976, 0.0, 0.0], [9.7241, 10.0001, 10.6329, 9.853, 10.0733, 10.0764], [7.6017, 7.9527, 8.1812, 7.5537, 7.6849, 7.7133], [6.3222, 6.5217, 6.7986, 6.5143, 6.5557, 6.6755], [47.7141, 48.9597, 50.6699, 49.2405, 49.8404, 50.0463], [8.2224, 8.4992, 8.7661, 8.4936, 8.5869, 8.7062], [0.0, 6.2645, 6.4579, 6.1633, 6.2382, 0.0]], "spot_trace": [667.8188, 668.62, 669.2199, 668.9982, 669.23, 669.4136]}, "QQQ": {"timestamps": ["2026-03-09T15:22:26.062064", "2026-03-09T15:40:43.017887", "2026-03-09T18:16:43.812437", "2026-03-09T18:20:27.594868", "2026-03-09T18:29:36.922655"], "strikes": [570.0, 573.0, 574.78, 575.0, 577.0, 578.0, 579.0, 580.0, 581.0, 582.0, 583.0, 584.0, 584.78, 585.0, 586.0, 587.0, 588.0, 589.0, 590.0, 591.0, 592.0, 593.0, 594.0, 595.0, 596.0, 597.0, 598.0, 599.0, 600.0, 601.0, 602.0, 603.0, 604.0, 605.0, 606.0, 607.0, 608.0, 609.0, 610.0, 611.0, 612.0, 613.0, 614.0, 615.0, 616.0, 617.0, 618.0, 619.0, 620.0, 621.0, 622.0, 623.0, 624.0, 625.0, 626.0, 627.0, 628.0, 629.0], "matrix": [[-75.006, -73.6558, -73.8445, -73.764, -0.3649], [-11.8462, -11.2925, -11.388, -11.1569, 0.0], [-30.9711, -30.809, -30.7851, -30.9134, 0.0], [-63.4688, -61.8532, -61.8272, -61.438, -0.5742], [0.0, 0.0, 0.0, 0.0, -0.2566], [-3.3604, -3.1582, -3.0562, -2.9833, 0.0], [-2.8288, -2.6652, -2.477, -2.4247, -0.268], [-106.791, -104.833, -104.1394, -103.8218, -2.3397], [-5.8215, -5.5869, -5.5064, -5.4304, 0.0], [-4.2413, -3.967, -3.6059, -3.5228, -0.437], [-5.384, -5.0445, -4.8031, -4.6074, -0.532], [-4.3109, -4.0232, -3.8227, -3.6578, -0.3885], [-3.358, -3.3515, -3.3312, -3.3498, 0.0], [-62.1653, -59.8748, -59.7388, -59.0013, -1.5638], [-5.6073, -5.2283, -4.898, -4.8097, -0.4664], [-7.7084, -7.2087, -6.7991, -6.5632, -0.7915], [-12.7985, -11.8134, -10.9422, -10.5793, -1.351], [-7.8123, -7.1679, -6.5089, -6.288, -0.8788], [-136.913, -131.567, -129.5365, -128.9636, -5.4507], [-14.3616, -13.0772, -12.0763, -11.5937, -2.0721], [-21.3425, -20.5268, -18.6537, -17.5679, -2.6799], [-17.3867, -16.2751, -14.9044, -14.0641, -4.9616], [-18.8038, -17.5742, -18.0136, -16.7467, -5.7117], [-90.4555, -87.517, -94.3826, -89.8805, -19.087], [-22.4512, -21.806, -25.372, -24.3261, -5.822], [-19.0193, -18.1743, -25.375, -24.0994, -11.4894], [-13.1346, -11.6506, -22.1736, -21.8434, -15.3042], [-10.7664, -10.809, -16.6209, -17.0814, -8.1588], [-146.4455, -141.1268, -167.607, -174.3723, -51.16], [3.8824, 6.6459, 5.2073, 7.1082, 12.0413], [-4.7863, -4.2967, -6.2055, -5.8134, -0.7434], [-8.1822, -8.2108, -8.1555, -8.0215, 3.7843], [-3.3663, -2.9624, 0.0, 2.3587, 2.1105], [-11.381, -10.2202, -7.7964, -12.1193, 11.5329], [2.5526, 3.7192, 3.1423, 0.0, 4.1439], [0.0, 0.0, 0.0, 0.0, 2.5824], [0.0, 3.3802, 0.0, 0.0, 4.3867], [0.0, 0.0, 0.0, 0.0, 0.4985], [-5.2137, -3.4031, -6.7022, -5.4494, 4.631], [4.5263, 4.9277, 5.3829, 4.5979, 1.4695], [10.2231, 11.1199, 11.5437, 10.7422, 1.3513], [0.0, 0.0, 0.0, 0.0, 0.6113], [4.8104, 5.0483, 4.7784, 4.9364, 1.3275], [6.4145, 7.4495, 6.312, 6.4618, 1.2586], [0.0, 0.0, 0.0, 0.0, 0.7539], [4.1849, 4.4519, 4.3149, 4.419, 0.617], [3.4346, 3.6282, 3.5842, 3.6689, 0.715], [4.3096, 4.5781, 4.4385, 4.5337, 0.584], [7.1185, 8.1628, 7.1804, 7.3064, 0.768], [3.7672, 4.0364, 3.821, 3.9125, 0.52], [6.3618, 6.6495, 6.4923, 6.594, 0.5946], [3.1388, 3.3342, 3.1934, 3.2453, 0.2456], [2.8122, 3.0033, 2.8606, 2.8928, 0.2632], [27.007, 28.3589, 27.756, 27.907, 0.0], [2.4556, 0.0, 2.4522, 2.4909, 0.0], [3.0736, 3.1557, 3.081, 3.1321, 0.5487], [0.0, 0.0, 2.5914, 2.6389, 0.0], [0.0, 0.0, 0.0, 0.0, 0.3668]], "spot_trace": [597.7588, 598.825, 598.36, 598.888, 599.28]}, "SPX": {"timestamps": [], "strikes": [], "matrix": [], "spot_trace": []}};</script><script>
+  <div id="gex-chart-panel" class="card gex-viz-full"><div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><span>⚡ GAMMA EXPOSURE — STRIKE BREAKDOWN</span><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><button id="gex-toggle-net" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('net')" title="Toggle net GEX vs split call/put bars">Net GEX</button><button id="gex-toggle-levels" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('levels')" title="Show/hide key gamma levels">Key Levels</button><button id="gex-toggle-zdte" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('zdte')" title="Show/hide 0DTE gamma">0DTE</button><button onclick="exportPanel('gex-chart-panel','GEX_Chart')" class="export-btn">📸 Save Chart</button></div></div><div class="card-body"><div class="gex-tabs"><button class="gex-tab  gex-tab-active" data-t="SPY" onclick="switchGexTicker('SPY')">SPY</button><button class="gex-tab" data-t="QQQ" onclick="switchGexTicker('QQQ')">QQQ</button><button class="gex-tab" data-t="SPX" onclick="switchGexTicker('SPX')">SPX</button></div><div id="gex-regime-box" class="gex-regime-box">Loading…</div><div id="gex-key-levels-bar" class="gex-key-levels-bar"></div><div class="gex-chart-grid"><div><div class="gex-sub-lbl">GEX by Strike</div><div id="gex-strike-chart"></div></div><div><div class="gex-sub-lbl">Intraday Price Path</div><div id="gex-price-chart"></div></div><div id="gex-zdte-col"><div class="gex-sub-lbl">0DTE Gamma</div><div id="gex-0dte-chart"></div></div></div><div class="gex-heatmap-section"><div class="gex-sub-lbl">GEX Heatmap — Strike Profile Over Time</div><div id="gex-heatmap-chart" class="gex-heatmap-canvas-wrap"></div></div></div></div><script>const GEX_DATA = {"SPY": {"ticker": "SPY", "spot": 679.48, "net_gex_m": -837.91, "regime": "negative", "regime_summary": "Negative GEX  $-837.9M \u2014 Dealer long gamma \u2192 mean-reversion, vol expansion", "stability_pct": 97.1, "strikes": [{"strike": 646.0, "call_gex_m": 0.1097, "put_gex_m": 21.2701, "net_gex_m": -21.1604}, {"strike": 648.0, "call_gex_m": 0.3304, "put_gex_m": 15.8685, "net_gex_m": -15.5381}, {"strike": 649.0, "call_gex_m": 0.1471, "put_gex_m": 13.1768, "net_gex_m": -13.0297}, {"strike": 650.0, "call_gex_m": 24.9832, "put_gex_m": 149.3354, "net_gex_m": -124.3522}, {"strike": 651.0, "call_gex_m": 0.3054, "put_gex_m": 15.9033, "net_gex_m": -15.5979}, {"strike": 652.0, "call_gex_m": 0.1432, "put_gex_m": 18.717, "net_gex_m": -18.5738}, {"strike": 653.0, "call_gex_m": 0.1858, "put_gex_m": 19.909, "net_gex_m": -19.7231}, {"strike": 654.0, "call_gex_m": 0.1614, "put_gex_m": 18.5994, "net_gex_m": -18.438}, {"strike": 655.0, "call_gex_m": 6.3178, "put_gex_m": 92.4193, "net_gex_m": -86.1015}, {"strike": 656.0, "call_gex_m": 0.5256, "put_gex_m": 14.2373, "net_gex_m": -13.7117}, {"strike": 657.0, "call_gex_m": 0.315, "put_gex_m": 28.9312, "net_gex_m": -28.6161}, {"strike": 658.0, "call_gex_m": 0.1142, "put_gex_m": 19.7539, "net_gex_m": -19.6397}, {"strike": 659.0, "call_gex_m": 0.1951, "put_gex_m": 21.3486, "net_gex_m": -21.1535}, {"strike": 660.0, "call_gex_m": 23.6445, "put_gex_m": 203.9221, "net_gex_m": -180.2776}, {"strike": 662.0, "call_gex_m": 0.5534, "put_gex_m": 17.2228, "net_gex_m": -16.6694}, {"strike": 663.0, "call_gex_m": 1.2209, "put_gex_m": 14.0903, "net_gex_m": -12.8695}, {"strike": 664.0, "call_gex_m": 0.7974, "put_gex_m": 14.0975, "net_gex_m": -13.3001}, {"strike": 665.0, "call_gex_m": 19.3282, "put_gex_m": 83.4951, "net_gex_m": -64.1668}, {"strike": 666.0, "call_gex_m": 1.1125, "put_gex_m": 15.9259, "net_gex_m": -14.8134}, {"strike": 668.0, "call_gex_m": 3.1387, "put_gex_m": 19.1469, "net_gex_m": -16.0082}, {"strike": 669.0, "call_gex_m": 3.0011, "put_gex_m": 17.177, "net_gex_m": -14.1759}, {"strike": 670.0, "call_gex_m": 52.4901, "put_gex_m": 174.0266, "net_gex_m": -121.5364}, {"strike": 672.0, "call_gex_m": 14.1822, "put_gex_m": 27.4729, "net_gex_m": -13.2907}, {"strike": 673.0, "call_gex_m": 14.413, "put_gex_m": 27.9035, "net_gex_m": -13.4905}, {"strike": 674.0, "call_gex_m": 16.8441, "put_gex_m": 32.3729, "net_gex_m": -15.5288}, {"strike": 675.0, "call_gex_m": 55.1073, "put_gex_m": 239.1194, "net_gex_m": -184.0121}, {"strike": 677.0, "call_gex_m": 22.0975, "put_gex_m": 34.5335, "net_gex_m": -12.436}, {"strike": 678.0, "call_gex_m": 21.9658, "put_gex_m": 41.6311, "net_gex_m": -19.6653}, {"strike": 679.0, "call_gex_m": 67.8868, "put_gex_m": 38.4311, "net_gex_m": 29.4557}, {"strike": 680.0, "call_gex_m": 285.2187, "put_gex_m": 177.6762, "net_gex_m": 107.5426}, {"strike": 681.0, "call_gex_m": 74.8139, "put_gex_m": 29.4374, "net_gex_m": 45.3765}, {"strike": 682.0, "call_gex_m": 71.6172, "put_gex_m": 34.0056, "net_gex_m": 37.6116}, {"strike": 683.0, "call_gex_m": 58.3645, "put_gex_m": 26.7339, "net_gex_m": 31.6306}, {"strike": 684.0, "call_gex_m": 49.1982, "put_gex_m": 27.0613, "net_gex_m": 22.1368}, {"strike": 685.0, "call_gex_m": 149.4757, "put_gex_m": 115.3629, "net_gex_m": 34.1127}, {"strike": 689.0, "call_gex_m": 36.8617, "put_gex_m": 20.526, "net_gex_m": 16.3357}, {"strike": 690.0, "call_gex_m": 124.3335, "put_gex_m": 85.6759, "net_gex_m": 38.6575}, {"strike": 691.0, "call_gex_m": 22.8864, "put_gex_m": 8.4475, "net_gex_m": 14.4389}, {"strike": 692.0, "call_gex_m": 26.0119, "put_gex_m": 8.6686, "net_gex_m": 17.3434}, {"strike": 693.0, "call_gex_m": 24.1799, "put_gex_m": 11.111, "net_gex_m": 13.0689}, {"strike": 694.0, "call_gex_m": 28.9486, "put_gex_m": 6.463, "net_gex_m": 22.4855}, {"strike": 695.0, "call_gex_m": 71.3839, "put_gex_m": 33.041, "net_gex_m": 38.3429}, {"strike": 696.0, "call_gex_m": 19.7565, "put_gex_m": 5.3806, "net_gex_m": 14.3759}, {"strike": 697.0, "call_gex_m": 29.2809, "put_gex_m": 5.3934, "net_gex_m": 23.8874}, {"strike": 698.0, "call_gex_m": 25.7342, "put_gex_m": 5.92, "net_gex_m": 19.8141}, {"strike": 699.0, "call_gex_m": 16.2707, "put_gex_m": 2.9648, "net_gex_m": 13.3058}, {"strike": 700.0, "call_gex_m": 129.8594, "put_gex_m": 36.1912, "net_gex_m": 93.6682}, {"strike": 701.0, "call_gex_m": 16.9659, "put_gex_m": 1.1278, "net_gex_m": 15.8381}, {"strike": 705.0, "call_gex_m": 50.3875, "put_gex_m": 12.1576, "net_gex_m": 38.2298}, {"strike": 710.0, "call_gex_m": 43.9069, "put_gex_m": 12.8896, "net_gex_m": 31.0173}], "zdtes": [{"strike": 646.0, "call_gex_m": 0.0, "put_gex_m": 0.0673, "net_gex_m": -0.0673}, {"strike": 647.0, "call_gex_m": 0.0, "put_gex_m": 0.0965, "net_gex_m": -0.0965}, {"strike": 648.0, "call_gex_m": 0.0, "put_gex_m": 0.12, "net_gex_m": -0.12}, {"strike": 649.0, "call_gex_m": 0.0, "put_gex_m": 0.136, "net_gex_m": -0.136}, {"strike": 650.0, "call_gex_m": 0.0, "put_gex_m": 1.5636, "net_gex_m": -1.5636}, {"strike": 651.0, "call_gex_m": 0.0, "put_gex_m": 0.2242, "net_gex_m": -0.2242}, {"strike": 652.0, "call_gex_m": 0.0, "put_gex_m": 0.1751, "net_gex_m": -0.1751}, {"strike": 653.0, "call_gex_m": 0.0, "put_gex_m": 0.2421, "net_gex_m": -0.2421}, {"strike": 654.0, "call_gex_m": 0.0, "put_gex_m": 0.618, "net_gex_m": -0.618}, {"strike": 655.0, "call_gex_m": 0.0, "put_gex_m": 1.3143, "net_gex_m": -1.3143}, {"strike": 656.0, "call_gex_m": 0.0, "put_gex_m": 0.1972, "net_gex_m": -0.1972}, {"strike": 657.0, "call_gex_m": 0.0, "put_gex_m": 2.4364, "net_gex_m": -2.4364}, {"strike": 658.0, "call_gex_m": 0.0, "put_gex_m": 0.4038, "net_gex_m": -0.4038}, {"strike": 659.0, "call_gex_m": 0.0, "put_gex_m": 0.3515, "net_gex_m": -0.3515}, {"strike": 660.0, "call_gex_m": 0.0, "put_gex_m": 2.8245, "net_gex_m": -2.8245}, {"strike": 661.0, "call_gex_m": 0.0, "put_gex_m": 0.6731, "net_gex_m": -0.6731}, {"strike": 662.0, "call_gex_m": 0.0, "put_gex_m": 0.4884, "net_gex_m": -0.4884}, {"strike": 663.0, "call_gex_m": 0.0, "put_gex_m": 0.563, "net_gex_m": -0.563}, {"strike": 664.0, "call_gex_m": 0.0, "put_gex_m": 0.9216, "net_gex_m": -0.9216}, {"strike": 665.0, "call_gex_m": 0.0, "put_gex_m": 2.9508, "net_gex_m": -2.9508}, {"strike": 666.0, "call_gex_m": 0.0, "put_gex_m": 0.9191, "net_gex_m": -0.9191}, {"strike": 667.0, "call_gex_m": 0.0, "put_gex_m": 0.9169, "net_gex_m": -0.9169}, {"strike": 668.0, "call_gex_m": 0.0, "put_gex_m": 1.2167, "net_gex_m": -1.2167}, {"strike": 669.0, "call_gex_m": 0.0, "put_gex_m": 1.0988, "net_gex_m": -1.0988}, {"strike": 670.0, "call_gex_m": 0.0, "put_gex_m": 7.1255, "net_gex_m": -7.1255}, {"strike": 671.0, "call_gex_m": 0.0, "put_gex_m": 3.7067, "net_gex_m": -3.7067}, {"strike": 672.0, "call_gex_m": 0.0, "put_gex_m": 6.2529, "net_gex_m": -6.2529}, {"strike": 673.0, "call_gex_m": 0.0, "put_gex_m": 8.3172, "net_gex_m": -8.3172}, {"strike": 674.0, "call_gex_m": 0.0, "put_gex_m": 14.977, "net_gex_m": -14.977}, {"strike": 675.0, "call_gex_m": 0.0, "put_gex_m": 29.9422, "net_gex_m": -29.9422}, {"strike": 676.0, "call_gex_m": 0.0, "put_gex_m": 9.8421, "net_gex_m": -9.8421}, {"strike": 677.0, "call_gex_m": 0.0, "put_gex_m": 9.545, "net_gex_m": -9.545}, {"strike": 678.0, "call_gex_m": 0.0, "put_gex_m": 10.9753, "net_gex_m": -10.9753}, {"strike": 679.0, "call_gex_m": 43.5534, "put_gex_m": 14.3521, "net_gex_m": 29.2013}, {"strike": 680.0, "call_gex_m": 180.414, "put_gex_m": 22.5844, "net_gex_m": 157.8297}, {"strike": 681.0, "call_gex_m": 47.2937, "put_gex_m": 12.2736, "net_gex_m": 35.0202}, {"strike": 682.0, "call_gex_m": 36.6691, "put_gex_m": 6.9584, "net_gex_m": 29.7107}, {"strike": 683.0, "call_gex_m": 27.3542, "put_gex_m": 5.3349, "net_gex_m": 22.0193}, {"strike": 684.0, "call_gex_m": 16.5738, "put_gex_m": 4.2373, "net_gex_m": 12.3365}, {"strike": 685.0, "call_gex_m": 21.4725, "put_gex_m": 7.927, "net_gex_m": 13.5455}, {"strike": 686.0, "call_gex_m": 4.1748, "put_gex_m": 4.9582, "net_gex_m": -0.7835}, {"strike": 687.0, "call_gex_m": 4.5549, "put_gex_m": 2.8709, "net_gex_m": 1.6839}, {"strike": 688.0, "call_gex_m": 3.3261, "put_gex_m": 1.8627, "net_gex_m": 1.4634}, {"strike": 689.0, "call_gex_m": 3.7905, "put_gex_m": 0.95, "net_gex_m": 2.8405}, {"strike": 690.0, "call_gex_m": 7.0799, "put_gex_m": 3.2241, "net_gex_m": 3.8557}, {"strike": 691.0, "call_gex_m": 1.3319, "put_gex_m": 0.0211, "net_gex_m": 1.3108}, {"strike": 692.0, "call_gex_m": 2.6027, "put_gex_m": 0.0013, "net_gex_m": 2.6013}, {"strike": 693.0, "call_gex_m": 1.4359, "put_gex_m": 0.0, "net_gex_m": 1.4359}, {"strike": 694.0, "call_gex_m": 1.2193, "put_gex_m": 0.0, "net_gex_m": 1.2193}, {"strike": 695.0, "call_gex_m": 1.3273, "put_gex_m": 0.0315, "net_gex_m": 1.2958}, {"strike": 696.0, "call_gex_m": 0.9456, "put_gex_m": 0.0, "net_gex_m": 0.9456}, {"strike": 697.0, "call_gex_m": 2.2731, "put_gex_m": 0.0, "net_gex_m": 2.2731}, {"strike": 698.0, "call_gex_m": 0.9008, "put_gex_m": 0.0109, "net_gex_m": 0.8899}, {"strike": 699.0, "call_gex_m": 0.6616, "put_gex_m": 0.0, "net_gex_m": 0.6616}, {"strike": 700.0, "call_gex_m": 1.0622, "put_gex_m": 0.0186, "net_gex_m": 1.0436}, {"strike": 701.0, "call_gex_m": 0.3326, "put_gex_m": 0.0, "net_gex_m": 0.3326}, {"strike": 702.0, "call_gex_m": 1.72, "put_gex_m": 0.0, "net_gex_m": 1.72}, {"strike": 703.0, "call_gex_m": 0.2008, "put_gex_m": 0.0, "net_gex_m": 0.2008}, {"strike": 704.0, "call_gex_m": 0.5103, "put_gex_m": 0.0, "net_gex_m": 0.5103}, {"strike": 705.0, "call_gex_m": 0.4466, "put_gex_m": 0.0025, "net_gex_m": 0.4442}, {"strike": 706.0, "call_gex_m": 0.1785, "put_gex_m": 0.0, "net_gex_m": 0.1785}, {"strike": 707.0, "call_gex_m": 0.1382, "put_gex_m": 0.0, "net_gex_m": 0.1382}, {"strike": 708.0, "call_gex_m": 0.0362, "put_gex_m": 0.0, "net_gex_m": 0.0362}, {"strike": 709.0, "call_gex_m": 0.2909, "put_gex_m": 0.0, "net_gex_m": 0.2909}, {"strike": 710.0, "call_gex_m": 0.0462, "put_gex_m": 0.0, "net_gex_m": 0.0462}, {"strike": 711.0, "call_gex_m": 0.0194, "put_gex_m": 0.0, "net_gex_m": 0.0194}, {"strike": 712.0, "call_gex_m": 0.0295, "put_gex_m": 0.0, "net_gex_m": 0.0295}, {"strike": 713.0, "call_gex_m": 0.0223, "put_gex_m": 0.0, "net_gex_m": 0.0223}], "key_strikes": [650.0, 655.0, 660.0, 670.0, 675.0, 680.0, 700.0], "price_bars": [], "flip_point": 677.0, "put_wall": 675.0, "call_wall": 680.0, "max_gamma_strike": 675.0}, "QQQ": {"ticker": "QQQ", "spot": 608.47, "net_gex_m": -166.67, "regime": "negative", "regime_summary": "Negative GEX  $-166.7M \u2014 Dealer long gamma \u2192 mean-reversion, vol expansion", "stability_pct": 97.9, "strikes": [{"strike": 580.0, "call_gex_m": 8.0378, "put_gex_m": 94.452, "net_gex_m": -86.4142}, {"strike": 581.0, "call_gex_m": 0.0271, "put_gex_m": 3.6456, "net_gex_m": -3.6186}, {"strike": 584.78, "call_gex_m": 0.808, "put_gex_m": 4.0366, "net_gex_m": -3.2286}, {"strike": 585.0, "call_gex_m": 6.848, "put_gex_m": 51.7424, "net_gex_m": -44.8944}, {"strike": 587.0, "call_gex_m": 0.1694, "put_gex_m": 4.4171, "net_gex_m": -4.2477}, {"strike": 588.0, "call_gex_m": 0.2487, "put_gex_m": 7.0146, "net_gex_m": -6.7659}, {"strike": 589.0, "call_gex_m": 0.2399, "put_gex_m": 4.465, "net_gex_m": -4.2251}, {"strike": 590.0, "call_gex_m": 14.5505, "put_gex_m": 124.0891, "net_gex_m": -109.5386}, {"strike": 591.0, "call_gex_m": 0.4374, "put_gex_m": 5.907, "net_gex_m": -5.4696}, {"strike": 592.0, "call_gex_m": 0.419, "put_gex_m": 12.7196, "net_gex_m": -12.3006}, {"strike": 593.0, "call_gex_m": 0.5199, "put_gex_m": 8.7631, "net_gex_m": -8.2432}, {"strike": 594.0, "call_gex_m": 0.7946, "put_gex_m": 8.8131, "net_gex_m": -8.0185}, {"strike": 595.0, "call_gex_m": 9.422, "put_gex_m": 65.5007, "net_gex_m": -56.0787}, {"strike": 596.0, "call_gex_m": 1.9623, "put_gex_m": 12.6955, "net_gex_m": -10.7333}, {"strike": 597.0, "call_gex_m": 3.1217, "put_gex_m": 12.0005, "net_gex_m": -8.8788}, {"strike": 598.0, "call_gex_m": 5.3158, "put_gex_m": 10.4503, "net_gex_m": -5.1345}, {"strike": 599.0, "call_gex_m": 5.9732, "put_gex_m": 12.3285, "net_gex_m": -6.3553}, {"strike": 600.0, "call_gex_m": 60.7459, "put_gex_m": 180.7147, "net_gex_m": -119.9688}, {"strike": 603.0, "call_gex_m": 8.7543, "put_gex_m": 17.5812, "net_gex_m": -8.8269}, {"strike": 604.0, "call_gex_m": 12.0697, "put_gex_m": 19.8585, "net_gex_m": -7.7888}, {"strike": 605.0, "call_gex_m": 35.3276, "put_gex_m": 60.523, "net_gex_m": -25.1953}, {"strike": 606.0, "call_gex_m": 39.7351, "put_gex_m": 17.567, "net_gex_m": 22.168}, {"strike": 608.0, "call_gex_m": 92.7081, "put_gex_m": 20.3794, "net_gex_m": 72.3287}, {"strike": 609.0, "call_gex_m": 57.6216, "put_gex_m": 23.3201, "net_gex_m": 34.3015}, {"strike": 610.0, "call_gex_m": 136.8399, "put_gex_m": 75.8254, "net_gex_m": 61.0145}, {"strike": 611.0, "call_gex_m": 34.6102, "put_gex_m": 9.5105, "net_gex_m": 25.0997}, {"strike": 612.0, "call_gex_m": 36.8289, "put_gex_m": 11.3564, "net_gex_m": 25.4725}, {"strike": 613.0, "call_gex_m": 18.6826, "put_gex_m": 7.067, "net_gex_m": 11.6156}, {"strike": 614.0, "call_gex_m": 17.0297, "put_gex_m": 4.1127, "net_gex_m": 12.917}, {"strike": 615.0, "call_gex_m": 72.6729, "put_gex_m": 50.1881, "net_gex_m": 22.4848}, {"strike": 616.0, "call_gex_m": 14.9096, "put_gex_m": 7.6468, "net_gex_m": 7.2629}, {"strike": 617.0, "call_gex_m": 12.7501, "put_gex_m": 2.651, "net_gex_m": 10.0991}, {"strike": 618.0, "call_gex_m": 13.4757, "put_gex_m": 4.1784, "net_gex_m": 9.2974}, {"strike": 619.0, "call_gex_m": 11.9354, "put_gex_m": 1.1469, "net_gex_m": 10.7885}, {"strike": 620.0, "call_gex_m": 71.212, "put_gex_m": 50.6852, "net_gex_m": 20.5269}, {"strike": 621.0, "call_gex_m": 10.7311, "put_gex_m": 0.8516, "net_gex_m": 9.8795}, {"strike": 622.0, "call_gex_m": 14.6214, "put_gex_m": 1.9652, "net_gex_m": 12.6561}, {"strike": 623.0, "call_gex_m": 7.4627, "put_gex_m": 0.8002, "net_gex_m": 6.6626}, {"strike": 624.0, "call_gex_m": 7.6077, "put_gex_m": 1.5511, "net_gex_m": 6.0567}, {"strike": 625.0, "call_gex_m": 79.6961, "put_gex_m": 30.4476, "net_gex_m": 49.2485}, {"strike": 626.0, "call_gex_m": 6.0582, "put_gex_m": 1.0621, "net_gex_m": 4.9961}, {"strike": 627.0, "call_gex_m": 8.0216, "put_gex_m": 1.725, "net_gex_m": 6.2966}, {"strike": 628.0, "call_gex_m": 5.7903, "put_gex_m": 1.0417, "net_gex_m": 4.7486}, {"strike": 629.0, "call_gex_m": 5.2171, "put_gex_m": 0.8321, "net_gex_m": 4.385}, {"strike": 630.0, "call_gex_m": 83.8485, "put_gex_m": 22.3875, "net_gex_m": 61.461}, {"strike": 632.0, "call_gex_m": 4.8651, "put_gex_m": 0.7911, "net_gex_m": 4.074}, {"strike": 633.0, "call_gex_m": 8.0618, "put_gex_m": 0.8956, "net_gex_m": 7.1662}, {"strike": 634.0, "call_gex_m": 3.9272, "put_gex_m": 0.3125, "net_gex_m": 3.6148}, {"strike": 635.0, "call_gex_m": 47.9783, "put_gex_m": 6.8567, "net_gex_m": 41.1216}, {"strike": 637.0, "call_gex_m": 3.7041, "put_gex_m": 0.2088, "net_gex_m": 3.4953}], "zdtes": [{"strike": 579.0, "call_gex_m": 0.0, "put_gex_m": 0.1451, "net_gex_m": -0.1451}, {"strike": 580.0, "call_gex_m": 0.0, "put_gex_m": 0.9075, "net_gex_m": -0.9075}, {"strike": 581.0, "call_gex_m": 0.0, "put_gex_m": 0.0889, "net_gex_m": -0.0889}, {"strike": 582.0, "call_gex_m": 0.0, "put_gex_m": 0.2175, "net_gex_m": -0.2175}, {"strike": 583.0, "call_gex_m": 0.0007, "put_gex_m": 0.1873, "net_gex_m": -0.1866}, {"strike": 584.0, "call_gex_m": 0.0015, "put_gex_m": 0.1326, "net_gex_m": -0.1311}, {"strike": 585.0, "call_gex_m": 0.042, "put_gex_m": 0.5305, "net_gex_m": -0.4885}, {"strike": 586.0, "call_gex_m": 0.0, "put_gex_m": 0.1538, "net_gex_m": -0.1538}, {"strike": 587.0, "call_gex_m": 0.0, "put_gex_m": 0.2003, "net_gex_m": -0.2003}, {"strike": 588.0, "call_gex_m": 0.0, "put_gex_m": 0.3286, "net_gex_m": -0.3286}, {"strike": 589.0, "call_gex_m": 0.0121, "put_gex_m": 0.2021, "net_gex_m": -0.19}, {"strike": 590.0, "call_gex_m": 0.0, "put_gex_m": 1.031, "net_gex_m": -1.031}, {"strike": 591.0, "call_gex_m": 0.0279, "put_gex_m": 0.3555, "net_gex_m": -0.3276}, {"strike": 592.0, "call_gex_m": 0.0, "put_gex_m": 0.4939, "net_gex_m": -0.4939}, {"strike": 593.0, "call_gex_m": 0.0, "put_gex_m": 0.6139, "net_gex_m": -0.6139}, {"strike": 594.0, "call_gex_m": 0.0, "put_gex_m": 0.5651, "net_gex_m": -0.5651}, {"strike": 595.0, "call_gex_m": 0.4006, "put_gex_m": 1.5734, "net_gex_m": -1.1728}, {"strike": 596.0, "call_gex_m": 0.3223, "put_gex_m": 0.4561, "net_gex_m": -0.1338}, {"strike": 597.0, "call_gex_m": 0.3274, "put_gex_m": 0.6445, "net_gex_m": -0.3171}, {"strike": 598.0, "call_gex_m": 0.0, "put_gex_m": 1.0066, "net_gex_m": -1.0066}, {"strike": 599.0, "call_gex_m": 0.0, "put_gex_m": 1.065, "net_gex_m": -1.065}, {"strike": 600.0, "call_gex_m": 0.0, "put_gex_m": 5.8253, "net_gex_m": -5.8253}, {"strike": 601.0, "call_gex_m": 0.0, "put_gex_m": 1.2729, "net_gex_m": -1.2729}, {"strike": 602.0, "call_gex_m": 5.6209, "put_gex_m": 3.4868, "net_gex_m": 2.1342}, {"strike": 603.0, "call_gex_m": 0.0, "put_gex_m": 3.605, "net_gex_m": -3.605}, {"strike": 604.0, "call_gex_m": 0.0, "put_gex_m": 6.8936, "net_gex_m": -6.8936}, {"strike": 605.0, "call_gex_m": 0.0, "put_gex_m": 12.2047, "net_gex_m": -12.2047}, {"strike": 606.0, "call_gex_m": 30.2371, "put_gex_m": 7.2284, "net_gex_m": 23.0088}, {"strike": 607.0, "call_gex_m": 9.9201, "put_gex_m": 7.9067, "net_gex_m": 2.0134}, {"strike": 608.0, "call_gex_m": 78.5678, "put_gex_m": 6.4275, "net_gex_m": 72.1403}, {"strike": 609.0, "call_gex_m": 49.0265, "put_gex_m": 14.1482, "net_gex_m": 34.8783}, {"strike": 610.0, "call_gex_m": 67.681, "put_gex_m": 9.2145, "net_gex_m": 58.4665}, {"strike": 611.0, "call_gex_m": 20.6305, "put_gex_m": 1.6885, "net_gex_m": 18.942}, {"strike": 612.0, "call_gex_m": 10.9792, "put_gex_m": 4.2626, "net_gex_m": 6.7166}, {"strike": 613.0, "call_gex_m": 9.8762, "put_gex_m": 1.6156, "net_gex_m": 8.2606}, {"strike": 614.0, "call_gex_m": 5.4463, "put_gex_m": 0.5273, "net_gex_m": 4.919}, {"strike": 615.0, "call_gex_m": 10.1459, "put_gex_m": 2.5663, "net_gex_m": 7.5796}, {"strike": 616.0, "call_gex_m": 3.5496, "put_gex_m": 0.9666, "net_gex_m": 2.5831}, {"strike": 617.0, "call_gex_m": 2.1942, "put_gex_m": 0.0, "net_gex_m": 2.1942}, {"strike": 618.0, "call_gex_m": 1.5681, "put_gex_m": 0.0055, "net_gex_m": 1.5626}, {"strike": 619.0, "call_gex_m": 0.8594, "put_gex_m": 0.0099, "net_gex_m": 0.8495}, {"strike": 620.0, "call_gex_m": 1.3333, "put_gex_m": 0.0291, "net_gex_m": 1.3042}, {"strike": 621.0, "call_gex_m": 0.949, "put_gex_m": 0.0024, "net_gex_m": 0.9465}, {"strike": 622.0, "call_gex_m": 0.9339, "put_gex_m": 0.0, "net_gex_m": 0.9339}, {"strike": 623.0, "call_gex_m": 0.3478, "put_gex_m": 0.0, "net_gex_m": 0.3478}, {"strike": 624.0, "call_gex_m": 0.4122, "put_gex_m": 0.0, "net_gex_m": 0.4122}, {"strike": 625.0, "call_gex_m": 0.3177, "put_gex_m": 0.0036, "net_gex_m": 0.3141}, {"strike": 626.0, "call_gex_m": 0.1987, "put_gex_m": 0.0, "net_gex_m": 0.1987}, {"strike": 627.0, "call_gex_m": 0.5128, "put_gex_m": 0.0, "net_gex_m": 0.5128}, {"strike": 628.0, "call_gex_m": 0.1021, "put_gex_m": 0.0, "net_gex_m": 0.1021}, {"strike": 629.0, "call_gex_m": 0.1688, "put_gex_m": 0.0, "net_gex_m": 0.1688}, {"strike": 630.0, "call_gex_m": 0.1107, "put_gex_m": 0.007, "net_gex_m": 0.1037}, {"strike": 631.0, "call_gex_m": 0.0165, "put_gex_m": 0.0, "net_gex_m": 0.0165}, {"strike": 632.0, "call_gex_m": 0.425, "put_gex_m": 0.0, "net_gex_m": 0.425}, {"strike": 633.0, "call_gex_m": 0.0618, "put_gex_m": 0.0, "net_gex_m": 0.0618}, {"strike": 634.0, "call_gex_m": 0.0451, "put_gex_m": 0.0, "net_gex_m": 0.0451}, {"strike": 635.0, "call_gex_m": 0.0488, "put_gex_m": 0.0, "net_gex_m": 0.0488}, {"strike": 636.0, "call_gex_m": 0.022, "put_gex_m": 0.0, "net_gex_m": 0.022}, {"strike": 637.0, "call_gex_m": 0.0696, "put_gex_m": 0.0, "net_gex_m": 0.0696}, {"strike": 638.0, "call_gex_m": 0.0104, "put_gex_m": 0.0, "net_gex_m": 0.0104}], "key_strikes": [580.0, 585.0, 590.0, 595.0, 600.0, 608.0, 610.0, 625.0, 630.0], "price_bars": [], "flip_point": 634.5, "put_wall": 600.0, "call_wall": 610.0, "max_gamma_strike": 600.0}, "SPX": {"ticker": "SPX", "error": "no spot price", "spot": 0, "net_gex_m": 0, "regime": "unknown", "regime_summary": "no spot price", "strikes": [], "zdtes": [], "key_strikes": [], "price_bars": []}}; const GEX_DEFAULT = "SPY"; const GEX_HEATMAP = {"SPY": {"timestamps": ["2026-03-09T15:18:40.327869", "2026-03-09T15:20:54.685304", "2026-03-09T15:39:29.042710", "2026-03-09T18:14:35.363400", "2026-03-09T18:19:18.254107", "2026-03-09T18:29:34.002591", "2026-03-09T19:39:10.177111", "2026-03-09T19:42:16.633665", "2026-03-09T19:42:52.141130", "2026-03-09T19:56:24.447041"], "strikes": [635.0, 638.0, 639.0, 640.0, 641.0, 642.0, 643.0, 644.0, 645.0, 646.0, 647.0, 648.0, 649.0, 650.0, 651.0, 652.0, 653.0, 654.0, 655.0, 656.0, 657.0, 658.0, 659.0, 660.0, 661.0, 662.0, 663.0, 664.0, 665.0, 666.0, 667.0, 668.0, 669.0, 670.0, 671.0, 672.0, 673.0, 674.0, 675.0, 676.0, 677.0, 678.0, 679.0, 680.0, 681.0, 682.0, 683.0, 684.0, 685.0, 689.0, 690.0, 691.0, 692.0, 693.0, 694.0, 695.0, 696.0, 697.0, 698.0, 699.0, 700.0, 701.0, 702.0, 705.0, 706.0, 707.0, 710.0], "matrix": [[-73.7938, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [-5.0505, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [-8.7541, -8.6121, -8.208, -8.2291, -8.1806, -8.1472, 0.0, 0.0, 0.0, 0.0], [-93.8124, -92.7639, -91.5301, -91.5438, -91.1578, -90.8564, 0.0, 0.0, 0.0, 0.0], [-11.8537, -11.7189, -11.4561, -11.5595, -11.4895, -11.4864, -9.7789, 0.0, 0.0, 0.0], [-7.7475, -7.6253, -7.4976, -7.4765, -7.4306, -7.4091, 0.0, 0.0, 0.0, 0.0], [-8.395, -8.2376, -8.0447, -8.0566, -7.9933, -7.9489, 0.0, 0.0, 0.0, 0.0], [-19.5006, -19.0704, -18.7039, -18.5706, -18.4576, -18.3469, -15.5066, -15.4611, -15.3798, 0.0], [-98.7874, -97.2978, -95.959, -95.8092, -95.4024, -95.1619, -83.991, -83.5046, -84.2365, 0.0], [-26.3686, -26.088, -25.8996, -25.9682, -25.9238, -25.9303, -22.6671, -23.077, -23.0551, -21.1604], [-8.785, -8.6392, -8.4854, -8.4081, -8.3623, -8.3471, 0.0, 0.0, 0.0, 0.0], [-20.4701, -20.1328, -19.8219, -19.8138, -19.7317, -19.8083, -16.9296, -17.4325, -17.2527, -15.5381], [-16.1285, -15.8606, -15.6848, -15.5475, -15.4958, -15.5043, -13.6582, -14.0181, -13.9592, -13.0297], [-170.0336, -166.6082, -164.0194, -162.806, -161.9461, -160.4184, -137.1371, -136.9803, -136.376, -124.3522], [-21.337, -20.8478, -20.4967, -20.3112, -20.2327, -20.0847, -17.2668, -17.3736, -17.2156, -15.5979], [-24.3074, -23.835, -23.6375, -23.4146, -23.3209, -23.3063, -19.8146, -20.2417, -20.3022, -18.5738], [-27.4015, -26.8071, -26.1537, -25.8948, -25.7736, -25.8162, -21.4562, -22.0917, -22.0891, -19.7231], [-40.3771, -38.5912, -36.8738, -34.9035, -34.3012, -32.9599, -23.7912, -21.9292, -22.5613, -18.438], [-120.6111, -118.0673, -116.0305, -113.873, -113.44, -112.5103, -93.3486, -96.2783, -96.5451, -86.1015], [-20.1867, -19.6444, -19.3215, -18.9831, -18.8688, -18.7894, -15.2517, -15.5689, -15.5278, -13.7117], [-55.9359, -53.2125, -51.3618, -42.8195, -42.523, -40.5557, -31.147, -31.8373, -32.337, -28.6161], [-29.8374, -28.8951, -28.4112, -27.198, -26.9968, -26.8501, -21.1937, -21.7486, -21.6611, -19.6397], [-30.6318, -29.7738, -28.9375, -27.8685, -27.7662, -27.6584, -22.2711, -23.7816, -23.5913, -21.1535], [-267.2901, -258.5566, -253.5246, -244.9217, -244.6184, -241.2633, -192.4151, -202.2057, -201.7651, -180.2776], [-21.876, -20.7726, -19.7388, -16.4662, -16.2574, -15.8971, -10.4293, -10.6657, -10.7829, 0.0], [-31.8234, -29.9051, -29.1461, -27.8594, -27.4442, -27.2431, -19.3472, -19.1936, -19.5055, -16.6694], [-26.4869, -25.0075, -24.7481, -22.7075, -22.2454, -21.7493, -14.3332, -14.8568, -15.3938, -12.8695], [-33.289, -31.169, -30.3403, -28.3778, -27.4436, -26.7248, -15.2796, -16.33, -16.5763, -13.3001], [-127.1673, -119.6431, -121.6828, -123.8118, -120.2009, -115.2791, -69.0215, -74.584, -75.4396, -64.1668], [-36.0998, -32.7637, -33.7833, -37.9333, -37.1318, -35.8912, -18.2521, -19.2483, -19.6378, -14.8134], [-27.6526, -24.1573, -25.7725, -33.5358, -33.3168, -32.1527, -13.5877, -13.0182, -13.7213, 0.0], [-31.7446, -25.7424, -28.999, -40.4947, -41.1552, -40.0042, -22.143, -20.7494, -22.8533, -16.0082], [-24.1236, -22.9649, -27.7145, -39.3874, -40.4997, -41.2575, -21.2818, -20.9761, -22.5645, -14.1759], [-173.9485, -164.3877, -184.9698, -226.0769, -233.3306, -219.5568, -145.3864, -156.2654, -166.2693, -121.5364], [-14.5554, -7.5531, -14.2862, -19.5072, -20.0758, -19.3792, -24.5696, -23.4984, -15.7512, 0.0], [-15.7467, -10.9499, -13.4926, -19.2735, -19.3037, -19.9726, -16.1664, -27.8358, -16.0901, -13.2907], [-7.4906, 0.0, 0.0, -8.8775, -7.5248, -8.6549, -11.4714, -28.4221, 0.0, -13.4905], [0.0, 0.0, 0.0, 0.0, 0.0, -6.745, -9.5666, -29.4893, 42.7179, -15.5288], [-160.5407, -150.4845, -153.8356, -165.5419, -161.2431, -174.7219, 187.2405, -25.9976, -97.5374, -184.0121], [8.5176, 5.5016, 5.8193, 0.0, 7.8961, 6.3188, 34.0396, 28.7837, 17.6312, 0.0], [0.0, -6.658, -6.6319, -7.1527, -6.6692, -8.3502, 9.3623, 0.0, 0.0, -12.436], [-8.4022, -11.5009, -11.4808, -11.9419, -10.792, -13.7982, 0.0, 12.3468, 0.0, -19.6653], [0.0, -8.2549, -8.3826, -6.6144, 0.0, -9.1219, 0.0, 0.0, 0.0, 29.4557], [-55.0108, -61.565, -64.7604, -62.8949, -61.4306, -66.293, -16.3963, -32.6871, -40.247, 107.5426], [0.0, 0.0, 0.0, 0.0, 6.0077, 0.0, 12.2494, 13.253, 12.3364, 45.3765], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 12.4054, 12.3813, 12.9342, 37.6116], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.4954, 0.0, 12.2626, 31.6306], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.3224, 10.7501, 9.4298, 22.1368], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28.8994, 10.6041, 9.2175, 34.1127], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.8938, 11.6814, 10.8882, 16.3357], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 25.0967, 17.2629, 20.4017, 38.6575], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 14.4389], [6.8755, 7.1416, 7.7084, 7.3076, 7.6014, 7.4517, 11.3732, 11.653, 11.2672, 17.3434], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 13.0689], [9.0015, 9.0421, 9.6399, 9.2953, 9.4621, 9.295, 13.2799, 15.0165, 14.9684, 22.4855], [16.8549, 16.1102, 17.144, 17.3625, 17.7452, 17.1581, 26.3009, 24.6327, 24.6539, 38.3429], [5.6674, 5.8167, 6.0714, 5.6976, 0.0, 0.0, 0.0, 0.0, 0.0, 14.3759], [9.7241, 10.0001, 10.6329, 9.853, 10.0733, 10.0764, 13.4483, 15.7463, 15.7615, 23.8874], [7.6017, 7.9527, 8.1812, 7.5537, 7.6849, 7.7133, 10.0961, 11.797, 11.9276, 19.8141], [6.3222, 6.5217, 6.7986, 6.5143, 6.5557, 6.6755, 0.0, 9.1967, 9.4288, 13.3058], [47.7141, 48.9597, 50.6699, 49.2405, 49.8404, 50.0463, 66.6189, 69.4253, 70.044, 93.6682], [8.2224, 8.4992, 8.7661, 8.4936, 8.5869, 8.7062, 10.8202, 11.9009, 11.9742, 15.8381], [0.0, 6.2645, 6.4579, 6.1633, 6.2382, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28.1442, 28.8317, 29.8676, 38.2298], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 9.1792, 9.1947, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 8.9572, 0.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 31.0173]], "spot_trace": [667.8188, 668.62, 669.2199, 668.9982, 669.23, 669.4136, 674.42, 675.53, 674.9, 679.48]}, "QQQ": {"timestamps": ["2026-03-09T15:22:26.062064", "2026-03-09T15:40:43.017887", "2026-03-09T18:16:43.812437", "2026-03-09T18:20:27.594868", "2026-03-09T18:29:36.922655", "2026-03-09T19:41:20.852194", "2026-03-09T19:44:06.707996", "2026-03-09T19:44:34.575093", "2026-03-09T19:58:20.458472"], "strikes": [570.0, 573.0, 574.78, 575.0, 577.0, 578.0, 579.0, 580.0, 581.0, 582.0, 583.0, 584.0, 584.78, 585.0, 586.0, 587.0, 588.0, 589.0, 590.0, 591.0, 592.0, 593.0, 594.0, 595.0, 596.0, 597.0, 598.0, 599.0, 600.0, 601.0, 602.0, 603.0, 604.0, 605.0, 606.0, 607.0, 608.0, 609.0, 610.0, 611.0, 612.0, 613.0, 614.0, 615.0, 616.0, 617.0, 618.0, 619.0, 620.0, 621.0, 622.0, 623.0, 624.0, 625.0, 626.0, 627.0, 628.0, 629.0, 630.0, 632.0, 633.0, 634.0, 635.0, 637.0], "matrix": [[-75.006, -73.6558, -73.8445, -73.764, -0.3649, 0.0, 0.0, 0.0, 0.0], [-11.8462, -11.2925, -11.388, -11.1569, 0.0, 0.0, 0.0, 0.0, 0.0], [-30.9711, -30.809, -30.7851, -30.9134, 0.0, -30.2902, -30.3724, -30.3696, 0.0], [-63.4688, -61.8532, -61.8272, -61.438, -0.5742, -54.2411, -53.9475, -53.6215, 0.0], [0.0, 0.0, 0.0, 0.0, -0.2566, 0.0, 0.0, 0.0, 0.0], [-3.3604, -3.1582, -3.0562, -2.9833, 0.0, 0.0, 0.0, 0.0, 0.0], [-2.8288, -2.6652, -2.477, -2.4247, -0.268, 0.0, 0.0, 0.0, 0.0], [-106.791, -104.833, -104.1394, -103.8218, -2.3397, -92.912, -94.1433, -93.6031, -86.4142], [-5.8215, -5.5869, -5.5064, -5.4304, 0.0, -4.3526, -4.2962, -4.3223, -3.6186], [-4.2413, -3.967, -3.6059, -3.5228, -0.437, 0.0, 0.0, 0.0, 0.0], [-5.384, -5.0445, -4.8031, -4.6074, -0.532, -3.6516, -3.5883, -3.5823, 0.0], [-4.3109, -4.0232, -3.8227, -3.6578, -0.3885, 0.0, 0.0, 0.0, 0.0], [-3.358, -3.3515, -3.3312, -3.3498, 0.0, 0.0, 0.0, 0.0, -3.2286], [-62.1653, -59.8748, -59.7388, -59.0013, -1.5638, -51.3669, -51.0752, -50.7848, -44.8944], [-5.6073, -5.2283, -4.898, -4.8097, -0.4664, -3.7004, -3.6347, -3.6458, 0.0], [-7.7084, -7.2087, -6.7991, -6.5632, -0.7915, -5.0218, -5.0095, -5.0308, -4.2477], [-12.7985, -11.8134, -10.9422, -10.5793, -1.351, -8.14, -8.0453, -8.0532, -6.7659], [-7.8123, -7.1679, -6.5089, -6.288, -0.8788, -4.902, -4.9115, -4.8905, -4.2251], [-136.913, -131.567, -129.5365, -128.9636, -5.4507, -115.3561, -118.8278, -118.0726, -109.5386], [-14.3616, -13.0772, -12.0763, -11.5937, -2.0721, -7.2471, -7.1751, -7.2578, -5.4696], [-21.3425, -20.5268, -18.6537, -17.5679, -2.6799, -14.2644, -13.8159, -13.4865, -12.3006], [-17.3867, -16.2751, -14.9044, -14.0641, -4.9616, -8.4939, -9.9479, -8.6807, -8.2432], [-18.8038, -17.5742, -18.0136, -16.7467, -5.7117, -9.3429, -9.4788, -9.4764, -8.0185], [-90.4555, -87.517, -94.3826, -89.8805, -19.087, -60.8749, -63.9611, -63.0623, -56.0787], [-22.4512, -21.806, -25.372, -24.3261, -5.822, -15.4332, -14.3127, -14.0451, -10.7333], [-19.0193, -18.1743, -25.375, -24.0994, -11.4894, -11.0631, -10.8637, -10.565, -8.8788], [-13.1346, -11.6506, -22.1736, -21.8434, -15.3042, -7.7364, -7.7447, -5.3423, -5.1345], [-10.7664, -10.809, -16.6209, -17.0814, -8.1588, -11.9235, -10.4051, -9.0669, -6.3553], [-146.4455, -141.1268, -167.607, -174.3723, -51.16, -151.4606, -149.2873, -152.6078, -119.9688], [3.8824, 6.6459, 5.2073, 7.1082, 12.0413, -8.5183, -8.9134, 0.0, 0.0], [-4.7863, -4.2967, -6.2055, -5.8134, -0.7434, -6.1985, -20.7433, -9.6191, 0.0], [-8.1822, -8.2108, -8.1555, -8.0215, 3.7843, -18.0784, -12.18, -18.9287, -8.8269], [-3.3663, -2.9624, 0.0, 2.3587, 2.1105, 7.6849, 0.0, -11.481, -7.7888], [-11.381, -10.2202, -7.7964, -12.1193, 11.5329, 37.5529, 0.0, -8.4376, -25.1953], [2.5526, 3.7192, 3.1423, 0.0, 4.1439, 19.3771, 29.5752, 19.0716, 22.168], [0.0, 0.0, 0.0, 0.0, 2.5824, 0.0, 0.0, 0.0, 0.0], [0.0, 3.3802, 0.0, 0.0, 4.3867, 20.8355, 23.8717, 22.9518, 72.3287], [0.0, 0.0, 0.0, 0.0, 0.4985, 0.0, 7.4232, 6.7316, 34.3015], [-5.2137, -3.4031, -6.7022, -5.4494, 4.631, 17.8861, 19.4846, 16.5563, 61.0145], [4.5263, 4.9277, 5.3829, 4.5979, 1.4695, 7.4331, 11.182, 10.2399, 25.0997], [10.2231, 11.1199, 11.5437, 10.7422, 1.3513, 18.4427, 18.4076, 19.2147, 25.4725], [0.0, 0.0, 0.0, 0.0, 0.6113, 6.2297, 4.7853, 5.0813, 11.6156], [4.8104, 5.0483, 4.7784, 4.9364, 1.3275, 7.0497, 8.896, 9.117, 12.917], [6.4145, 7.4495, 6.312, 6.4618, 1.2586, 13.1763, 11.3569, 12.0025, 22.4848], [0.0, 0.0, 0.0, 0.0, 0.7539, 4.0763, 3.7841, 4.1871, 7.2629], [4.1849, 4.4519, 4.3149, 4.419, 0.617, 6.0982, 6.5992, 6.5428, 10.0991], [3.4346, 3.6282, 3.5842, 3.6689, 0.715, 5.2767, 5.6542, 5.64, 9.2974], [4.3096, 4.5781, 4.4385, 4.5337, 0.584, 6.6934, 7.3164, 7.3266, 10.7885], [7.1185, 8.1628, 7.1804, 7.3064, 0.768, 11.9212, 11.9285, 12.9571, 20.5269], [3.7672, 4.0364, 3.821, 3.9125, 0.52, 6.0361, 6.5083, 6.4399, 9.8795], [6.3618, 6.6495, 6.4923, 6.594, 0.5946, 8.6798, 9.1896, 9.4126, 12.6561], [3.1388, 3.3342, 3.1934, 3.2453, 0.2456, 4.549, 4.7911, 4.8111, 6.6626], [2.8122, 3.0033, 2.8606, 2.8928, 0.2632, 3.9424, 4.2304, 4.3107, 6.0567], [27.007, 28.3589, 27.756, 27.907, 0.0, 38.0032, 38.1461, 38.7814, 49.2485], [2.4556, 0.0, 2.4522, 2.4909, 0.0, 3.3862, 3.5505, 3.6424, 4.9961], [3.0736, 3.1557, 3.081, 3.1321, 0.5487, 4.4537, 4.4743, 4.6847, 6.2966], [0.0, 0.0, 2.5914, 2.6389, 0.0, 3.5048, 3.6605, 3.7035, 4.7486], [0.0, 0.0, 0.0, 0.0, 0.3668, 3.3281, 3.3838, 3.4336, 4.385], [0.0, 0.0, 0.0, 0.0, 0.0, 47.7383, 49.7077, 49.6328, 61.461], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.074], [0.0, 0.0, 0.0, 0.0, 0.0, 5.6903, 5.4228, 5.3175, 7.1662], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.6148], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 33.7128, 0.0, 41.1216], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.4953]], "spot_trace": [597.7588, 598.825, 598.36, 598.888, 599.28, 604.11, 604.87, 604.16, 608.47]}, "SPX": {"timestamps": [], "strikes": [], "matrix": [], "spot_trace": []}};</script><script>
 (function() {
   if (typeof d3 === 'undefined') { console.warn('[gex] D3 not loaded'); return; }
   var curTicker = GEX_DEFAULT || Object.keys(GEX_DATA)[0] || 'SPY';
@@ -847,67 +1007,67 @@ function drawHeatmap(elemId, ticker) {
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-GS">GS</span>
+        <span class="sig-main">GS GEX EXTREME — Net GEX: $-4.4M (97th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;GS at extreme negative GEX means dealers are short gamma - expect amplified moves in either direction, perfect for your long vol strategies.&quot;</span>
+        <span class="sig-time">15:37 ET</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge tk-TSLA">TSLA</span>
+        <span class="sig-main">TSLA GEX EXTREME — Net GEX: $96.7M (65th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;TSLA just flipped positive GEX at $96.7M - dealers now buying dips and selling rips, expect reduced volatility.&quot;</span>
+        <span class="sig-time">15:37 ET</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge tk-GOOG">GOOG</span>
+        <span class="sig-main">GOOG GEX EXTREME — Net GEX: $3.3M (85th pct, 30d)</span>
+        <span class="ai-note">💬 GOOG just flipped positive gamma - market makers now buying dips, selling rips, expect lower volatility and range-bound action.</span>
+        <span class="sig-time">15:36 ET</span>
+      </div>
       <div class="sig-row neut">
-        <span class="ticker-badge">AMZN</span>
+        <span class="ticker-badge tk-AAPL">AAPL</span>
+        <span class="sig-main">AAPL GEX EXTREME — Net GEX: $184.6M (97th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;AAPL&#x27;s sitting on a $185M gamma wall - expect muted moves until this massive dealer hedge unwinds.&quot;</span>
+        <span class="sig-time">15:36 ET</span>
+      </div>
+      <div class="sig-row neut" style="opacity:0.45">
+        <span class="ticker-badge tk-AMZN">AMZN</span>
         <span class="sig-main">AMZN GEX EXTREME — Net GEX: $-52.0M (2th pct, 30d)</span>
         <span class="ai-note">💬 &quot;AMZN&#x27;s sitting at 2nd percentile GEX - we&#x27;re looking at potential explosive moves with minimal dealer hedging support.&quot;</span>
         <span class="sig-time">12:57 ET</span>
       </div>
       <div class="sig-row bull" style="opacity:0.45">
-        <span class="ticker-badge">META</span>
+        <span class="ticker-badge tk-META">META</span>
         <span class="sig-main">META GEX EXTREME — Net GEX: $2.0M (14th pct, 30d)</span>
         <span class="ai-note">💬 &quot;META just flipped positive GEX at $2M - dealers now long gamma, expect muted moves and mean reversion around current levels.&quot;</span>
         <span class="sig-time">11:53 ET</span>
       </div>
       <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">IWM</span>
+        <span class="ticker-badge tk-IWM">IWM</span>
         <span class="sig-main">IWM GEX EXTREME — Net GEX: $-1656.3M (4th pct, 30d)</span>
         <span class="ai-note">💬 &quot;IWM&#x27;s at 4th percentile GEX with $1.7B net short - this gamma vacuum could amplify any directional move significantly.&quot;</span>
         <span class="sig-time">11:35 ET</span>
       </div>
       <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">GOOG</span>
+        <span class="ticker-badge tk-GOOG">GOOG</span>
         <span class="sig-main">GOOG GEX EXTREME — Net GEX: $-4.5M (43th pct, 30d)</span>
         <span class="ai-note">💬 &quot;GOOG just flipped negative GEX at -$4.5M - expect higher volatility and momentum acceleration on any directional moves.&quot;</span>
         <span class="sig-time">11:34 ET</span>
       </div>
       <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">AAPL</span>
+        <span class="ticker-badge tk-AAPL">AAPL</span>
         <span class="sig-main">AAPL GEX EXTREME — Net GEX: $93.5M (4th pct, 30d)</span>
         <span class="ai-note">💬 &quot;AAPL&#x27;s gamma is bone dry at 4th percentile - expect explosive moves, perfect setup for long straddles.&quot;</span>
         <span class="sig-time">09:41 ET</span>
       </div>
       <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">UBER</span>
+        <span class="ticker-badge tk-UBER">UBER</span>
         <span class="sig-main">UBER GEX EXTREME — Net GEX: $-31.5M (5th pct, 30d)</span>
         <span class="ai-note">💬 &quot;UBER&#x27;s at extreme low GEX with $31.5M net short - expect massive volatility swings, perfect setup for long straddles.&quot;</span>
         <span class="sig-time">08:55 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">MSFT</span>
-        <span class="sig-main">MSFT GEX EXTREME — Net GEX: $81.3M (4th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;MSFT&#x27;s at 4th percentile GEX - $81M net long means minimal dealer hedging resistance on any upside breakout.&quot;</span>
-        <span class="sig-time">08:55 ET</span>
-      </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">ARM</span>
-        <span class="sig-main">ARM GEX EXTREME — Net GEX: $-14.9M (4th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;ARM&#x27;s at 4th percentile GEX with negative $15M - perfect setup for explosive moves, want to discuss some gamma plays?&quot;</span>
-        <span class="sig-time">08:34 ET</span>
-      </div>
-      <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">NFLX</span>
-        <span class="sig-main">NFLX GEX EXTREME — Net GEX: $211.2M (3th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;NFLX gamma is bone dry at 3rd percentile - perfect setup for explosive moves, want to load volatility?&quot;</span>
-        <span class="sig-time">08:34 ET</span>
-      </div>
-      <div class="sig-row bull" style="opacity:0.45">
-        <span class="ticker-badge">TSLA</span>
-        <span class="sig-main">TSLA GEX EXTREME — Net GEX: $8.5M (19th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;TSLA just flipped positive GEX at $8.5M - dealers now buying dips, selling rips, expect reduced volatility ahead.&quot;</span>
-        <span class="sig-time">08:33 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2145.1M</td><td>40th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1645.3M</td><td>8th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-913.3M</td><td>53th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-630.8M</td><td>83th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+298.7M</td><td>42th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+252.9M</td><td>12th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+152.8M</td><td>17th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+140.9M</td><td>44th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+90.4M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMZN</td><td>$-65.2M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-47.3M</td><td>53th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-36.6M</td><td>5th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-35.1M</td><td>30th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-29.1M</td><td>33th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.0M</td><td>29th</td><td class="trend">↑</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-1519.9M</td><td>94th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1272.5M</td><td>45th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-638.2M</td><td>81th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-547.7M</td><td>78th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+321.8M</td><td>47th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+264.3M</td><td>25th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+184.6M</td><td>96th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+156.0M</td><td>20th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+99.9M</td><td>10th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+96.7M</td><td>65th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-31.8M</td><td>13th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-28.6M</td><td>74th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+28.2M</td><td>62th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-26.0M</td><td>75th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-22.0M</td><td>74th</td><td class="trend">↑</td></tr></tbody></table>
       </div>
     </div>
   
@@ -916,64 +1076,64 @@ function drawHeatmap(elemId, ticker) {
       <div class="card-body scroll">
         
       <div class="sig-row bear">
-        <span class="ticker-badge">JPM</span>
-        <span class="sig-main">JPM Apr&#x27;26 Skew ELEVATED — 25d Skew: +9.6vol (91th pct, 30d)</span>
-        <span class="ai-note">💬 JPM&#x27;s +9.6 vol skew at 91st percentile screams sell puts/buy calls - this elevated put premium is free money.</span>
-        <span class="sig-time">14:12 ET</span>
+        <span class="ticker-badge tk-MRVL">MRVL</span>
+        <span class="sig-main">MRVL Apr&#x27;26 Skew ELEVATED — 25d Skew: +6.0vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;MRVL put skew at +6.0 vol points is screaming rich - sell that put vol and buy calls, this spread is unsustainable.&quot;</span>
+        <span class="sig-time">15:39 ET</span>
       </div>
       <div class="sig-row bear">
-        <span class="ticker-badge">AAPL</span>
-        <span class="sig-main">AAPL Apr&#x27;26 Skew ELEVATED — 25d Skew: +8.1vol (95th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;AAPL&#x27;s 25-delta skew at +8.1 vol points (95th percentile) screams sell puts/buy calls - this elevated put premium is unsustainable.&quot;</span>
-        <span class="sig-time">14:04 ET</span>
+        <span class="ticker-badge tk-UBER">UBER</span>
+        <span class="sig-main">UBER Apr&#x27;26 Skew ELEVATED — 25d Skew: +7.4vol (99th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;UBER&#x27;s +7.4 vol skew is screaming rich - sell those 25-delta puts at 43.7% and buy calls, this 99th percentile level won&#x27;t hold.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
       </div>
       <div class="sig-row bear">
-        <span class="ticker-badge">META</span>
-        <span class="sig-main">META Apr&#x27;26 Skew ELEVATED — 25d Skew: +7.4vol (91th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;META put skew at 7.4 vol points is screaming rich - time to sell that elevated put vol and buy calls instead.&quot;</span>
-        <span class="sig-time">13:44 ET</span>
-      </div>
-      <div class="sig-row neut">
-        <span class="ticker-badge">XLF</span>
-        <span class="sig-main">XLF Apr&#x27;26 Skew CROSSED — 25d Skew: +9.7vol (24th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;XLF skew at +9.7 vol points (24th percentile) signals cheap downside protection - buy puts here before fear premium expands.&quot;</span>
-        <span class="sig-time">13:21 ET</span>
+        <span class="ticker-badge tk-AMD">AMD</span>
+        <span class="sig-main">AMD Apr&#x27;26 Skew ELEVATED — 25d Skew: +12.5vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;AMD&#x27;s 12.5 vol point skew is screaming rich - sell that elevated put vol and buy calls, this imbalance won&#x27;t last.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
       </div>
       <div class="sig-row bear">
-        <span class="ticker-badge">TSLA</span>
-        <span class="sig-main">TSLA Apr&#x27;26 Skew ELEVATED — 25d Skew: +6.9vol (91th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;TSLA put/call skew at +6.9 vol points (91st percentile) screams sell puts, buy calls - this skew is massively overdone.&quot;</span>
-        <span class="sig-time">13:21 ET</span>
+        <span class="ticker-badge tk-IWM">IWM</span>
+        <span class="sig-main">IWM Apr&#x27;26 Skew ELEVATED — 25d Skew: +12.8vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;IWM put skew at +12.8 vol is screaming rich - time to sell that elevated put vol and buy calls against it.&quot;</span>
+        <span class="sig-time">15:38 ET</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge tk-XLE">XLE</span>
+        <span class="sig-main">XLE Apr&#x27;26 Skew COMPRESSED — 25d Skew: +2.1vol (10th pct, 30d)</span>
+        <span class="ai-note">💬 XLE put/call skew at +2.1 vol is historically compressed - time to buy put spreads before energy downside protection gets expensive again.</span>
+        <span class="sig-time">15:38 ET</span>
       </div>
       <div class="sig-row bear">
-        <span class="ticker-badge">ARM</span>
-        <span class="sig-main">ARM Apr&#x27;26 Skew ELEVATED — 25d Skew: +9.3vol (93th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;ARM put skew at +9.3 vol points (93rd percentile) screams sell puts/buy calls - this elevated skew is begging to normalize.&quot;</span>
-        <span class="sig-time">12:35 ET</span>
+        <span class="ticker-badge tk-XLK">XLK</span>
+        <span class="sig-main">XLK Apr&#x27;26 Skew ELEVATED — 25d Skew: +15.8vol (99th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLK put skew at +15.8 vol is screaming rich - fade this elevated put premium and sell the 25-delta puts against calls.&quot;</span>
+        <span class="sig-time">15:37 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">NFLX</span>
-        <span class="sig-main">NFLX Apr&#x27;26 Skew ELEVATED — 25d Skew: +4.9vol (97th pct, 30d)</span>
-        <span class="ai-note">💬 NFLX skew at 97th percentile screams sell put vol here - that +4.9 spread is overdone, fade the fear.</span>
-        <span class="sig-time">12:35 ET</span>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-GS">GS</span>
+        <span class="sig-main">GS Apr&#x27;26 Skew ELEVATED — 25d Skew: +11.9vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;GS put skew at +11.9 vol points is screaming rich - time to sell that fat put premium and buy calls against it.&quot;</span>
+        <span class="sig-time">15:37 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">COIN</span>
-        <span class="sig-main">COIN Apr&#x27;26 Skew ELEVATED — 25d Skew: +7.9vol (95th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;COIN&#x27;s +7.9 skew at 95th percentile screams sell put vol at 78% - downside fear is massively overdone.&quot;</span>
-        <span class="sig-time">12:34 ET</span>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-AMZN">AMZN</span>
+        <span class="sig-main">AMZN Apr&#x27;26 Skew ELEVATED — 25d Skew: +11.6vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 AMZN put skew at +11.6 vol points is screaming rich - time to sell that elevated put vol and fade the fear.</span>
+        <span class="sig-time">15:37 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">MRVL</span>
-        <span class="sig-main">MRVL Apr&#x27;26 Skew CROSSED — 25d Skew: -0.6vol (60th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;MRVL skew at -0.6 vol points is relatively flat - sell puts here, the downside protection is underpriced versus calls.&quot;</span>
-        <span class="sig-time">11:37 ET</span>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-MSFT">MSFT</span>
+        <span class="sig-main">MSFT Apr&#x27;26 Skew ELEVATED — 25d Skew: +7.7vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 MSFT put skew at +7.7 vol (100th percentile) screams sell puts/buy call spreads - this elevated put premium won&#x27;t last.</span>
+        <span class="sig-time">15:36 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
-        <span class="ticker-badge">IWM</span>
-        <span class="sig-main">IWM Apr&#x27;26 Skew CROSSED — 25d Skew: +9.1vol (44th pct, 30d)</span>
-        <span class="ai-note">💬 IWM put skew at +9.1 vol is still cheap - fade the fear, sell puts or buy call spreads.</span>
-        <span class="sig-time">10:01 ET</span>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-QQQ">QQQ</span>
+        <span class="sig-main">QQQ Apr&#x27;26 Skew ELEVATED — 25d Skew: +13.8vol (100th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;QQQ put/call skew at +13.8 vol points is screaming rich - time to sell this elevated put premium back to fair value.&quot;</span>
+        <span class="sig-time">15:35 ET</span>
       </div>
         
       </div>
@@ -989,8 +1149,12 @@ function drawHeatmap(elemId, ticker) {
 </div>
 
 <footer>
-  <span class="wl-badge">SPY</span> <span class="wl-badge">QQQ</span> <span class="wl-badge">NVDA</span> <span class="wl-badge">AAPL</span> <span class="wl-badge">MSFT</span> <span class="wl-badge">META</span> <span class="wl-badge">GOOG</span> <span class="wl-badge">AMZN</span> <span class="wl-badge">TSLA</span> <span class="wl-badge">GS</span> <span class="wl-badge">JPM</span> <span class="wl-badge">XLF</span> <span class="wl-badge">XLK</span> <span class="wl-badge">XLE</span> <span class="wl-badge">IWM</span> <span class="wl-badge">COIN</span> <span class="wl-badge">AMD</span> <span class="wl-badge">NFLX</span> <span class="wl-badge">UBER</span> <span class="wl-badge">ARM</span> <span class="wl-badge">MRVL</span>
-  <span class="footer-right">Powered by Polygon.io + Claude</span>
+  <div class="footer-tickers"><span class="ticker-badge wl-badge tk-SPY">SPY</span> <span class="ticker-badge wl-badge tk-QQQ">QQQ</span> <span class="ticker-badge wl-badge tk-NVDA">NVDA</span> <span class="ticker-badge wl-badge tk-AAPL">AAPL</span> <span class="ticker-badge wl-badge tk-MSFT">MSFT</span> <span class="ticker-badge wl-badge tk-META">META</span> <span class="ticker-badge wl-badge tk-GOOG">GOOG</span> <span class="ticker-badge wl-badge tk-AMZN">AMZN</span> <span class="ticker-badge wl-badge tk-TSLA">TSLA</span> <span class="ticker-badge wl-badge tk-GS">GS</span> <span class="ticker-badge wl-badge tk-JPM">JPM</span> <span class="ticker-badge wl-badge tk-XLF">XLF</span> <span class="ticker-badge wl-badge tk-XLK">XLK</span> <span class="ticker-badge wl-badge tk-XLE">XLE</span> <span class="ticker-badge wl-badge tk-IWM">IWM</span> <span class="ticker-badge wl-badge tk-COIN">COIN</span> <span class="ticker-badge wl-badge tk-AMD">AMD</span> <span class="ticker-badge wl-badge tk-NFLX">NFLX</span> <span class="ticker-badge wl-badge tk-UBER">UBER</span> <span class="ticker-badge wl-badge tk-ARM">ARM</span> <span class="ticker-badge wl-badge tk-MRVL">MRVL</span></div>
+  <div class="footer-bar">
+    <span class="footer-credits">Powered by Polygon.io &times; Claude</span>
+    <img src="assets/LNlogo2.png" alt="Liquidnet" class="footer-logo" onerror="this.style.display='none'">
+    <span class="footer-disc">v2.0 &nbsp;|&nbsp; Data delayed. Not investment advice. &copy; 2026</span>
+  </div>
 </footer>
 
 <script>
