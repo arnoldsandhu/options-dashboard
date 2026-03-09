@@ -257,9 +257,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 09 2026 07:30 ET</span>
+    <span class="updated">Updated Mar 09 2026 07:51 ET</span>
     <span class="status-closed">CLOSED</span>
-    <span class="count-badge">40 signals today</span>
+    <span class="count-badge">41 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -278,17 +278,15 @@
         <div class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
-            <button id="copy-btn" class="copy-btn" data-ts="07:08 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+            <button id="copy-btn" class="copy-btn" data-ts="07:50 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
           </div>
-          <pre id="ai-text" class="ai-text">I notice that the options flow data showing the top calls and puts by volume spike versus 20-day average appears to be missing from your message. 
+          <pre id="ai-text" class="ai-text">I notice the options flow data appears to be missing from your message. Could you please provide the:
 
-To provide the structured Flow Pulse analysis you&#x27;ve requested, I&#x27;ll need:
-- The actual ticker symbols and volume data for top calls
-- The actual ticker symbols and volume data for top puts
-- Ideally strike prices, expirations, and volume multiples vs 20d average
+- TOP CALLS (by vol spike vs 20d avg)
+- TOP PUTS (by vol spike vs 20d avg)
 
-Could you please provide the complete options flow data so I can deliver the institutional-quality analysis in the format you&#x27;ve outlined?</pre>
-          <div class="ai-ts">Analysis as of 07:08 ET</div>
+Once I have the specific tickers, strikes, expirations, and volume metrics, I&#x27;ll deliver the structured Flow Pulse analysis in the institutional research note format you&#x27;ve requested.</pre>
+          <div class="ai-ts">Analysis as of 07:50 ET</div>
         </div>
       </div>
     </div>
@@ -297,6 +295,12 @@ Could you please provide the complete options flow data so I can deliver the ins
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
+      <div class="sig-row bull">
+        <span class="ticker-badge">META</span>
+        <span class="sig-main">META GEX EXTREME — Net GEX: $2.2M (9th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;META just flipped positive gamma at $2.2M - dealers now buying dips and selling rips, expect range compression.&quot;</span>
+        <span class="sig-time">07:51 ET</span>
+      </div>
       <div class="sig-row bear">
         <span class="ticker-badge">IWM</span>
         <span class="sig-main">IWM GEX EXTREME — Net GEX: $-1694.6M (2th pct, 30d)</span>
@@ -351,13 +355,7 @@ Could you please provide the complete options flow data so I can deliver the ins
         <span class="ai-note">💬 &quot;AMZN&#x27;s at zero gamma support - this thing&#x27;s gonna move violently on any catalyst, perfect for your straddle strategy.&quot;</span>
         <span class="sig-time">04:16 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">GOOG</span>
-        <span class="sig-main">GOOG GEX EXTREME — Net GEX: $-3.4M (42th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;GOOG just flipped negative gamma - you&#x27;re looking at accelerated moves both ways, especially on any tech rotation.&quot;</span>
-        <span class="sig-time">04:15 ET</span>
-      </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2290.4M</td><td>21th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1665.1M</td><td>4th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1064.4M</td><td>32th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-607.5M</td><td>88th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+208.6M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+175.0M</td><td>29th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+101.1M</td><td>8th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+92.4M</td><td>13th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-83.4M</td><td>12th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+74.8M</td><td>1th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMZN</td><td>$-47.0M</td><td>1th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-45.1M</td><td>17th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-33.4M</td><td>2th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-26.4M</td><td>40th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.7M</td><td>0th</td><td class="trend">↓</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2262.2M</td><td>25th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1637.6M</td><td>5th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1008.2M</td><td>38th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-615.5M</td><td>87th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+226.9M</td><td>5th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+174.6M</td><td>28th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+106.4M</td><td>12th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+88.1M</td><td>13th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-84.5M</td><td>10th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+76.5M</td><td>2th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMZN</td><td>$-45.1M</td><td>1th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-44.4M</td><td>17th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-34.1M</td><td>2th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-27.4M</td><td>36th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.7M</td><td>0th</td><td class="trend">↓</td></tr></tbody></table>
       </div>
     </div>
   
