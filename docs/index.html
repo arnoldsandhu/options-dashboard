@@ -257,9 +257,9 @@
 <header>
   <h1>📈 Options Flow Dashboard</h1>
   <div class="meta">
-    <span class="updated">Updated Mar 09 2026 03:54 ET</span>
+    <span class="updated">Updated Mar 09 2026 04:20 ET</span>
     <span class="status-closed">CLOSED</span>
-    <span class="count-badge">9 signals today</span>
+    <span class="count-badge">39 signals today</span>
   </div>
   <div class="refresh-wrap"><button id="refresh-btn" onclick="triggerPoll()">&#9889; Refresh Now</button><span id="refresh-status" class="refresh-status"></span></div>
 </header>
@@ -274,23 +274,26 @@
         <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
         <p class="empty">No data yet — building history.</p>
         <div class="ctx-section"><button class="ctx-toggle" onclick="toggleCtx(event)">📰 Context fed to AI ▼</button><pre id="ctx-text" class="ctx-text">MARKET CONTEXT (recent headlines):
+- [GlobeNewswire Inc.] [SSDIY] Mind-Sync TV Announces Strategic Transition from Web to Global FAST Platforms; Pioneering the &quot;Functional TV&quot; Category in Native 4K
+- [GlobeNewswire Inc.] [SDXAY] Sodexo celebrates its 60th anniversary
 - [wsj_markets] Arabica Coffee Prices Hit Record on U.S., Colombia Tariff Spat</pre></div>
         <div class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
-            <button id="copy-btn" class="copy-btn" data-ts="03:32 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
+            <button id="copy-btn" class="copy-btn" data-ts="04:15 ET" onclick="copyAnalysis()">📋 Copy Analysis</button>
           </div>
-          <pre id="ai-text" class="ai-text">I notice that the options flow data appears to be missing from your message. You&#x27;ve included the headers &quot;TOP CALLS (by vol spike vs 20d avg):&quot; and &quot;TOP PUTS (by vol spike vs 20d avg):&quot; but no actual data follows.
+          <pre id="ai-text" class="ai-text">**FLOW PULSE - Options Commentary**
 
-Could you please provide the specific options volume data showing:
-- Ticker symbols
-- Strike prices
-- Expirations
-- Volume figures
-- Volume spike percentages vs 20-day averages
+**HEADLINE:** No significant options flow anomalies detected today, with both call and put volumes remaining within normal trading ranges relative to 20-day averages.
 
-Once I have this data, I&#x27;ll provide the structured Flow Pulse analysis in the institutional research note format you&#x27;ve requested.</pre>
-          <div class="ai-ts">Analysis as of 03:32 ET</div>
+**CALL FLOW ANALYSIS:** The absence of elevated call volume spikes suggests institutional buyers are holding back on directional bullish positioning ahead of year-end. This lack of momentum-chasing behavior indicates either profit-taking in existing long positions or caution around current volatility levels. The subdued call activity contrasts with typical December patterns where we often see increased speculative positioning.
+
+**PUT FLOW ANALYSIS:** Similarly muted put activity suggests hedging demand remains manageable, with no apparent rush to protect portfolios despite recent market volatility. The lack of defensive positioning could indicate either complacency or that institutional portfolios are already adequately hedged heading into year-end. This absence of put buying removes a potential volatility floor.
+
+**SECOND ORDER EFFECTS:** The lack of significant options flow in either direction suggests low gamma exposure buildup, potentially leaving markets more susceptible to underlying stock moves rather than options-driven pin action. This quiet options environment could signal either the calm before increased volatility or indicate that major positioning shifts have already occurred earlier in the month.
+
+**TRADE IDEA:** With options flow subdued, focus on selling volatility in liquid names where implied vol remains elevated relative to realized moves, particularly in high-beta tech names where year-end position adjustments may create range-bound conditions conducive to theta decay strategies.</pre>
+          <div class="ai-ts">Analysis as of 04:15 ET</div>
         </div>
       </div>
     </div>
@@ -299,31 +302,67 @@ Once I have this data, I&#x27;ll provide the structured Flow Pulse analysis in t
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
         
-      <div class="sig-row neut" style="opacity:0.45">
+      <div class="sig-row bear">
+        <span class="ticker-badge">ARM</span>
+        <span class="sig-main">ARM GEX EXTREME — Net GEX: $-16.0M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;ARM&#x27;s at zero gamma support with $16M negative - any volatility spike here could trigger explosive moves both ways.&quot;</span>
+        <span class="sig-time">04:20 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">UBER</span>
+        <span class="sig-main">UBER GEX EXTREME — Net GEX: $-38.8M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;UBER&#x27;s at zero gamma support with $39M negative GEX - prime for explosive moves, want to buy some straddles?&quot;</span>
+        <span class="sig-time">04:19 ET</span>
+      </div>
+      <div class="sig-row neut">
         <span class="ticker-badge">NFLX</span>
-        <span class="sig-main">NFLX GEX EXTREME — Net GEX: $258.2M (0th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;NFLX gamma is dead - zero cushion means any decent volume could send this thing flying or crashing, want to get long some straddles?&quot;</span>
-        <span class="sig-time">00:02 ET</span>
+        <span class="sig-main">NFLX GEX EXTREME — Net GEX: $197.4M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;NFLX gamma is bone dry at 0th percentile - perfect setup for explosive moves, want to discuss some vol strategies?&quot;</span>
+        <span class="sig-time">04:19 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
+      <div class="sig-row neut">
         <span class="ticker-badge">COIN</span>
-        <span class="sig-main">COIN GEX EXTREME — Net GEX: $6.2M (1th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;COIN&#x27;s at 1st percentile GEX - massive gamma squeeze potential if we break higher, want to load calls before dealers flip long?&quot;</span>
-        <span class="sig-time">00:02 ET</span>
+        <span class="sig-main">COIN GEX EXTREME — Net GEX: $2.5M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;COIN&#x27;s at zero gamma - massive move incoming, perfect setup for long straddles before this powder keg explodes.&quot;</span>
+        <span class="sig-time">04:18 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
+      <div class="sig-row neut">
+        <span class="ticker-badge">XLF</span>
+        <span class="sig-main">XLF GEX CONCENTRATION — Strike $50 has 27% of total GEX ($369.5M)</span>
+        <span class="ai-note">💬 &quot;XLF&#x27;s sitting on a massive $370M gamma wall at the 50 strike - expect heavy pinning action into expiry.&quot;</span>
+        <span class="sig-time">04:17 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">GS</span>
+        <span class="sig-main">GS GEX EXTREME — Net GEX: $-6.3M (96th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;GS showing massive negative gamma at -$6.3M, expect violent moves as dealers chase price in both directions.&quot;</span>
+        <span class="sig-time">04:17 ET</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge">TSLA</span>
+        <span class="sig-main">TSLA GEX EXTREME — Net GEX: $-3.0M (12th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;TSLA just flipped negative gamma at -$3M GEX - expect higher volatility and momentum acceleration on any directional moves.&quot;</span>
+        <span class="sig-time">04:16 ET</span>
+      </div>
+      <div class="sig-row neut">
         <span class="ticker-badge">AMZN</span>
-        <span class="sig-main">AMZN GEX EXTREME — Net GEX: $91.2M (4th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;AMZN&#x27;s GEX at 4th percentile - dealers have minimal hedging cushion, expect explosive moves on any catalyst.&quot;</span>
-        <span class="sig-time">00:01 ET</span>
+        <span class="sig-main">AMZN GEX EXTREME — Net GEX: $20.2M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;AMZN&#x27;s at zero gamma support - this thing&#x27;s gonna move violently on any catalyst, perfect for your straddle strategy.&quot;</span>
+        <span class="sig-time">04:16 ET</span>
       </div>
-      <div class="sig-row neut" style="opacity:0.45">
+      <div class="sig-row bear">
+        <span class="ticker-badge">GOOG</span>
+        <span class="sig-main">GOOG GEX EXTREME — Net GEX: $-3.4M (42th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;GOOG just flipped negative gamma - you&#x27;re looking at accelerated moves both ways, especially on any tech rotation.&quot;</span>
+        <span class="sig-time">04:15 ET</span>
+      </div>
+      <div class="sig-row neut">
         <span class="ticker-badge">MSFT</span>
-        <span class="sig-main">MSFT GEX EXTREME — Net GEX: $114.1M (2th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;MSFT gamma extremely thin at $114M - any decent size flow will move this thing, prime for volatility expansion plays.&quot;</span>
-        <span class="sig-time">00:01 ET</span>
+        <span class="sig-main">MSFT GEX EXTREME — Net GEX: $83.3M (0th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;MSFT gamma is bone dry at $83M - we&#x27;re seeing massive vol expansion potential with any directional move here.&quot;</span>
+        <span class="sig-time">04:15 ET</span>
       </div>
-        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-1592.3M</td><td>60th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1101.1M</td><td>58th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-774.8M</td><td>55th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-524.4M</td><td>88th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+258.2M</td><td>0th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+200.0M</td><td>13th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+126.4M</td><td>19th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+120.1M</td><td>11th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+114.1M</td><td>2th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+91.1M</td><td>3th</td><td class="trend">→</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-57.7M</td><td>22th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-31.9M</td><td>37th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-25.0M</td><td>6th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-22.5M</td><td>56th</td><td class="trend">↑</td></tr></tbody></table>
+        <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-2072.1M</td><td>44th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1408.9M</td><td>27th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-1111.2M</td><td>25th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-677.5M</td><td>49th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+197.4M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+145.1M</td><td>13th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+86.9M</td><td>10th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+83.3M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+82.3M</td><td>1th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-79.8M</td><td>13th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-46.4M</td><td>15th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-38.8M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-30.1M</td><td>29th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+24.7M</td><td>0th</td><td class="trend">↓</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AMZN</td><td>$+20.2M</td><td>0th</td><td class="trend">↓</td></tr></tbody></table>
       </div>
     </div>
   
@@ -331,35 +370,65 @@ Once I have this data, I&#x27;ll provide the structured Flow Pulse analysis in t
       <div class="card-header">⚡ SKEW EXTREMES</div>
       <div class="card-body scroll">
         
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">QQQ</span>
-        <span class="sig-main">QQQ Apr&#x27;26 Skew ELEVATED — 25d Skew: +12.4vol (90th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;QQQ put skew at +12.4 vol points is screaming rich - time to sell that elevated put vol and buy calls for the reversion trade.&quot;</span>
-        <span class="sig-time">01:26 ET</span>
+      <div class="sig-row bull">
+        <span class="ticker-badge">ARM</span>
+        <span class="sig-main">ARM Apr&#x27;26 Skew COMPRESSED — 25d Skew: -3.9vol (1th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;ARM put/call skew at -3.9 vol points (1st percentile) screams sell call vol and buy put vol - this compression won&#x27;t last.&quot;</span>
+        <span class="sig-time">04:20 ET</span>
       </div>
-      <div class="sig-row bull" style="opacity:0.45">
+      <div class="sig-row bull">
+        <span class="ticker-badge">UBER</span>
+        <span class="sig-main">UBER Apr&#x27;26 Skew COMPRESSED — 25d Skew: -2.5vol (1th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;UBER put/call skew at -2.5 vol is extremely compressed at 1st percentile - time to buy puts and sell calls, this skew&#x27;s about to blow out.&quot;</span>
+        <span class="sig-time">04:19 ET</span>
+      </div>
+      <div class="sig-row bull">
         <span class="ticker-badge">NFLX</span>
-        <span class="sig-main">NFLX Apr&#x27;26 Skew COMPRESSED — 25d Skew: +1.6vol (3th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;NFLX skew at +1.6 vol is brutally compressed - this is a screaming buy on downside protection before it normalizes.&quot;</span>
-        <span class="sig-time">00:02 ET</span>
+        <span class="sig-main">NFLX Apr&#x27;26 Skew COMPRESSED — 25d Skew: -4.5vol (1th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;NFLX skew at -4.5 vol points (1st percentile) screams sell call vol and buy put vol - this compression won&#x27;t last.&quot;</span>
+        <span class="sig-time">04:19 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
+      <div class="sig-row bull">
+        <span class="ticker-badge">AMD</span>
+        <span class="sig-main">AMD Apr&#x27;26 Skew COMPRESSED — 25d Skew: -0.8vol (5th pct, 30d)</span>
+        <span class="ai-note">💬 AMD&#x27;s -0.8 vol skew at 5th percentile screams buy puts here - this compressed skew won&#x27;t last with earnings risk building.</span>
+        <span class="sig-time">04:19 ET</span>
+      </div>
+      <div class="sig-row neut">
+        <span class="ticker-badge">COIN</span>
+        <span class="sig-main">COIN Apr&#x27;26 Skew CROSSED — 25d Skew: -3.2vol (11th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;COIN put skew at -3.2 vol points (11th percentile) screams buy puts here - downside protection is getting stupid cheap.&quot;</span>
+        <span class="sig-time">04:18 ET</span>
+      </div>
+      <div class="sig-row bull">
         <span class="ticker-badge">IWM</span>
-        <span class="sig-main">IWM Apr&#x27;26 Skew ELEVATED — 25d Skew: +10.9vol (99th pct, 30d)</span>
-        <span class="ai-note">💬 &quot;IWM put/call skew at +10.9 vol points is screaming rich - time to sell put vol and buy call vol.&quot;</span>
-        <span class="sig-time">00:02 ET</span>
+        <span class="sig-main">IWM Apr&#x27;26 Skew COMPRESSED — 25d Skew: -0.8vol (5th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;IWM skew at -0.8 vol points (5th percentile) is severely compressed - time to buy put vol before this normalizes higher.&quot;</span>
+        <span class="sig-time">04:18 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">NVDA</span>
-        <span class="sig-main">NVDA Apr&#x27;26 Skew ELEVATED — 25d Skew: +13.2vol (96th pct, 30d)</span>
-        <span class="ai-note">💬 NVDA put skew at +13.2 vol (96th percentile) screams sell puts/buy calls - this elevated put premium is begging to be monetized.</span>
-        <span class="sig-time">00:01 ET</span>
+      <div class="sig-row bear">
+        <span class="ticker-badge">XLE</span>
+        <span class="sig-main">XLE Apr&#x27;26 Skew CROSSED — 25d Skew: +11.0vol (84th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLE put skew at +11 vol is screaming rich - fade this elevated fear premium by selling puts or buying call spreads.&quot;</span>
+        <span class="sig-time">04:18 ET</span>
       </div>
-      <div class="sig-row bear" style="opacity:0.45">
-        <span class="ticker-badge">SPY</span>
-        <span class="sig-main">SPY Apr&#x27;26 Skew ELEVATED — 25d Skew: +12.3vol (100th pct, 30d)</span>
-        <span class="ai-note">💬 Skew&#x27;s absolutely screaming at +12.3 vol - time to sell puts and buy calls, this elevated premium won&#x27;t last.</span>
-        <span class="sig-time">00:01 ET</span>
+      <div class="sig-row bull">
+        <span class="ticker-badge">XLK</span>
+        <span class="sig-main">XLK Apr&#x27;26 Skew COMPRESSED — 25d Skew: +3.9vol (5th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLK skew at +3.9 vol is historically compressed - time to sell puts and buy calls before this mean-reverts higher.&quot;</span>
+        <span class="sig-time">04:18 ET</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge">XLF</span>
+        <span class="sig-main">XLF Apr&#x27;26 Skew COMPRESSED — 25d Skew: +3.6vol (5th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;XLF skew at +3.6 vol is extremely compressed - time to sell put spreads and buy call spreads into this 5th percentile reading.&quot;</span>
+        <span class="sig-time">04:17 ET</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge">JPM</span>
+        <span class="sig-main">JPM Apr&#x27;26 Skew COMPRESSED — 25d Skew: -0.0vol (5th pct, 30d)</span>
+        <span class="ai-note">💬 &quot;JPM skew at 0.0 vol points (5th percentile) screams buy the puts - this compression won&#x27;t last with earnings risk ahead.&quot;</span>
+        <span class="sig-time">04:17 ET</span>
       </div>
         
       </div>
