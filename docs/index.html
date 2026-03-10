@@ -570,7 +570,7 @@
       </div>
     </div>
     <div class="hdr-right">
-      <span class="hdr-time">Mar 10 2026 11:34 ET</span>
+      <span class="hdr-time">Mar 10 2026 14:32 ET</span>
       <span class="status-open"><span class="market-dot"></span>OPEN</span>
     </div>
   </div>
@@ -663,525 +663,24 @@ The cleaner expression is relative — watch whether energy sector call flow sus
         </div>
       </div>
     </div>
-  <div id="gex-chart-panel" class="card gex-viz-full"><div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><span>⚡ GAMMA EXPOSURE — STRIKE BREAKDOWN</span><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><button id="gex-toggle-net" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('net')" title="Toggle net GEX vs split call/put bars">Net GEX</button><button id="gex-toggle-levels" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('levels')" title="Show/hide key gamma levels">Key Levels</button><button id="gex-toggle-zdte" class="gex-toggle-btn gex-toggle-active" onclick="gexToggle('zdte')" title="Show/hide 0DTE gamma">0DTE</button><button onclick="exportPanel('gex-chart-panel','GEX_Chart')" class="export-btn">📸 Save Chart</button></div></div><div class="card-body"><div class="gex-tabs"><button class="gex-tab  gex-tab-active" data-t="SPY" onclick="switchGexTicker('SPY')">SPY</button><button class="gex-tab" data-t="QQQ" onclick="switchGexTicker('QQQ')">QQQ</button><button class="gex-tab" data-t="SPX" onclick="switchGexTicker('SPX')">SPX</button></div><div class="gex-stats-strip" id="gex-stats-strip"><div class="gex-ss-item"><div class="gex-ss-lbl">TICKER</div><div class="gex-ss-val" id="gex-ss-ticker">—</div></div><div class="gex-ss-sep"></div><div class="gex-ss-item"><div class="gex-ss-lbl">SPOT</div><div class="gex-ss-val" id="gex-ss-spot">—</div></div><div class="gex-ss-sep"></div><div class="gex-ss-item"><div class="gex-ss-lbl">NET GEX (1% move)</div><div class="gex-ss-val" id="gex-ss-netgex">—</div></div><div class="gex-ss-sep"></div><div class="gex-ss-item"><div class="gex-ss-lbl">GAMMA FLIP (spot-scan)</div><div class="gex-ss-val" id="gex-ss-flip">—</div></div><div class="gex-ss-sep"></div><div class="gex-ss-item"><div class="gex-ss-lbl">STABILITY</div><div class="gex-ss-val" id="gex-ss-stab">—</div></div><div class="gex-ss-sep"></div><div class="gex-ss-item gex-ss-regime-item"><div class="gex-ss-lbl">REGIME</div><div class="gex-ss-val" id="gex-ss-regime">—</div></div></div><div id="gex-key-levels-bar" class="gex-key-levels-bar"></div><div class="gex-chart-grid"><div><div class="gex-sub-lbl">GEX by Strike</div><div id="gex-strike-chart"></div></div><div><div class="gex-sub-lbl">Intraday Price Path</div><div id="gex-price-chart"></div></div><div id="gex-zdte-col"><div class="gex-sub-lbl">0DTE Gamma</div><div id="gex-0dte-chart"></div></div></div><div class="gex-heatmap-section"><div class="gex-sub-lbl">GEX Heatmap — Strike Profile Over Time</div><div id="gex-heatmap-chart" class="gex-heatmap-canvas-wrap"></div></div><details class="gex-diag-details" id="gex-diagnostics-panel"><summary class="gex-diag-summary">Diagnostics &amp; Methodology</summary><div id="gex-diag-body" class="gex-diag-body">Loading…</div></details></div></div><script>const GEX_DATA = {"SPY": {"ticker": "SPY", "spot": 680.5, "net_gex_m": -5790.32, "gex_mode": "1pct", "regime": "negative", "regime_summary": "Strong negative gamma \u2014 dealer amplifying  [High convexity zone]  \u2014  Net GEX $-5790.3M (1% move, est.)", "stability_pct": 0.0, "strikes": [{"strike": 648.0, "call_gex_m": 2.9452, "put_gex_m": 107.9998, "net_gex_m": -105.0546}, {"strike": 649.0, "call_gex_m": 1.1004, "put_gex_m": 90.3949, "net_gex_m": -89.2945}, {"strike": 650.0, "call_gex_m": 169.8269, "put_gex_m": 1172.9179, "net_gex_m": -1003.0911}, {"strike": 651.0, "call_gex_m": 1.7524, "put_gex_m": 100.4999, "net_gex_m": -98.7475}, {"strike": 652.0, "call_gex_m": 3.1222, "put_gex_m": 132.2479, "net_gex_m": -129.1258}, {"strike": 653.0, "call_gex_m": 0.9876, "put_gex_m": 138.2207, "net_gex_m": -137.2331}, {"strike": 655.0, "call_gex_m": 43.767, "put_gex_m": 621.5965, "net_gex_m": -577.8295}, {"strike": 656.0, "call_gex_m": 4.6078, "put_gex_m": 99.8423, "net_gex_m": -95.2345}, {"strike": 657.0, "call_gex_m": 3.3897, "put_gex_m": 221.6511, "net_gex_m": -218.2614}, {"strike": 658.0, "call_gex_m": 2.1751, "put_gex_m": 147.3152, "net_gex_m": -145.1401}, {"strike": 659.0, "call_gex_m": 5.6837, "put_gex_m": 147.6944, "net_gex_m": -142.0108}, {"strike": 660.0, "call_gex_m": 218.5052, "put_gex_m": 1847.9533, "net_gex_m": -1629.4481}, {"strike": 661.0, "call_gex_m": 10.2415, "put_gex_m": 130.0243, "net_gex_m": -119.7829}, {"strike": 662.0, "call_gex_m": 15.4256, "put_gex_m": 130.6359, "net_gex_m": -115.2103}, {"strike": 663.0, "call_gex_m": 23.9698, "put_gex_m": 117.8056, "net_gex_m": -93.8358}, {"strike": 665.0, "call_gex_m": 179.2491, "put_gex_m": 595.2746, "net_gex_m": -416.0255}, {"strike": 666.0, "call_gex_m": 44.9629, "put_gex_m": 125.1163, "net_gex_m": -80.1534}, {"strike": 668.0, "call_gex_m": 62.481, "put_gex_m": 161.0676, "net_gex_m": -98.5866}, {"strike": 669.0, "call_gex_m": 62.0619, "put_gex_m": 146.4078, "net_gex_m": -84.3459}, {"strike": 670.0, "call_gex_m": 484.8771, "put_gex_m": 1513.1846, "net_gex_m": -1028.3075}, {"strike": 672.0, "call_gex_m": 126.4408, "put_gex_m": 234.9765, "net_gex_m": -108.5357}, {"strike": 675.0, "call_gex_m": 518.6583, "put_gex_m": 1666.7871, "net_gex_m": -1148.1288}, {"strike": 676.0, "call_gex_m": 296.6999, "put_gex_m": 208.5578, "net_gex_m": 88.1421}, {"strike": 679.0, "call_gex_m": 411.5193, "put_gex_m": 314.5705, "net_gex_m": 96.9488}, {"strike": 680.0, "call_gex_m": 1167.6312, "put_gex_m": 1478.528, "net_gex_m": -310.8968}, {"strike": 681.0, "call_gex_m": 365.8421, "put_gex_m": 191.6545, "net_gex_m": 174.1876}, {"strike": 682.0, "call_gex_m": 557.5126, "put_gex_m": 275.899, "net_gex_m": 281.6136}, {"strike": 683.0, "call_gex_m": 422.4248, "put_gex_m": 199.6077, "net_gex_m": 222.8171}, {"strike": 684.0, "call_gex_m": 399.4585, "put_gex_m": 238.0466, "net_gex_m": 161.4119}, {"strike": 685.0, "call_gex_m": 1311.6557, "put_gex_m": 872.1262, "net_gex_m": 439.5295}, {"strike": 686.0, "call_gex_m": 324.787, "put_gex_m": 162.642, "net_gex_m": 162.145}, {"strike": 687.0, "call_gex_m": 290.4531, "put_gex_m": 174.6155, "net_gex_m": 115.8376}, {"strike": 688.0, "call_gex_m": 256.2839, "put_gex_m": 162.9046, "net_gex_m": 93.3793}, {"strike": 689.0, "call_gex_m": 300.8151, "put_gex_m": 150.9136, "net_gex_m": 149.9015}, {"strike": 690.0, "call_gex_m": 1119.8948, "put_gex_m": 666.5996, "net_gex_m": 453.2952}, {"strike": 691.0, "call_gex_m": 188.1531, "put_gex_m": 65.0072, "net_gex_m": 123.1459}, {"strike": 692.0, "call_gex_m": 206.5596, "put_gex_m": 68.5609, "net_gex_m": 137.9987}, {"strike": 693.0, "call_gex_m": 216.05, "put_gex_m": 79.3395, "net_gex_m": 136.7105}, {"strike": 694.0, "call_gex_m": 225.174, "put_gex_m": 44.6004, "net_gex_m": 180.5736}, {"strike": 695.0, "call_gex_m": 555.4536, "put_gex_m": 229.9089, "net_gex_m": 325.5447}, {"strike": 696.0, "call_gex_m": 140.1281, "put_gex_m": 39.7432, "net_gex_m": 100.3849}, {"strike": 697.0, "call_gex_m": 198.2335, "put_gex_m": 37.1631, "net_gex_m": 161.0704}, {"strike": 698.0, "call_gex_m": 169.1777, "put_gex_m": 40.4815, "net_gex_m": 128.6963}, {"strike": 699.0, "call_gex_m": 149.2497, "put_gex_m": 22.0982, "net_gex_m": 127.1515}, {"strike": 700.0, "call_gex_m": 902.6807, "put_gex_m": 256.5084, "net_gex_m": 646.1724}, {"strike": 701.0, "call_gex_m": 118.289, "put_gex_m": 8.4074, "net_gex_m": 109.8816}, {"strike": 705.0, "call_gex_m": 325.5851, "put_gex_m": 84.7905, "net_gex_m": 240.7946}, {"strike": 708.0, "call_gex_m": 80.1559, "put_gex_m": 0.4517, "net_gex_m": 79.7043}, {"strike": 710.0, "call_gex_m": 322.864, "put_gex_m": 84.8694, "net_gex_m": 237.9947}, {"strike": 713.0, "call_gex_m": 84.0792, "put_gex_m": 0.2112, "net_gex_m": 83.868}], "zdtes": [{"strike": 647.0, "call_gex_m": 0.0009, "put_gex_m": 5.3892, "net_gex_m": -5.3883}, {"strike": 648.0, "call_gex_m": 0.2527, "put_gex_m": 4.5507, "net_gex_m": -4.298}, {"strike": 649.0, "call_gex_m": 0.0171, "put_gex_m": 0.8981, "net_gex_m": -0.881}, {"strike": 650.0, "call_gex_m": 0.6755, "put_gex_m": 11.0112, "net_gex_m": -10.3357}, {"strike": 651.0, "call_gex_m": 0.0185, "put_gex_m": 1.642, "net_gex_m": -1.6235}, {"strike": 652.0, "call_gex_m": 0.0568, "put_gex_m": 2.4347, "net_gex_m": -2.3779}, {"strike": 653.0, "call_gex_m": 0.0262, "put_gex_m": 5.5375, "net_gex_m": -5.5113}, {"strike": 654.0, "call_gex_m": 0.2303, "put_gex_m": 10.7466, "net_gex_m": -10.5163}, {"strike": 655.0, "call_gex_m": 0.1039, "put_gex_m": 9.9476, "net_gex_m": -9.8437}, {"strike": 656.0, "call_gex_m": 0.0586, "put_gex_m": 4.1809, "net_gex_m": -4.1223}, {"strike": 657.0, "call_gex_m": 0.1423, "put_gex_m": 5.9181, "net_gex_m": -5.7757}, {"strike": 658.0, "call_gex_m": 0.1239, "put_gex_m": 7.7033, "net_gex_m": -7.5794}, {"strike": 659.0, "call_gex_m": 0.242, "put_gex_m": 5.7639, "net_gex_m": -5.522}, {"strike": 660.0, "call_gex_m": 1.9363, "put_gex_m": 15.4675, "net_gex_m": -13.5312}, {"strike": 661.0, "call_gex_m": 1.3935, "put_gex_m": 47.7586, "net_gex_m": -46.3652}, {"strike": 662.0, "call_gex_m": 3.4736, "put_gex_m": 13.6597, "net_gex_m": -10.186}, {"strike": 663.0, "call_gex_m": 4.9416, "put_gex_m": 11.7855, "net_gex_m": -6.8438}, {"strike": 664.0, "call_gex_m": 9.4533, "put_gex_m": 10.926, "net_gex_m": -1.4728}, {"strike": 665.0, "call_gex_m": 27.7549, "put_gex_m": 32.086, "net_gex_m": -4.3311}, {"strike": 666.0, "call_gex_m": 16.3142, "put_gex_m": 18.2389, "net_gex_m": -1.9247}, {"strike": 667.0, "call_gex_m": 13.0423, "put_gex_m": 20.8803, "net_gex_m": -7.838}, {"strike": 668.0, "call_gex_m": 18.445, "put_gex_m": 39.2994, "net_gex_m": -20.8545}, {"strike": 669.0, "call_gex_m": 15.8203, "put_gex_m": 27.5883, "net_gex_m": -11.768}, {"strike": 670.0, "call_gex_m": 39.6001, "put_gex_m": 198.3919, "net_gex_m": -158.7918}, {"strike": 671.0, "call_gex_m": 43.766, "put_gex_m": 45.4507, "net_gex_m": -1.6847}, {"strike": 672.0, "call_gex_m": 34.4496, "put_gex_m": 65.3317, "net_gex_m": -30.8821}, {"strike": 673.0, "call_gex_m": 52.8428, "put_gex_m": 36.1642, "net_gex_m": 16.6787}, {"strike": 674.0, "call_gex_m": 44.4325, "put_gex_m": 69.6185, "net_gex_m": -25.186}, {"strike": 675.0, "call_gex_m": 171.3574, "put_gex_m": 155.4669, "net_gex_m": 15.8905}, {"strike": 676.0, "call_gex_m": 179.4582, "put_gex_m": 99.8049, "net_gex_m": 79.6533}, {"strike": 677.0, "call_gex_m": 139.0064, "put_gex_m": 131.3314, "net_gex_m": 7.675}, {"strike": 678.0, "call_gex_m": 367.6248, "put_gex_m": 217.9986, "net_gex_m": 149.6262}, {"strike": 679.0, "call_gex_m": 249.2617, "put_gex_m": 96.5106, "net_gex_m": 152.7512}, {"strike": 680.0, "call_gex_m": 405.8066, "put_gex_m": 266.1537, "net_gex_m": 139.6529}, {"strike": 681.0, "call_gex_m": 180.3896, "put_gex_m": 69.0799, "net_gex_m": 111.3097}, {"strike": 682.0, "call_gex_m": 240.0585, "put_gex_m": 49.2988, "net_gex_m": 190.7596}, {"strike": 683.0, "call_gex_m": 120.2886, "put_gex_m": 29.8341, "net_gex_m": 90.4545}, {"strike": 684.0, "call_gex_m": 157.2646, "put_gex_m": 56.7509, "net_gex_m": 100.5137}, {"strike": 685.0, "call_gex_m": 170.6428, "put_gex_m": -0.0, "net_gex_m": 170.6428}, {"strike": 686.0, "call_gex_m": 80.5406, "put_gex_m": -0.0, "net_gex_m": 80.5406}, {"strike": 687.0, "call_gex_m": 53.4799, "put_gex_m": 5.9373, "net_gex_m": 47.5426}, {"strike": 688.0, "call_gex_m": 41.7719, "put_gex_m": 6.1921, "net_gex_m": 35.5798}, {"strike": 689.0, "call_gex_m": 21.621, "put_gex_m": -0.0, "net_gex_m": 21.621}, {"strike": 690.0, "call_gex_m": 54.5539, "put_gex_m": 0.5201, "net_gex_m": 54.0337}, {"strike": 691.0, "call_gex_m": 6.5501, "put_gex_m": -0.0, "net_gex_m": 6.5501}, {"strike": 692.0, "call_gex_m": 8.6937, "put_gex_m": -0.0, "net_gex_m": 8.6937}, {"strike": 693.0, "call_gex_m": 6.094, "put_gex_m": -0.0, "net_gex_m": 6.094}, {"strike": 694.0, "call_gex_m": 6.1954, "put_gex_m": -0.0, "net_gex_m": 6.1954}, {"strike": 695.0, "call_gex_m": 5.8003, "put_gex_m": -0.0, "net_gex_m": 5.8003}, {"strike": 696.0, "call_gex_m": 3.1748, "put_gex_m": -0.0, "net_gex_m": 3.1748}, {"strike": 697.0, "call_gex_m": 4.2472, "put_gex_m": -0.0, "net_gex_m": 4.2472}, {"strike": 698.0, "call_gex_m": 3.5065, "put_gex_m": -0.0, "net_gex_m": 3.5065}, {"strike": 699.0, "call_gex_m": 2.5413, "put_gex_m": -0.0, "net_gex_m": 2.5413}, {"strike": 700.0, "call_gex_m": 8.8418, "put_gex_m": -0.0, "net_gex_m": 8.8418}, {"strike": 701.0, "call_gex_m": 1.7904, "put_gex_m": -0.0, "net_gex_m": 1.7904}, {"strike": 702.0, "call_gex_m": 2.009, "put_gex_m": -0.0, "net_gex_m": 2.009}, {"strike": 703.0, "call_gex_m": 3.3535, "put_gex_m": -0.0, "net_gex_m": 3.3535}, {"strike": 704.0, "call_gex_m": 0.5283, "put_gex_m": -0.0, "net_gex_m": 0.5283}, {"strike": 705.0, "call_gex_m": 1.3044, "put_gex_m": -0.0, "net_gex_m": 1.3044}, {"strike": 706.0, "call_gex_m": 0.7127, "put_gex_m": -0.0, "net_gex_m": 0.7127}, {"strike": 707.0, "call_gex_m": 0.3769, "put_gex_m": -0.0, "net_gex_m": 0.3769}, {"strike": 708.0, "call_gex_m": 2.146, "put_gex_m": -0.0, "net_gex_m": 2.146}, {"strike": 709.0, "call_gex_m": 0.2419, "put_gex_m": -0.0, "net_gex_m": 0.2419}, {"strike": 710.0, "call_gex_m": 0.9855, "put_gex_m": -0.0, "net_gex_m": 0.9855}, {"strike": 711.0, "call_gex_m": 0.1943, "put_gex_m": -0.0, "net_gex_m": 0.1943}, {"strike": 712.0, "call_gex_m": 0.1305, "put_gex_m": -0.0, "net_gex_m": 0.1305}, {"strike": 713.0, "call_gex_m": 0.1447, "put_gex_m": -0.0, "net_gex_m": 0.1447}, {"strike": 714.0, "call_gex_m": 0.0488, "put_gex_m": -0.0, "net_gex_m": 0.0488}], "key_strikes": [650.0, 655.0, 660.0, 670.0, 675.0, 700.0], "price_bars": [], "flip_point": null, "flip_note": "Flip not found in +-10% range -- nearest: $612.45 (low boundary)", "flip_curve": [{"spot": 612.45, "net_gex": -4690159870.0}, {"spot": 615.8525, "net_gex": -4742417515.0}, {"spot": 619.255, "net_gex": -4794964677.0}, {"spot": 622.6575, "net_gex": -4847801354.0}, {"spot": 626.06, "net_gex": -4900927548.0}, {"spot": 629.4625, "net_gex": -4954343257.0}, {"spot": 632.865, "net_gex": -5008048483.0}, {"spot": 636.2675, "net_gex": -5062043225.0}, {"spot": 639.67, "net_gex": -5116327482.0}, {"spot": 643.0725, "net_gex": -5170901256.0}, {"spot": 646.475, "net_gex": -5225764546.0}, {"spot": 649.8775, "net_gex": -5280917352.0}, {"spot": 653.28, "net_gex": -5336359674.0}, {"spot": 656.6825, "net_gex": -5392091512.0}, {"spot": 660.085, "net_gex": -5448112866.0}, {"spot": 663.4875, "net_gex": -5504423736.0}, {"spot": 666.89, "net_gex": -5561024122.0}, {"spot": 670.2925, "net_gex": -5617914024.0}, {"spot": 673.695, "net_gex": -5675093442.0}, {"spot": 677.0975, "net_gex": -5732562376.0}, {"spot": 680.5, "net_gex": -5790320827.0}, {"spot": 683.9025, "net_gex": -5848368793.0}, {"spot": 687.305, "net_gex": -5906706275.0}, {"spot": 690.7075, "net_gex": -5965333274.0}, {"spot": 694.11, "net_gex": -6024249788.0}, {"spot": 697.5125, "net_gex": -6083455819.0}, {"spot": 700.915, "net_gex": -6142951365.0}, {"spot": 704.3175, "net_gex": -6202736428.0}, {"spot": 707.72, "net_gex": -6262811006.0}, {"spot": 711.1225, "net_gex": -6323175101.0}, {"spot": 714.525, "net_gex": -6383828711.0}, {"spot": 717.9275, "net_gex": -6444771838.0}, {"spot": 721.33, "net_gex": -6506004481.0}, {"spot": 724.7325, "net_gex": -6567526640.0}, {"spot": 728.135, "net_gex": -6629338314.0}, {"spot": 731.5375, "net_gex": -6691439505.0}, {"spot": 734.94, "net_gex": -6753830212.0}, {"spot": 738.3425, "net_gex": -6816510435.0}, {"spot": 741.745, "net_gex": -6879480174.0}, {"spot": 745.1475, "net_gex": -6942739429.0}, {"spot": 748.55, "net_gex": -7006288200.0}], "put_wall": 660.0, "call_wall": 685.0, "call_walls": [{"strike": 685.0, "gex_m": 1311.6557391314975, "distance_pct": 0.66}, {"strike": 680.0, "gex_m": 1167.6312215414646, "distance_pct": -0.07}, {"strike": 690.0, "gex_m": 1119.8948021581864, "distance_pct": 1.4}], "put_walls": [{"strike": 660.0, "gex_m": 1847.9533468547706, "distance_pct": -3.01}, {"strike": 675.0, "gex_m": 1666.787139858912, "distance_pct": -0.81}, {"strike": 670.0, "gex_m": 1513.1846184684175, "distance_pct": -1.54}], "max_gamma_strike": 680.0, "magnet_score": 27.89, "regime_label": "Strong negative gamma \u2014 dealer amplifying", "regime_subflags": ["High convexity zone"], "net_gex_0dte_m": 1088.02, "flow_gex_0dte_m": 25266.74, "abs_gex_0dte_m": 4981.65, "pctiles_30d": {"net_gex_pctile": 0.0, "net_gex_zscore": 0.0, "abs_gex_pctile": 0.0, "abs_gex_zscore": 0.0, "zdte_abs_pctile": 0.0, "zdte_abs_zscore": 0.0, "zdte_share_pctile": 0.0, "zdte_share_zscore": 0.0, "history_count": 1}, "diagnostics": {"included": 9261, "zero_oi": 3855, "missing_iv": 9349, "total": 13116}}, "QQQ": {"ticker": "QQQ", "spot": 611.3, "net_gex_m": 1031.92, "gex_mode": "1pct", "regime": "positive", "regime_summary": "Strong positive gamma \u2014 dealer dampening  [High convexity zone]  \u2014  Net GEX $+1031.9M (1% move, est.)", "stability_pct": 100.0, "strikes": [{"strike": 585.0, "call_gex_m": 41.167, "put_gex_m": 267.1234, "net_gex_m": -225.9564}, {"strike": 587.0, "call_gex_m": 1.3642, "put_gex_m": 29.4005, "net_gex_m": -28.0363}, {"strike": 588.0, "call_gex_m": 2.1516, "put_gex_m": 42.162, "net_gex_m": -40.0103}, {"strike": 589.0, "call_gex_m": 2.6263, "put_gex_m": 28.4646, "net_gex_m": -25.8384}, {"strike": 590.0, "call_gex_m": 86.9583, "put_gex_m": 760.1566, "net_gex_m": -673.1983}, {"strike": 591.0, "call_gex_m": 6.4038, "put_gex_m": 29.0637, "net_gex_m": -22.6598}, {"strike": 592.0, "call_gex_m": 9.9145, "put_gex_m": 92.8699, "net_gex_m": -82.9554}, {"strike": 593.0, "call_gex_m": 16.947, "put_gex_m": 51.1648, "net_gex_m": -34.2177}, {"strike": 594.0, "call_gex_m": 8.8428, "put_gex_m": 54.7566, "net_gex_m": -45.9138}, {"strike": 595.0, "call_gex_m": 64.9017, "put_gex_m": 386.0059, "net_gex_m": -321.1042}, {"strike": 596.0, "call_gex_m": 18.9254, "put_gex_m": 59.5472, "net_gex_m": -40.6218}, {"strike": 597.0, "call_gex_m": 23.8952, "put_gex_m": 83.6538, "net_gex_m": -59.7586}, {"strike": 598.0, "call_gex_m": 39.6408, "put_gex_m": 89.5991, "net_gex_m": -49.9583}, {"strike": 599.0, "call_gex_m": 38.7236, "put_gex_m": 89.8725, "net_gex_m": -51.149}, {"strike": 600.0, "call_gex_m": 420.9665, "put_gex_m": 1093.2102, "net_gex_m": -672.2438}, {"strike": 601.0, "call_gex_m": 32.3673, "put_gex_m": 67.2816, "net_gex_m": -34.9143}, {"strike": 602.0, "call_gex_m": 40.1378, "put_gex_m": 81.3921, "net_gex_m": -41.2543}, {"strike": 603.0, "call_gex_m": 45.6731, "put_gex_m": 97.6945, "net_gex_m": -52.0214}, {"strike": 605.0, "call_gex_m": 293.2617, "put_gex_m": 342.0345, "net_gex_m": -48.7728}, {"strike": 607.0, "call_gex_m": 202.8059, "put_gex_m": 172.0615, "net_gex_m": 30.7444}, {"strike": 608.0, "call_gex_m": 393.661, "put_gex_m": 161.5135, "net_gex_m": 232.1475}, {"strike": 609.0, "call_gex_m": 639.4829, "put_gex_m": 84.091, "net_gex_m": 555.3919}, {"strike": 610.0, "call_gex_m": 1013.7013, "put_gex_m": 474.8017, "net_gex_m": 538.8996}, {"strike": 611.0, "call_gex_m": 238.1818, "put_gex_m": 65.4083, "net_gex_m": 172.7735}, {"strike": 612.0, "call_gex_m": 555.6318, "put_gex_m": 58.328, "net_gex_m": 497.3037}, {"strike": 613.0, "call_gex_m": 205.8701, "put_gex_m": 45.5359, "net_gex_m": 160.3342}, {"strike": 614.0, "call_gex_m": 277.9521, "put_gex_m": 29.452, "net_gex_m": 248.5001}, {"strike": 615.0, "call_gex_m": 637.5588, "put_gex_m": 328.5961, "net_gex_m": 308.9627}, {"strike": 616.0, "call_gex_m": 154.7098, "put_gex_m": 46.8335, "net_gex_m": 107.8763}, {"strike": 617.0, "call_gex_m": 145.6592, "put_gex_m": 18.7253, "net_gex_m": 126.9338}, {"strike": 618.0, "call_gex_m": 148.8218, "put_gex_m": 31.0963, "net_gex_m": 117.7256}, {"strike": 619.0, "call_gex_m": 95.6291, "put_gex_m": 8.3248, "net_gex_m": 87.3043}, {"strike": 620.0, "call_gex_m": 520.727, "put_gex_m": 342.4601, "net_gex_m": 178.2669}, {"strike": 621.0, "call_gex_m": 97.6897, "put_gex_m": 6.1039, "net_gex_m": 91.5858}, {"strike": 622.0, "call_gex_m": 102.3486, "put_gex_m": 14.3988, "net_gex_m": 87.9498}, {"strike": 623.0, "call_gex_m": 60.9841, "put_gex_m": 6.13, "net_gex_m": 54.8541}, {"strike": 624.0, "call_gex_m": 54.0381, "put_gex_m": 10.9166, "net_gex_m": 43.1215}, {"strike": 625.0, "call_gex_m": 586.7231, "put_gex_m": 210.0832, "net_gex_m": 376.6399}, {"strike": 626.0, "call_gex_m": 44.6907, "put_gex_m": 7.4921, "net_gex_m": 37.1986}, {"strike": 627.0, "call_gex_m": 54.5469, "put_gex_m": 11.8304, "net_gex_m": 42.7165}, {"strike": 628.0, "call_gex_m": 51.8193, "put_gex_m": 7.3241, "net_gex_m": 44.4952}, {"strike": 629.0, "call_gex_m": 38.9742, "put_gex_m": 5.2525, "net_gex_m": 33.7216}, {"strike": 630.0, "call_gex_m": 555.1816, "put_gex_m": 152.3305, "net_gex_m": 402.8511}, {"strike": 631.0, "call_gex_m": 26.0529, "put_gex_m": 2.737, "net_gex_m": 23.3159}, {"strike": 632.0, "call_gex_m": 30.9804, "put_gex_m": 5.4238, "net_gex_m": 25.5567}, {"strike": 633.0, "call_gex_m": 55.6942, "put_gex_m": 5.7443, "net_gex_m": 49.9499}, {"strike": 634.0, "call_gex_m": 25.6828, "put_gex_m": 2.1644, "net_gex_m": 23.5184}, {"strike": 635.0, "call_gex_m": 330.2239, "put_gex_m": 43.3384, "net_gex_m": 286.8855}, {"strike": 636.0, "call_gex_m": 24.1056, "put_gex_m": 2.2064, "net_gex_m": 21.8992}, {"strike": 640.0, "call_gex_m": 264.7437, "put_gex_m": 29.7273, "net_gex_m": 235.0163}], "zdtes": [{"strike": 581.0, "call_gex_m": 0.0101, "put_gex_m": 0.5393, "net_gex_m": -0.5292}, {"strike": 582.0, "call_gex_m": 0.006, "put_gex_m": 0.5737, "net_gex_m": -0.5676}, {"strike": 583.0, "call_gex_m": 0.003, "put_gex_m": 0.7323, "net_gex_m": -0.7293}, {"strike": 584.0, "call_gex_m": 0.2723, "put_gex_m": 0.7995, "net_gex_m": -0.5272}, {"strike": 585.0, "call_gex_m": 0.0, "put_gex_m": 3.6253, "net_gex_m": -3.6253}, {"strike": 586.0, "call_gex_m": 0.342, "put_gex_m": 1.4762, "net_gex_m": -1.1342}, {"strike": 587.0, "call_gex_m": 0.1609, "put_gex_m": 3.4731, "net_gex_m": -3.3121}, {"strike": 588.0, "call_gex_m": 0.485, "put_gex_m": 5.1617, "net_gex_m": -4.6767}, {"strike": 589.0, "call_gex_m": 0.8993, "put_gex_m": 3.9037, "net_gex_m": -3.0044}, {"strike": 590.0, "call_gex_m": 0.0, "put_gex_m": 8.7348, "net_gex_m": -8.7348}, {"strike": 591.0, "call_gex_m": 2.3975, "put_gex_m": 7.0362, "net_gex_m": -4.6388}, {"strike": 592.0, "call_gex_m": 3.6652, "put_gex_m": 6.577, "net_gex_m": -2.9118}, {"strike": 593.0, "call_gex_m": 10.2644, "put_gex_m": 5.5119, "net_gex_m": 4.7525}, {"strike": 594.0, "call_gex_m": 0.0, "put_gex_m": 7.7913, "net_gex_m": -7.7913}, {"strike": 595.0, "call_gex_m": 0.0, "put_gex_m": 14.0964, "net_gex_m": -14.0964}, {"strike": 596.0, "call_gex_m": 0.0, "put_gex_m": 14.1113, "net_gex_m": -14.1113}, {"strike": 597.0, "call_gex_m": 0.0, "put_gex_m": 7.8345, "net_gex_m": -7.8345}, {"strike": 598.0, "call_gex_m": 0.0, "put_gex_m": 16.8093, "net_gex_m": -16.8093}, {"strike": 599.0, "call_gex_m": 0.0, "put_gex_m": 26.3469, "net_gex_m": -26.3469}, {"strike": 600.0, "call_gex_m": 0.0, "put_gex_m": 37.6061, "net_gex_m": -37.6061}, {"strike": 601.0, "call_gex_m": 0.0, "put_gex_m": 13.2354, "net_gex_m": -13.2354}, {"strike": 602.0, "call_gex_m": 0.0, "put_gex_m": 18.4077, "net_gex_m": -18.4077}, {"strike": 603.0, "call_gex_m": 0.0, "put_gex_m": 47.927, "net_gex_m": -47.927}, {"strike": 604.0, "call_gex_m": 9.1483, "put_gex_m": 18.6852, "net_gex_m": -9.5369}, {"strike": 605.0, "call_gex_m": 60.8335, "put_gex_m": 57.2951, "net_gex_m": 3.5384}, {"strike": 606.0, "call_gex_m": 63.4504, "put_gex_m": 44.6317, "net_gex_m": 18.8186}, {"strike": 607.0, "call_gex_m": 114.68, "put_gex_m": 83.5312, "net_gex_m": 31.1489}, {"strike": 608.0, "call_gex_m": 275.0902, "put_gex_m": 67.7782, "net_gex_m": 207.312}, {"strike": 609.0, "call_gex_m": 541.8373, "put_gex_m": 24.3933, "net_gex_m": 517.444}, {"strike": 610.0, "call_gex_m": 529.539, "put_gex_m": 29.3531, "net_gex_m": 500.1859}, {"strike": 611.0, "call_gex_m": 136.1484, "put_gex_m": 16.6045, "net_gex_m": 119.5439}, {"strike": 612.0, "call_gex_m": 407.3997, "put_gex_m": 9.1939, "net_gex_m": 398.2058}, {"strike": 613.0, "call_gex_m": 123.2138, "put_gex_m": 12.235, "net_gex_m": 110.9788}, {"strike": 614.0, "call_gex_m": 191.5247, "put_gex_m": 5.25, "net_gex_m": 186.2747}, {"strike": 615.0, "call_gex_m": 191.2365, "put_gex_m": 5.182, "net_gex_m": 186.0544}, {"strike": 616.0, "call_gex_m": 57.361, "put_gex_m": 2.6112, "net_gex_m": 54.7498}, {"strike": 617.0, "call_gex_m": 57.9944, "put_gex_m": 0.8326, "net_gex_m": 57.1618}, {"strike": 618.0, "call_gex_m": 44.9235, "put_gex_m": 1.3823, "net_gex_m": 43.5412}, {"strike": 619.0, "call_gex_m": 10.8723, "put_gex_m": 0.6541, "net_gex_m": 10.2182}, {"strike": 620.0, "call_gex_m": 12.6741, "put_gex_m": 0.6828, "net_gex_m": 11.9914}, {"strike": 621.0, "call_gex_m": 6.1381, "put_gex_m": 0.0668, "net_gex_m": 6.0714}, {"strike": 622.0, "call_gex_m": 4.1305, "put_gex_m": 0.0518, "net_gex_m": 4.0787}, {"strike": 623.0, "call_gex_m": 3.7496, "put_gex_m": -0.0, "net_gex_m": 3.7496}, {"strike": 624.0, "call_gex_m": 3.0631, "put_gex_m": 0.0432, "net_gex_m": 3.0199}, {"strike": 625.0, "call_gex_m": 2.4053, "put_gex_m": 0.0298, "net_gex_m": 2.3755}, {"strike": 626.0, "call_gex_m": 0.7899, "put_gex_m": -0.0, "net_gex_m": 0.7899}, {"strike": 627.0, "call_gex_m": 4.967, "put_gex_m": -0.0, "net_gex_m": 4.967}, {"strike": 628.0, "call_gex_m": 0.5451, "put_gex_m": -0.0, "net_gex_m": 0.5451}, {"strike": 629.0, "call_gex_m": 4.0018, "put_gex_m": -0.0, "net_gex_m": 4.0018}, {"strike": 630.0, "call_gex_m": 1.1038, "put_gex_m": -0.0, "net_gex_m": 1.1038}, {"strike": 631.0, "call_gex_m": 0.2743, "put_gex_m": -0.0, "net_gex_m": 0.2743}, {"strike": 632.0, "call_gex_m": 2.712, "put_gex_m": -0.0, "net_gex_m": 2.712}, {"strike": 633.0, "call_gex_m": 0.1014, "put_gex_m": -0.0, "net_gex_m": 0.1014}, {"strike": 634.0, "call_gex_m": 0.2562, "put_gex_m": -0.0, "net_gex_m": 0.2562}, {"strike": 635.0, "call_gex_m": 0.1716, "put_gex_m": -0.0, "net_gex_m": 0.1716}, {"strike": 636.0, "call_gex_m": 0.0721, "put_gex_m": -0.0, "net_gex_m": 0.0721}, {"strike": 637.0, "call_gex_m": 0.0647, "put_gex_m": -0.0, "net_gex_m": 0.0647}, {"strike": 638.0, "call_gex_m": 0.1203, "put_gex_m": -0.0, "net_gex_m": 0.1203}, {"strike": 639.0, "call_gex_m": 0.0292, "put_gex_m": -0.0, "net_gex_m": 0.0292}, {"strike": 640.0, "call_gex_m": 0.0906, "put_gex_m": -0.0, "net_gex_m": 0.0906}, {"strike": 641.0, "call_gex_m": 0.0985, "put_gex_m": -0.0, "net_gex_m": 0.0985}], "key_strikes": [590.0, 595.0, 600.0, 609.0, 610.0, 612.0, 625.0, 630.0], "price_bars": [], "flip_point": null, "flip_note": "Flip not found in +-10% range -- nearest: $550.17 (low boundary)", "flip_curve": [{"spot": 550.1678, "net_gex": 835856795.0}, {"spot": 553.2243, "net_gex": 845169928.0}, {"spot": 556.2808, "net_gex": 854534658.0}, {"spot": 559.3373, "net_gex": 863950984.0}, {"spot": 562.3938, "net_gex": 873418907.0}, {"spot": 565.4503, "net_gex": 882938426.0}, {"spot": 568.5068, "net_gex": 892509542.0}, {"spot": 571.5633, "net_gex": 902132254.0}, {"spot": 574.6197, "net_gex": 911806245.0}, {"spot": 577.6762, "net_gex": 921532149.0}, {"spot": 580.7327, "net_gex": 931309649.0}, {"spot": 583.7892, "net_gex": 941138745.0}, {"spot": 586.8457, "net_gex": 951019438.0}, {"spot": 589.9022, "net_gex": 960951728.0}, {"spot": 592.9587, "net_gex": 970935614.0}, {"spot": 596.0152, "net_gex": 980971097.0}, {"spot": 599.0716, "net_gex": 991057845.0}, {"spot": 602.1281, "net_gex": 1001196519.0}, {"spot": 605.1846, "net_gex": 1011386789.0}, {"spot": 608.2411, "net_gex": 1021628656.0}, {"spot": 611.2976, "net_gex": 1031922120.0}, {"spot": 614.3541, "net_gex": 1042267180.0}, {"spot": 617.4106, "net_gex": 1052663836.0}, {"spot": 620.4671, "net_gex": 1063112089.0}, {"spot": 623.5236, "net_gex": 1073611939.0}, {"spot": 626.58, "net_gex": 1084163038.0}, {"spot": 629.6365, "net_gex": 1094766079.0}, {"spot": 632.693, "net_gex": 1105420717.0}, {"spot": 635.7495, "net_gex": 1116126950.0}, {"spot": 638.806, "net_gex": 1126884781.0}, {"spot": 641.8625, "net_gex": 1137694208.0}, {"spot": 644.919, "net_gex": 1148555231.0}, {"spot": 647.9755, "net_gex": 1159467851.0}, {"spot": 651.0319, "net_gex": 1170431708.0}, {"spot": 654.0884, "net_gex": 1181447519.0}, {"spot": 657.1449, "net_gex": 1192514927.0}, {"spot": 660.2014, "net_gex": 1203633931.0}, {"spot": 663.2579, "net_gex": 1214804532.0}, {"spot": 666.3144, "net_gex": 1226026729.0}, {"spot": 669.3709, "net_gex": 1237300523.0}, {"spot": 672.4274, "net_gex": 1248625913.0}], "put_wall": 600.0, "call_wall": 610.0, "call_walls": [{"strike": 610.0, "gex_m": 1013.7012702174972, "distance_pct": -0.21}, {"strike": 609.0, "gex_m": 639.4828900476509, "distance_pct": -0.38}, {"strike": 615.0, "gex_m": 637.5587607374164, "distance_pct": 0.61}], "put_walls": [{"strike": 600.0, "gex_m": 1093.2102475993083, "distance_pct": -1.85}, {"strike": 590.0, "gex_m": 760.1566285519938, "distance_pct": -3.48}, {"strike": 580.0, "gex_m": 509.4164047431869, "distance_pct": -5.12}], "max_gamma_strike": 600.0, "magnet_score": 26.57, "regime_label": "Strong positive gamma \u2014 dealer dampening", "regime_subflags": ["High convexity zone"], "net_gex_0dte_m": 2227.33, "flow_gex_0dte_m": 10528.22, "abs_gex_0dte_m": 3538.83, "pctiles_30d": {"net_gex_pctile": 0.0, "net_gex_zscore": 0.0, "abs_gex_pctile": 0.0, "abs_gex_zscore": 0.0, "zdte_abs_pctile": 0.0, "zdte_abs_zscore": 0.0, "zdte_share_pctile": 0.0, "zdte_share_zscore": 0.0, "history_count": 1}, "diagnostics": {"included": 6865, "zero_oi": 2501, "missing_iv": 6999, "total": 9366}}, "SPX": {"ticker": "SPX", "error": "no spot price", "spot": 0, "net_gex_m": 0, "regime": "unknown", "regime_summary": "no spot price", "strikes": [], "zdtes": [], "key_strikes": [], "price_bars": []}}; const GEX_DEFAULT = "SPY"; const GEX_HEATMAP = {"SPY": {"timestamps": ["2026-03-10T13:29:18.960379", "2026-03-10T13:54:12.111729", "2026-03-10T14:11:26.754397", "2026-03-10T14:13:04.180733", "2026-03-10T15:03:55.196908", "2026-03-10T15:17:26.369129", "2026-03-10T15:27:30.382764"], "strikes": [644.0, 645.0, 646.0, 648.0, 649.0, 650.0, 651.0, 652.0, 653.0, 654.0, 655.0, 656.0, 657.0, 658.0, 659.0, 660.0, 661.0, 662.0, 663.0, 664.0, 665.0, 666.0, 667.0, 668.0, 669.0, 670.0, 671.0, 672.0, 675.0, 676.0, 677.0, 678.0, 679.0, 680.0, 681.0, 682.0, 683.0, 684.0, 685.0, 686.0, 687.0, 688.0, 689.0, 690.0, 691.0, 692.0, 693.0, 694.0, 695.0, 696.0, 697.0, 698.0, 699.0, 700.0, 701.0, 705.0, 708.0, 710.0, 713.0, 715.0], "matrix": [[-15.2738, -14.0468, -14.1775, -14.3946, 0.0, 0.0, 0.0], [-92.3494, -89.2607, -89.6408, -91.1636, 0.0, 0.0, 0.0], [-24.5067, -22.5205, -22.6502, -23.05, -141.3452, 0.0, 0.0], [-19.5129, -17.7753, -18.0135, -18.2578, -108.233, -104.4181, -105.0546], [-14.7061, -14.2714, -14.3186, -14.5763, 0.0, -88.4881, -89.2945], [-181.5757, -170.0924, -172.465, -175.7003, -1031.2843, -994.45, -1003.0911], [-17.1173, -16.4827, -16.6087, -16.7994, -101.2409, -97.9359, -98.7475], [-22.902, -21.5415, -21.7384, -22.1709, -132.1145, -127.9549, -129.1258], [-24.5771, -22.8026, -23.1872, -23.614, -140.9272, -136.2124, -137.2331], [-16.034, 0.0, -12.667, -12.8812, 0.0, 0.0, 0.0], [-100.3228, -96.4989, -97.4723, -99.3755, -590.5163, -570.7138, -577.8295], [-17.9182, -16.2676, -16.6627, -17.0836, -98.2829, -94.4225, -95.2345], [-36.7293, -35.7652, -35.9783, -36.808, -221.156, -216.0231, -218.2614], [-26.0159, -24.4926, -24.5888, -25.164, -148.837, -144.0398, -145.1401], [-24.0531, -23.2619, -23.554, -24.0963, -144.932, -140.6157, -142.0108], [-264.4049, -272.8665, -270.8008, -278.7662, -1656.8222, -1598.1415, -1629.4481], [-35.1116, -24.0, -26.4358, -26.9979, -119.0246, -118.3421, -119.7829], [-24.9422, -21.8326, -22.8928, -23.5571, -123.7115, -117.0943, -115.2103], [-17.5405, -16.0914, -16.3696, -17.0188, -101.2928, -97.0125, -93.8358], [-13.835, 0.0, -13.8285, -13.8775, 0.0, 0.0, 0.0], [-66.8104, -66.8733, -66.377, -69.1969, -445.6838, -435.64, -416.0255], [-15.203, -14.3889, -14.7187, -15.5609, -100.2608, -87.7901, -80.1534], [-15.4003, -15.3325, -15.5443, -16.1287, -94.5014, 0.0, 0.0], [-21.1856, -20.6887, -21.2689, -22.7754, -123.1246, -105.5686, -98.5866], [-15.9859, -17.0152, -16.7731, -18.0105, -104.9512, -94.5589, -84.3459], [-171.8747, -190.1411, -185.5124, -196.3027, -1089.0206, -1009.1719, -1028.3075], [0.0, -13.9293, 0.0, -12.3907, -103.1185, 0.0, 0.0], [-19.8317, -25.1139, -23.525, -26.1728, -133.9858, -118.2433, -108.5357], [-151.9682, -190.3752, -165.7785, -175.0668, -1119.3297, -1125.1055, -1148.1288], [0.0, 0.0, 13.7761, 12.4207, 116.68, 86.6591, 88.1421], [0.0, -13.8331, 0.0, 0.0, 0.0, 0.0, 0.0], [0.0, -15.1953, 0.0, 0.0, 111.8747, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0, 131.3163, 109.9331, 96.9488], [-50.5163, -65.9095, -44.3927, -57.5037, -190.2601, -233.129, -310.8968], [13.4022, 19.8414, 16.9293, 15.3905, 183.2004, 191.0755, 174.1876], [21.4133, 23.252, 25.5097, 25.6313, 290.7662, 318.6821, 281.6136], [19.1104, 22.9188, 22.1398, 21.1455, 230.2547, 250.3361, 222.8171], [13.8522, 16.8544, 17.9699, 15.9978, 159.2981, 181.04, 161.4119], [37.7984, 37.9883, 39.3254, 36.1323, 428.3741, 483.6367, 439.5295], [15.582, 16.7793, 13.0205, 14.3394, 139.9265, 165.6386, 162.145], [12.9706, 0.0, 0.0, 0.0, 111.7447, 131.7227, 115.8376], [0.0, 0.0, 0.0, 0.0, 0.0, 100.4001, 93.3793], [16.8158, 15.7958, 13.7653, 12.4555, 137.2972, 161.7305, 149.9015], [53.6244, 45.4099, 44.7777, 46.1677, 417.8106, 490.4037, 453.2952], [14.789, 13.8296, 12.2723, 0.0, 112.2037, 128.713, 123.1459], [17.1718, 16.6879, 15.2002, 15.8314, 131.0699, 142.9214, 137.9987], [16.8374, 15.936, 14.8918, 14.6343, 130.1517, 144.4217, 136.7105], [21.7459, 20.5548, 19.5959, 18.9741, 168.4245, 186.2393, 180.5736], [40.6101, 37.7094, 37.0605, 35.6289, 308.338, 334.9795, 325.5447], [0.0, 0.0, 0.0, 0.0, 91.8145, 100.9455, 100.3849], [20.3984, 18.8306, 18.0712, 17.2385, 148.6563, 166.2143, 161.0704], [16.7442, 15.2679, 13.879, 13.4977, 119.9555, 134.7275, 128.6963], [16.1817, 15.1047, 14.3936, 13.8615, 120.0633, 132.984, 127.1515], [82.6164, 78.7249, 75.7672, 73.3497, 618.6304, 674.1248, 646.1724], [13.9638, 13.5253, 12.9492, 12.4895, 105.1228, 113.3195, 109.8816], [31.7695, 30.1458, 28.3219, 27.576, 230.2924, 247.4817, 240.7946], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 79.7043], [31.3841, 33.2484, 29.2665, 28.884, 226.5498, 238.6467, 237.9947], [0.0, 0.0, 0.0, 0.0, 0.0, 86.6855, 83.868], [0.0, 0.0, 0.0, 0.0, 0.0, 215.2893, 0.0]], "spot_trace": [677.0687, 677.39, 676.6, 676.49, 679.91, 681.03, 680.5]}, "QQQ": {"timestamps": ["2026-03-10T13:29:45.608674", "2026-03-10T13:56:08.773038", "2026-03-10T14:13:32.780439", "2026-03-10T14:14:45.563393", "2026-03-10T15:06:08.792298", "2026-03-10T15:19:06.710804", "2026-03-10T15:28:53.424383"], "strikes": [580.0, 581.0, 583.0, 584.78, 585.0, 586.0, 587.0, 588.0, 589.0, 590.0, 591.0, 592.0, 593.0, 594.0, 595.0, 596.0, 597.0, 598.0, 599.0, 600.0, 601.0, 602.0, 603.0, 604.0, 605.0, 606.0, 607.0, 608.0, 609.0, 610.0, 611.0, 612.0, 613.0, 614.0, 615.0, 616.0, 617.0, 618.0, 619.0, 620.0, 621.0, 622.0, 623.0, 624.0, 625.0, 626.0, 627.0, 628.0, 629.0, 630.0, 631.0, 632.0, 633.0, 634.0, 635.0, 636.0, 640.0], "matrix": [[-84.6875, -81.1901, -83.6534, -83.5628, 0.0, 0.0, 0.0], [-3.844, 0.0, -3.3583, -3.3706, 0.0, 0.0, 0.0], [-4.4046, -3.8577, -3.9862, -3.957, 0.0, 0.0, 0.0], [-3.2723, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [-44.0598, -41.09, -42.7821, -42.4035, -231.0363, -220.5455, -225.9564], [-4.7344, -3.9971, -4.021, -4.0393, 0.0, 0.0, 0.0], [-7.2382, -5.514, -5.6053, -5.6034, -29.2391, -26.9798, -28.0363], [-10.2493, -7.9958, -8.0716, -8.0895, -41.9028, -39.2857, -40.0103], [-6.8725, -5.1938, -5.1499, -5.1317, -28.4152, -26.9088, -25.8384], [-117.6999, -114.9471, -119.7059, -119.4767, -676.0734, -663.7508, -673.1983], [-7.6564, -5.449, -4.8098, -4.8762, -26.1409, -24.8438, -22.6598], [-16.552, -15.8533, -15.4714, -15.0187, -89.1741, -85.9741, -82.9554], [-8.3095, -7.4913, -6.3628, -6.2535, -45.2439, -44.185, -34.2177], [-9.3173, -7.9422, -7.9097, -7.7459, -49.8072, -45.5713, -45.9138], [-56.441, -57.0419, -58.2788, -57.5746, -326.9256, -313.0265, -321.1042], [-11.4045, -7.6713, -6.8881, -6.9158, -45.8603, -44.5697, -40.6218], [-11.4356, -10.6565, -11.5456, -11.4236, -61.4459, -59.675, -59.7586], [-10.2063, -11.1845, -10.1289, -10.235, -53.134, -51.0258, -49.9583], [-5.7913, -10.4008, -6.0838, -5.1506, -54.7196, -48.2013, -51.149], [-104.3523, -105.9076, -122.0446, -120.4704, -675.047, -675.7698, -672.2438], [0.0, 0.0, -3.6363, -3.4478, -36.8558, -33.0519, -34.9143], [-3.8542, -4.215, -6.0525, -6.0037, -44.2897, -42.496, -41.2543], [-5.9459, -6.6992, -10.2009, -11.7665, -46.7245, -45.0691, -52.0214], [0.0, 0.0, 0.0, 0.0, -23.6432, 0.0, 0.0], [0.0, 0.0, -9.4599, -8.6139, 0.0, -97.789, -48.7728], [4.302, 5.6283, 0.0, 3.5376, 28.7504, -40.4934, 0.0], [5.2238, 7.3437, 0.0, 0.0, 48.9924, -60.5246, 30.7444], [26.1094, 34.1507, 24.364, 29.5637, 272.1542, 136.9917, 232.1475], [51.271, 73.0833, 64.0299, 56.2916, 570.0583, 462.3857, 555.3919], [40.4021, 54.7114, 43.7388, 43.523, 518.2008, 490.5274, 538.8996], [15.0493, 19.8299, 15.5987, 15.6201, 167.5591, 172.8471, 172.7735], [39.1811, 49.0164, 45.4978, 42.2455, 449.6226, 518.013, 497.3037], [13.5125, 16.5492, 15.265, 14.8205, 140.2168, 190.9294, 160.3342], [20.8582, 24.6735, 22.1402, 21.042, 214.1455, 295.7768, 248.5001], [29.2943, 33.367, 23.8696, 23.5252, 279.7451, 377.3285, 308.9627], [10.8909, 12.4362, 10.2991, 10.7282, 97.2375, 136.8025, 107.8763], [14.6081, 16.5711, 14.3438, 14.4703, 118.131, 162.5309, 126.9338], [14.0011, 14.9497, 12.7477, 12.3559, 107.9279, 147.4878, 117.7256], [10.3976, 11.2286, 10.4213, 10.1176, 80.9119, 99.7307, 87.3043], [21.4535, 22.4552, 14.6968, 16.9927, 172.6835, 206.3396, 178.2669], [11.0396, 11.692, 10.8374, 10.6537, 83.1005, 104.4619, 91.5858], [11.4274, 12.1575, 11.4416, 11.4026, 83.1808, 94.9356, 87.9498], [6.8822, 7.464, 6.9017, 6.8653, 51.5717, 59.7269, 54.8541], [5.3274, 5.8454, 5.3651, 5.3295, 40.8276, 46.9353, 43.1215], [50.2009, 53.9061, 48.622, 49.0389, 365.1562, 404.6636, 376.6399], [4.6953, 5.2313, 4.8599, 4.7752, 35.6995, 40.1398, 37.1986], [5.4864, 5.9936, 6.2432, 5.9541, 41.6083, 45.9423, 42.7165], [5.8695, 6.3566, 6.6372, 6.0034, 42.5259, 47.3369, 44.4952], [4.3295, 4.7303, 4.7112, 4.3804, 31.9873, 36.1152, 33.7216], [53.7871, 58.5882, 65.7761, 65.6527, 384.8635, 422.4946, 402.8511], [0.0, 0.0, 0.0, 0.0, 21.9244, 24.6974, 23.3159], [3.2525, 3.643, 3.8054, 3.7738, 24.0226, 27.1694, 25.5567], [6.376, 7.1064, 7.1515, 7.0218, 47.0523, 53.281, 49.9499], [0.0, 3.5466, 3.3445, 0.0, 22.3199, 24.5206, 23.5184], [38.1798, 41.7303, 39.6782, 39.7981, 274.1551, 303.8986, 286.8855], [0.0, 3.3361, 0.0, 0.0, 0.0, 0.0, 21.8992], [0.0, 0.0, 0.0, 0.0, 227.4084, 243.3474, 235.0163]], "spot_trace": [607.29, 608.59, 607.8364, 607.49, 610.5864, 612.3287, 611.2976]}, "SPX": {"timestamps": [], "strikes": [], "matrix": [], "spot_trace": []}};</script><script>
-(function() {
-  if (typeof d3 === 'undefined') { console.warn('[gex] D3 not loaded'); return; }
-  var curTicker = GEX_DEFAULT || Object.keys(GEX_DATA)[0] || 'SPY';
-
-  window.switchGexTicker = function(t) {
-    curTicker = t;
-    document.querySelectorAll('.gex-tab').forEach(function(b) { b.classList.remove('gex-tab-active'); });
-    var btn = document.querySelector('.gex-tab[data-t="' + t + '"]');
-    if (btn) btn.classList.add('gex-tab-active');
-    renderAll();
-  };
-
-  // Toggle state
-  var _showNet    = true;   // Net GEX bars vs split call/put
-  var _showLevels = true;   // Key gamma levels overlay
-  var _showZdte   = true;   // 0DTE column
-
-  window.gexToggle = function(which) {
-    if (which === 'net')    { _showNet    = !_showNet;    _syncBtn('gex-toggle-net',    _showNet);    }
-    if (which === 'levels') { _showLevels = !_showLevels; _syncBtn('gex-toggle-levels', _showLevels); }
-    if (which === 'zdte')   { _showZdte   = !_showZdte;   _syncBtn('gex-toggle-zdte',   _showZdte);
-      var col = document.getElementById('gex-zdte-col');
-      if (col) col.style.display = _showZdte ? '' : 'none';
-    }
-    renderAll();
-  };
-
-  function _syncBtn(id, active) {
-    var b = document.getElementById(id);
-    if (!b) return;
-    if (active) b.classList.add('gex-toggle-active');
-    else b.classList.remove('gex-toggle-active');
-  }
-
-  function renderAll() {
-    var d = GEX_DATA[curTicker] || {};
-    renderRegime(d);
-    renderKeyLevels(d);
-    renderDiagnostics(d);
-    drawStrikeBars('gex-strike-chart', d.strikes || [], d);
-    drawPriceLine(d);
-    drawStrikeBars('gex-0dte-chart', d.zdtes || [], d);
-    if (typeof drawHeatmap === 'function') drawHeatmap('gex-heatmap-chart', curTicker);
-  }
-
-  function renderRegime(d) {
-    var gex = d.net_gex_m || 0;
-    var sign = gex >= 0 ? '+' : '';
-    var isPos = gex >= 0;
-    var gexColor = isPos ? '#4169E1' : '#DC5078';
-    var stab = d.stability_pct != null ? Math.round(d.stability_pct) : null;
-    var stabColor = stab != null ? (stab > 60 ? '#4169E1' : stab < 30 ? '#DC5078' : '#D0D860') : '#8B949E';
-
-    var spotEl = document.getElementById('gex-ss-spot');
-    if (spotEl) spotEl.textContent = d.spot ? '$' + Number(d.spot).toLocaleString(undefined, {minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
-
-    var netEl = document.getElementById('gex-ss-netgex');
-    if (netEl) { netEl.textContent = '$' + sign + gex.toFixed(1) + 'M'; netEl.style.color = gexColor; }
-
-    var flipEl = document.getElementById('gex-ss-flip');
-    if (flipEl) {
-      var flipTxt = d.flip_note || (d.flip_point ? 'Gamma Flip $' + d.flip_point + ' (spot-scan)' : '—');
-      flipEl.textContent = d.flip_point ? '$' + d.flip_point : '—';
-      flipEl.title = flipTxt;
-    }
-
-    var stabEl = document.getElementById('gex-ss-stab');
-    var p30 = d.pctiles_30d || {};
-    if (stabEl) {
-      var stabTxt = stab != null ? 'Net GEX: ' + stab + 'th pct (30d)' : '—';
-      if (p30.abs_gex_pctile != null) stabTxt += ' | Abs: ' + Math.round(p30.abs_gex_pctile) + 'th';
-      stabEl.textContent = stab != null ? stab + 'th pct' : '—';
-      stabEl.title = stabTxt;
-      stabEl.style.color = stabColor;
-    }
-
-    var regEl = document.getElementById('gex-ss-regime');
-    if (regEl) {
-      var regLabel = d.regime_label || d.regime_summary || (isPos ? 'Positive GEX' : 'Negative GEX');
-      var subflags = (d.regime_subflags || []).join(' · ');
-      regEl.textContent = regLabel.length > 35 ? regLabel.slice(0, 35) + '…' : regLabel;
-      regEl.title = regLabel + (subflags ? '  [' + subflags + ']' : '') + '  (estimated)';
-      regEl.style.color = gexColor;
-    }
-
-    var tkEl = document.getElementById('gex-ss-ticker');
-    if (tkEl) tkEl.textContent = d.ticker || '';
-  }
-
-  function renderKeyLevels(d) {
-    var bar = document.getElementById('gex-key-levels-bar');
-    if (!bar) return;
-    if (!_showLevels) { bar.innerHTML = ''; bar.style.display = 'none'; return; }
-    bar.style.display = 'flex';
-    var items = [];
-    if (d.flip_point != null) items.push(
-      '<span class="kl-item kl-flip" title="Gamma Flip (spot-scan)">⇆ Gamma Flip (spot-scan) <b>$' + d.flip_point + '</b></span>'
-    );
-    if (d.call_wall != null) items.push(
-      '<span class="kl-item kl-call" title="Top Call Wall — highest call GEX strike">Top Call Wall <b>$' + d.call_wall + '</b></span>'
-    );
-    if (d.put_wall != null) items.push(
-      '<span class="kl-item kl-put" title="Top Put Wall — highest put GEX strike">Top Put Wall <b>$' + d.put_wall + '</b></span>'
-    );
-    if (d.max_gamma_strike != null) items.push(
-      '<span class="kl-item kl-max" title="Max |Γ| — highest absolute gamma strike (magnet)">Max |Γ| <b>$' + d.max_gamma_strike + '</b> (magnet)</span>'
-    );
-    bar.innerHTML = items.length
-      ? '<span class="kl-label">Key Levels:</span> ' + items.join('')
-      : '';
-  }
-
-  function renderDiagnostics(d) {
-    var el = document.getElementById('gex-diag-body');
-    if (!el) return;
-    var diag = d.diagnostics || {};
-    var p30  = d.pctiles_30d || {};
-    var now  = d._fetched_at ? new Date(d._fetched_at) : null;
-    var ageS = now ? Math.round((Date.now() - now.getTime()) / 1000) : null;
-    var stale = ageS != null && ageS > 300;
-    var rows = [
-      ['Contracts included', diag.included != null ? diag.included : '—'],
-      ['Contracts excluded (zero OI)', diag.zero_oi != null ? diag.zero_oi : '—'],
-      ['Missing IV (vendor gamma used)', diag.missing_iv != null ? diag.missing_iv : '—'],
-      ['GEX formula', 'γ × OI × multiplier × spot² × 0.01 × sign (1% move)'],
-      ['Flip method', 'Spot-scan zero-crossing (±10% grid, 0.5% steps)'],
-      ['Sign model', 'Classic (calls +1, puts −1) — ESTIMATED'],
-      ['Multiplier', '100 (standard equity/ETF)'],
-      ['Net GEX pctile (30d)', p30.net_gex_pctile != null ? Math.round(p30.net_gex_pctile) + 'th  (z=' + p30.net_gex_zscore + ')' : '—'],
-      ['Abs GEX pctile (30d)', p30.abs_gex_pctile != null ? Math.round(p30.abs_gex_pctile) + 'th  (z=' + p30.abs_gex_zscore + ')' : '—'],
-      ['0DTE share pctile (30d)', p30.zdte_share_pctile != null ? Math.round(p30.zdte_share_pctile) + 'th  (z=' + p30.zdte_share_zscore + ')' : '—'],
-      ['History snapshots (30d)', p30.history_count != null ? p30.history_count : '—'],
-      ['Data age', ageS != null ? ageS + 's' + (stale ? ' ⚠ STALE (>5 min)' : '') : '—'],
-    ];
-    var html = '<table class="diag-tbl">';
-    rows.forEach(function(r) {
-      html += '<tr><td class="diag-k">' + r[0] + '</td><td class="diag-v">' + r[1] + '</td></tr>';
-    });
-    html += '</table>';
-    if (stale) html = '<div class="diag-stale">⚠ Data is stale (&gt;5 min old)</div>' + html;
-    el.innerHTML = html;
-  }
-
-  function drawStrikeBars(elemId, strikes, d) {
-    var container = document.getElementById(elemId);
-    if (!container) return;
-    container.innerHTML = '';
-    if (!strikes || !strikes.length) {
-      container.innerHTML = '<p class="empty">' +
-        (elemId === 'gex-0dte-chart' ? 'No 0DTE gamma (non-expiry or weekend)' : 'No strike data') +
-        '</p>';
-      return;
-    }
-
-    var barH = strikes.length > 35 ? 5 : strikes.length > 20 ? 7 : 9;
-    var m = {top: 10, right: 68, bottom: 22, left: 50};
-    var W = container.offsetWidth || 340;
-    var w = W - m.left - m.right;
-    var H = Math.min(460, Math.max(140, strikes.length * (barH + 2.5) + m.top + m.bottom));
-    var h = H - m.top - m.bottom;
-
-    var strikeVals = strikes.map(function(s) { return s.strike; });
-    var minS = d3.min(strikeVals), maxS = d3.max(strikeVals);
-    var pad = strikeVals.length > 1 ? (maxS - minS) / (strikeVals.length - 1) * 0.55 : 3;
-
-    var yScale = d3.scaleLinear()
-      .domain([minS - pad, maxS + pad])
-      .range([h, 0]);
-
-    var svg = d3.select(container).append('svg')
-      .attr('width', W).attr('height', H).style('overflow', 'visible');
-    var g = svg.append('g').attr('transform', 'translate(' + m.left + ',' + m.top + ')');
-
-    if (_showNet) {
-      // ── Net GEX mode: single bar, positive right (blue), negative left (red) ──
-      var maxAbsNet = d3.max(strikes, function(s) { return Math.abs(s.net_gex_m || 0); }) || 1;
-      var xZero = w / 2;
-      var xNetScale = d3.scaleLinear().domain([-maxAbsNet * 1.1, maxAbsNet * 1.1]).range([0, w]);
-
-      g.selectAll('.nbar').data(strikes).enter().append('rect')
-        .attr('class', 'nbar')
-        .attr('x', function(s) { var v = s.net_gex_m || 0; return v >= 0 ? xZero : xNetScale(v); })
-        .attr('y', function(s) { return yScale(s.strike) - barH / 2; })
-        .attr('width', function(s) {
-          var v = s.net_gex_m || 0;
-          return Math.max(0, v >= 0 ? xNetScale(v) - xZero : xZero - xNetScale(v));
-        })
-        .attr('height', barH)
-        .attr('fill', function(s) { return (s.net_gex_m || 0) >= 0 ? '#4169E1' : '#DC5078'; })
-        .attr('opacity', 0.85);
-
-      // Zero divider
-      g.append('line')
-        .attr('x1', xZero).attr('y1', 0).attr('x2', xZero).attr('y2', h)
-        .attr('stroke', '#4b5563').attr('stroke-width', 1);
-
-      // X axis labels
-      g.append('text').attr('x', xZero / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#DC5078').attr('font-size', '8px')
-        .text('← Net Neg GEX');
-      g.append('text').attr('x', xZero + xZero / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#4169E1').attr('font-size', '8px')
-        .text('Net Pos GEX →');
-    } else {
-      // ── Split mode: calls right (blue), puts left (red) ──
-      var maxGex = d3.max(strikes, function(s) {
-        return Math.max(s.call_gex_m || 0, s.put_gex_m || 0);
-      }) || 1;
-      var xHalf = w / 2;
-      var xScale = d3.scaleLinear().domain([0, maxGex * 1.1]).range([0, xHalf]);
-
-      g.selectAll('.cbar').data(strikes).enter().append('rect')
-        .attr('class', 'cbar')
-        .attr('x', xHalf)
-        .attr('y', function(s) { return yScale(s.strike) - barH / 2; })
-        .attr('width', function(s) { return Math.max(0, xScale(s.call_gex_m || 0)); })
-        .attr('height', barH)
-        .attr('fill', '#4169E1').attr('opacity', 0.85);
-
-      g.selectAll('.pbar').data(strikes).enter().append('rect')
-        .attr('class', 'pbar')
-        .attr('x', function(s) { return xHalf - xScale(s.put_gex_m || 0); })
-        .attr('y', function(s) { return yScale(s.strike) - barH / 2; })
-        .attr('width', function(s) { return Math.max(0, xScale(s.put_gex_m || 0)); })
-        .attr('height', barH)
-        .attr('fill', '#DC5078').attr('opacity', 0.85);
-
-      g.append('line')
-        .attr('x1', xHalf).attr('y1', 0).attr('x2', xHalf).attr('y2', h)
-        .attr('stroke', '#4b5563').attr('stroke-width', 1);
-
-      g.append('text').attr('x', xHalf / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#DC5078').attr('font-size', '8px')
-        .text('← Puts');
-      g.append('text').attr('x', xHalf + xHalf / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#4169E1').attr('font-size', '8px')
-        .text('Calls →');
-    }
-
-    // ── Spot price dashed line ──────────────────────────────────────────────
-    if (d.spot && d.spot > 0) {
-      var spotY = yScale(d.spot);
-      g.append('line')
-        .attr('x1', 0).attr('y1', spotY).attr('x2', w).attr('y2', spotY)
-        .attr('stroke', '#f9fafb').attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '4,3');
-      g.append('text')
-        .attr('x', w + 4).attr('y', spotY + 4)
-        .attr('fill', '#f9fafb').attr('font-size', '9px').text('SPOT');
-    }
-
-    // ── Key level reference lines (when Key Levels is on) ──────────────────
-    if (_showLevels) {
-      var levelDefs = [
-        { val: d.flip_point,       label: 'Flip',     color: '#a855f7' },
-        { val: d.call_wall,        label: 'Call Wall', color: '#60a5fa' },
-        { val: d.put_wall,         label: 'Put Wall',  color: '#f87171' },
-        { val: d.max_gamma_strike, label: 'MaxΓ', color: '#fbbf24' },
-      ];
-      levelDefs.forEach(function(lv) {
-        if (lv.val == null) return;
-        var dom = yScale.domain();
-        if (lv.val < dom[0] || lv.val > dom[1]) return;
-        var ly = yScale(lv.val);
-        g.append('line')
-          .attr('x1', 0).attr('y1', ly).attr('x2', w).attr('y2', ly)
-          .attr('stroke', lv.color).attr('stroke-width', 0.8)
-          .attr('stroke-dasharray', '3,3').attr('opacity', 0.7);
-        g.append('text')
-          .attr('x', -3).attr('y', ly + 3)
-          .attr('text-anchor', 'end')
-          .attr('fill', lv.color).attr('font-size', '7px').attr('font-weight', '700')
-          .text(lv.label);
-      });
-    }
-
-    // ── Y axis ─────────────────────────────────────────────────────────────
-    var tickCount = Math.min(10, strikeVals.length);
-    var step = Math.ceil(strikeVals.length / tickCount);
-    var tickVals = strikeVals.filter(function(_, i) { return i % step === 0; });
-    g.append('g')
-      .call(d3.axisLeft(yScale).tickValues(tickVals).tickFormat(function(v) { return '$' + v; }))
-      .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '8px');
-    g.selectAll('.domain').attr('stroke', '#374151');
-    g.selectAll('.tick line').attr('stroke', '#374151');
-  }
-
-  function drawPriceLine(d) {
-    var bars = d.price_bars || [];
-    var container = document.getElementById('gex-price-chart');
-    if (!container) return;
-    container.innerHTML = '';
-    if (!bars.length) {
-      container.innerHTML = '<p class="empty">No intraday data (market closed or weekend)</p>';
-      return;
-    }
-
-    var m = {top: 10, right: 62, bottom: 28, left: 55};
-    var W = container.offsetWidth || 340;
-    var w = W - m.left - m.right;
-    var H = 220, h = H - m.top - m.bottom;
-
-    var allC = bars.map(function(b) { return b.c; });
-    var keyS = (d.key_strikes || []).filter(function(ks) {
-      return ks > d3.min(allC) * 0.998 && ks < d3.max(allC) * 1.002;
-    });
-    var prices = allC.concat(keyS);
-    var minP = d3.min(prices) * 0.9995, maxP = d3.max(prices) * 1.0005;
-    var minT = d3.min(bars, function(b) { return b.t; });
-    var maxT = d3.max(bars, function(b) { return b.t; });
-
-    var xScale = d3.scaleLinear().domain([minT, maxT]).range([0, w]);
-    var yScale = d3.scaleLinear().domain([minP, maxP]).range([h, 0]);
-
-    var svg = d3.select(container).append('svg').attr('width', W).attr('height', H);
-    var g = svg.append('g').attr('transform', 'translate(' + m.left + ',' + m.top + ')');
-
-    // Light grid
-    g.append('g').call(
-      d3.axisLeft(yScale).ticks(5).tickSize(-w).tickFormat('')
-    ).selectAll('line').attr('stroke', '#1e2530').attr('stroke-width', 0.5);
-    g.selectAll('.grid .domain').attr('stroke', 'none');
-
-    // Key strike reference lines (legacy key_strikes list)
-    if (_showLevels) {
-      keyS.forEach(function(ks) {
-        g.append('line')
-          .attr('x1', 0).attr('y1', yScale(ks)).attr('x2', w).attr('y2', yScale(ks))
-          .attr('stroke', '#fbbf24').attr('stroke-width', 0.8)
-          .attr('stroke-dasharray', '3,3');
-        g.append('text')
-          .attr('x', w + 3).attr('y', yScale(ks) + 3)
-          .attr('fill', '#fbbf24').attr('font-size', '8px')
-          .text('$' + ks);
-      });
-
-      // Named key levels overlay on the price chart
-      var priceLevels = [
-        { val: d.flip_point,       label: 'Flip',      color: '#a855f7' },
-        { val: d.call_wall,        label: 'Call Wall',  color: '#60a5fa' },
-        { val: d.put_wall,         label: 'Put Wall',   color: '#f87171' },
-        { val: d.max_gamma_strike, label: 'MaxΓ',  color: '#fbbf24' },
-      ];
-      priceLevels.forEach(function(lv) {
-        if (lv.val == null) return;
-        if (lv.val < minP || lv.val > maxP) return;
-        var ly = yScale(lv.val);
-        g.append('line')
-          .attr('x1', 0).attr('y1', ly).attr('x2', w).attr('y2', ly)
-          .attr('stroke', lv.color).attr('stroke-width', 0.8)
-          .attr('stroke-dasharray', '5,3').attr('opacity', 0.8);
-        g.append('text')
-          .attr('x', w + 3).attr('y', ly + 3)
-          .attr('fill', lv.color).attr('font-size', '7px').attr('font-weight', '600')
-          .text(lv.label);
-      });
-    }
-
-    var firstC = bars[0].c, lastC = bars[bars.length - 1].c;
-    var lineColor = lastC >= firstC ? '#22c55e' : '#ef4444';
-
-    var line = d3.line()
-      .x(function(b) { return xScale(b.t); })
-      .y(function(b) { return yScale(b.c); });
-
-    g.append('path').datum(bars)
-      .attr('fill', 'none').attr('stroke', lineColor)
-      .attr('stroke-width', 1.5).attr('d', line);
-
-    // X axis (time)
-    g.append('g').attr('transform', 'translate(0,' + h + ')')
-      .call(d3.axisBottom(xScale).ticks(4).tickFormat(function(t) {
-        var dt = new Date(t);
-        return dt.getHours().toString().padStart(2,'0') + ':' +
-               dt.getMinutes().toString().padStart(2,'0');
-      }))
-      .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '9px');
-
-    // Y axis (price)
-    g.append('g').call(d3.axisLeft(yScale).ticks(5).tickFormat(function(v) {
-      return '$' + (v >= 1000 ? v.toFixed(0) : v.toFixed(1));
-    }))
-      .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '9px');
-
-    g.selectAll('.domain').attr('stroke', '#374151');
-    g.selectAll('.tick line').attr('stroke', '#374151');
-  }
-
-  // Kick off on load
-  renderAll();
-})();
-</script><script>
-function drawHeatmap(elemId, ticker) {
-  var container = document.getElementById(elemId);
-  if (!container) return;
-  container.innerHTML = '';
-  var hd = (typeof GEX_HEATMAP !== 'undefined' ? GEX_HEATMAP : {})[ticker] || {};
-  var strikes = hd.strikes || [];
-  var timestamps = hd.timestamps || [];
-  var matrix = hd.matrix || [];
-  var spotTrace = hd.spot_trace || [];
-  if (!strikes.length || timestamps.length < 2) {
-    container.innerHTML = '<p class="empty" style="padding:10px 4px;">Heatmap builds throughout the trading day (needs ≥2 poll cycles)</p>';
-    return;
-  }
-  var m = {top: 8, right: 52, bottom: 22, left: 54};
-  var W = container.offsetWidth || 500;
-  var cellH = Math.max(3, Math.min(10, Math.floor(340 / strikes.length)));
-  var H = Math.max(140, Math.min(480, strikes.length * cellH + m.top + m.bottom));
-  var w = W - m.left - m.right;
-  var h = H - m.top - m.bottom;
-  var dpr = window.devicePixelRatio || 1;
-  var canvas = document.createElement('canvas');
-  canvas.width = W * dpr; canvas.height = H * dpr;
-  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-  canvas.style.display = 'block';
-  container.style.position = 'relative';
-  container.appendChild(canvas);
-  var ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.fillStyle = '#0d1117'; ctx.fillRect(0, 0, W, H);
-  var minS = Math.min.apply(null, strikes), maxS = Math.max.apply(null, strikes);
-  var yScale = d3.scaleLinear().domain([minS, maxS]).range([h, 0]);
-  var cellW = w / timestamps.length;
-  var absMax = 0.01;
-  for (var si2 = 0; si2 < matrix.length; si2++) {
-    for (var ti2 = 0; ti2 < (matrix[si2] || []).length; ti2++) {
-      var av = Math.abs(matrix[si2][ti2] || 0); if (av > absMax) absMax = av;
-    }
-  }
-  function cellColor(v) {
-    if (v === 0) return null;
-    var norm = Math.pow(Math.min(1, Math.abs(v) / absMax), 0.6);
-    var r, g, b;
-    if (v > 0) {
-      // white-blue (#e8f0ff → #4169e1)
-      r = Math.round(232 - norm * (232 - 65));
-      g = Math.round(240 - norm * (240 - 105));
-      b = Math.round(255 - norm * (255 - 225));
-    } else {
-      // white-pink (#ffe8f0 → #dc5078)
-      r = Math.round(255 - norm * (255 - 220));
-      g = Math.round(232 - norm * (232 - 80));
-      b = Math.round(240 - norm * (240 - 120));
-    }
-    return 'rgba(' + r + ',' + g + ',' + b + ',0.92)';
-  }
-  ctx.save(); ctx.translate(m.left, m.top);
-  for (var si = 0; si < strikes.length; si++) {
-    var sy = yScale(strikes[si]);
-    var sy2 = si + 1 < strikes.length ? yScale(strikes[si + 1]) : sy - cellH;
-    var rh = Math.max(1, Math.abs(sy2 - sy)); var ry = Math.min(sy, sy2);
-    if (!matrix[si]) continue;
-    for (var ti = 0; ti < timestamps.length; ti++) {
-      var v = matrix[si][ti] || 0;
-      var cc = cellColor(v); if (!cc) continue;
-      ctx.fillStyle = cc;
-      ctx.fillRect(ti * cellW, ry, cellW + 0.5, rh + 0.5);
-    }
-  }
-  if (spotTrace.length > 1) {
-    ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
-    ctx.beginPath(); var started = false;
-    for (var i = 0; i < spotTrace.length; i++) {
-      if (!spotTrace[i]) continue;
-      var px = (i + 0.5) * cellW, py = yScale(spotTrace[i]);
-      if (py < 0 || py > h) { started = false; continue; }
-      if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
-    }
-    if (started) ctx.stroke();
-  }
-  ctx.restore();
-  var svg = d3.select(container).append('svg')
-    .style('position', 'absolute').style('top', 0).style('left', 0)
-    .attr('width', W).attr('height', H).style('pointer-events', 'none');
-  var ga = svg.append('g').attr('transform', 'translate(' + m.left + ',' + m.top + ')');
-  ga.append('g').call(d3.axisLeft(yScale).ticks(7).tickFormat(function(v) { return '$' + v; }))
-    .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '8px');
-  ga.selectAll('.domain').attr('stroke', 'none');
-  ga.selectAll('.tick line').attr('stroke', '#374151').attr('stroke-width', 0.5);
-  function fmtTs(ts) {
-    try {
-      var d = new Date(ts);
-      var etH = (d.getUTCHours() - 4 + 24) % 24;
-      return etH.toString().padStart(2, '0') + ':' + d.getUTCMinutes().toString().padStart(2, '0');
-    } catch(e) { return ''; }
-  }
-  var tg = svg.append('g').attr('transform', 'translate(' + m.left + ',' + (m.top + h + 14) + ')');
-  tg.append('text').attr('x', 0).attr('fill', '#9ca3af').attr('font-size', '8px').text(fmtTs(timestamps[0]));
-  tg.append('text').attr('x', w).attr('text-anchor', 'end').attr('fill', '#9ca3af').attr('font-size', '8px').text(fmtTs(timestamps[timestamps.length - 1]) + ' ET');
-  var cb = svg.append('g').attr('transform', 'translate(' + (m.left + w + 4) + ',' + m.top + ')');
-  var cbSteps = 40, cbW = 8;
-  for (var cs = 0; cs < cbSteps; cs++) {
-    var frac = cs / (cbSteps - 1);       // 0 = top (+GEX), 1 = bottom (-GEX)
-    var norm2 = Math.pow(frac <= 0.5 ? (1 - frac * 2) : (frac * 2 - 1), 0.6);
-    var cr, cg, cb2;
-    if (frac <= 0.5) {
-      cr = Math.round(232 - norm2 * (232 - 65));
-      cg = Math.round(240 - norm2 * (240 - 105));
-      cb2 = Math.round(255 - norm2 * (255 - 225));
-    } else {
-      cr = Math.round(255 - norm2 * (255 - 220));
-      cg = Math.round(232 - norm2 * (232 - 80));
-      cb2 = Math.round(240 - norm2 * (240 - 120));
-    }
-    cb.append('rect').attr('x', 0).attr('y', Math.round(frac * h))
-      .attr('width', cbW).attr('height', Math.ceil(h / cbSteps) + 1)
-      .attr('fill', 'rgba(' + cr + ',' + cg + ',' + cb2 + ',0.92)');
-  }
-  cb.append('text').attr('x', cbW + 2).attr('y', 8).attr('fill', '#9ca3af').attr('font-size', '7px').text('+GEX');
-  cb.append('text').attr('x', cbW + 2).attr('y', h).attr('fill', '#9ca3af').attr('font-size', '7px').text('−GEX');
-}
-</script>
+  <div id="gex-chart-panel" class="card gex-viz-full"><div class="card-header">⚡ GAMMA EXPOSURE — STRIKE BREAKDOWN</div><div class="card-body"><p class="empty">No GEX chart data available.</p></div></div>
   
     <div class="card">
       <div class="card-header">⚡ GEX EXTREMES</div>
       <div class="card-body scroll">
-        <p class="empty">No signals this session.</p>
+        
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-SPY">SPY</span>
+        <span class="sig-main">Net GEX $-1519.9M — 94th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED gamma, put-dominated</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge tk-AAPL">AAPL</span>
+        <span class="sig-main">Net GEX $+184.6M — 96th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED gamma, call-dominated</span>
+        <span class="sig-time">live</span>
+      </div>
         <table class="gex-tbl"><thead><tr><th>Ticker</th><th>Net GEX</th><th>Pct</th><th></th></tr></thead><tbody><tr class="gex-tr neg-gex"><td class="ticker-badge">SPY</td><td>$-1519.9M</td><td>94th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">IWM</td><td>$-1272.5M</td><td>45th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLF</td><td>$-638.2M</td><td>81th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">QQQ</td><td>$-547.7M</td><td>78th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NVDA</td><td>$+321.8M</td><td>47th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">NFLX</td><td>$+264.3M</td><td>25th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">AAPL</td><td>$+184.6M</td><td>96th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">XLE</td><td>$+156.0M</td><td>20th</td><td class="trend">→</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MSFT</td><td>$+99.9M</td><td>10th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">TSLA</td><td>$+96.7M</td><td>65th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">UBER</td><td>$-31.8M</td><td>13th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">AMD</td><td>$-28.6M</td><td>74th</td><td class="trend">↑</td></tr><tr class="gex-tr pos-gex"><td class="ticker-badge">MRVL</td><td>$+28.2M</td><td>62th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">XLK</td><td>$-26.0M</td><td>75th</td><td class="trend">↑</td></tr><tr class="gex-tr neg-gex"><td class="ticker-badge">JPM</td><td>$-22.0M</td><td>74th</td><td class="trend">↑</td></tr></tbody></table>
       </div>
     </div>
@@ -1189,7 +688,103 @@ function drawHeatmap(elemId, ticker) {
     <div class="card">
       <div class="card-header">⚡ SKEW EXTREMES</div>
       <div class="card-body scroll">
-        <p class="empty">No signals this session.</p>
+        
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-AAPL">AAPL</span>
+        <span class="sig-main">25d Skew +10.8vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-AMD">AMD</span>
+        <span class="sig-main">25d Skew +12.5vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-AMZN">AMZN</span>
+        <span class="sig-main">25d Skew +11.6vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-ARM">ARM</span>
+        <span class="sig-main">25d Skew +10.5vol — 97th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-GS">GS</span>
+        <span class="sig-main">25d Skew +11.9vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-IWM">IWM</span>
+        <span class="sig-main">25d Skew +12.8vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-JPM">JPM</span>
+        <span class="sig-main">25d Skew +12.8vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-MSFT">MSFT</span>
+        <span class="sig-main">25d Skew +7.7vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-NFLX">NFLX</span>
+        <span class="sig-main">25d Skew +5.1vol — 99th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-QQQ">QQQ</span>
+        <span class="sig-main">25d Skew +13.8vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-SPY">SPY</span>
+        <span class="sig-main">25d Skew +12.1vol — 93th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-TSLA">TSLA</span>
+        <span class="sig-main">25d Skew +10.6vol — 100th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-UBER">UBER</span>
+        <span class="sig-main">25d Skew +7.4vol — 99th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bull">
+        <span class="ticker-badge tk-XLE">XLE</span>
+        <span class="sig-main">25d Skew +2.1vol — 9th pctile (30d)</span>
+        <span class="ai-note">💬 COMPRESSED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-XLF">XLF</span>
+        <span class="sig-main">25d Skew +12.4vol — 99th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
+      <div class="sig-row bear">
+        <span class="ticker-badge tk-XLK">XLK</span>
+        <span class="sig-main">25d Skew +15.8vol — 99th pctile (30d)</span>
+        <span class="ai-note">💬 ELEVATED put premium</span>
+        <span class="sig-time">live</span>
+      </div>
         
       </div>
     </div>
@@ -1197,7 +792,14 @@ function drawHeatmap(elemId, ticker) {
     <div class="card pos-full">
       <div class="card-header">&#128202; 13F FLOW MATCH</div>
       <div class="card-body scroll">
-        <p class="empty">No 13F overlap with today's OVI tickers. Check back as more names print.</p>
+        <div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-MSFT">MSFT</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Point72</span> <span class="f13-fund">Balyasny</span> <span class="f13-more">+9 more</span><span class="f13-aum">$7,164M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-NVDA">NVDA</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Point72</span> <span class="f13-fund">Balyasny</span> <span class="f13-more">+7 more</span><span class="f13-aum">$1,855M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-AAPL">AAPL</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Point72</span> <span class="f13-fund">Balyasny</span> <span class="f13-more">+7 more</span><span class="f13-aum">$4,641M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-NFLX">NFLX</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Point72</span> <span class="f13-fund">Schonfeld</span> <span class="f13-more">+2 more</span><span class="f13-aum">$1,446M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-AMD">AMD</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Point72</span> <span class="f13-fund">Exodus Point</span> <span class="f13-more">+1 more</span><span class="f13-aum">$449M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-JPM">JPM</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Cohen &amp; Steers</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Balyasny</span> <span class="f13-more">+1 more</span><span class="f13-aum">$1,430M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-TSLA">TSLA</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Point72</span> <span class="f13-fund">Exodus Point</span><span class="f13-aum">$1,568M AUM</span></div></div>
+<div class="f13-card" style="border-left-color:#60a5fa;background:rgba(96,165,250,0.06)"><div class="f13-top"><span class="ticker-badge tk-UBER">UBER</span><span class="f13-side" style="color:#60a5fa">GEX</span><span class="f13-pct" style="color:#60a5fa">GEX watchlist</span><span class="f13-align f13-neut">13F LONG</span></div><div class="f13-funds"><span class="f13-fund">LGIM</span> <span class="f13-fund">Millennium</span> <span class="f13-fund">Balyasny</span><span class="f13-aum">$331M AUM</span></div></div>
       </div>
     </div>
 </div>
