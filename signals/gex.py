@@ -1,69 +1,43 @@
 """Signal 2: GEX (Gamma Exposure) Extreme"""
-import statistics
 from datetime import date
-
-from polygon import RESTClient
 
 from config import (
     POLYGON_API_KEY,
     GEX_HISTORY_DAYS,
     GEX_PERCENTILE_EXTREME,
     GEX_SINGLE_STRIKE_PCT,
+    GEX_MIN_ABS_M,
 )
-from claude_draft import draft_observation
-from db.database import save_gex, get_gex_history, get_latest_gex
-
-_client: RESTClient | None = None
-
-
-def _get_client() -> RESTClient:
-    global _client
-    if _client is None:
-        _client = RESTClient(api_key=POLYGON_API_KEY)
-    return _client
+from db.database import save_gex, get_gex_history
+from gex_engine.vendor_ingest import fetch_chain
+from gex_engine.greek_calc import get_gamma, reset_fallback_counter
+from gex_engine.contract_model import normalize_chain
 
 
-def _fetch_spot(ticker: str) -> float:
-    client = _get_client()
-    try:
-        snap = client.get_snapshot_all("stocks", tickers=[ticker])
-        if snap and len(snap) > 0:
-            return snap[0].day.close or snap[0].prev_day.close or 0.0
-    except Exception:
-        pass
-    try:
-        aggs = list(client.get_aggs(ticker, 1, "day",
-                                    date.today().strftime("%Y-%m-%d"),
-                                    date.today().strftime("%Y-%m-%d")))
-        if aggs:
-            return aggs[0].close or 0.0
-    except Exception as e:
-        print(f"  [gex] Could not fetch spot for {ticker}: {e}")
-    return 0.0
-
-
-def _compute_gex(contracts: list, spot: float) -> tuple[float, dict[float, float]]:
+def _compute_gex(contracts: list[dict], spot: float) -> tuple[float, dict[float, float]]:
     """
-    Returns (net_gex_dollars, strike_gex_map).
-    net_gex = sum(call_gex) - sum(put_gex) across all contracts.
-    GEX per contract = gamma × OI × 100 × spot_price
-    Calls add positive GEX, puts add negative GEX.
+    Compute net GEX and per-strike absolute GEX from normalized contract dicts.
+
+    Uses get_gamma() which prioritises Black-Scholes (IV-based) over vendor gamma.
+    Formula: gamma × OI × multiplier × spot  (per $1 move, signed by dealer convention)
     """
     strike_gex: dict[float, float] = {}
     net_gex = 0.0
 
     for c in contracts:
-        details = getattr(c, "details", None)
-        greeks = getattr(c, "greeks", None)
-        oi = getattr(c, "open_interest", 0) or 0
-        gamma = (greeks.gamma if greeks and greeks.gamma else 0.0) or 0.0
-        cp = (getattr(details, "contract_type", "").lower() if details else "")
-        strike = (getattr(details, "strike_price", 0.0) if details else 0.0) or 0.0
+        oi     = c.get("oi", 0)
+        cp     = c.get("option_type", "")
+        strike = c.get("strike", 0.0)
+        mult   = c.get("multiplier", 100)
 
-        if gamma == 0.0 or oi == 0:
+        if oi == 0 or strike == 0.0:
             continue
 
-        gex = gamma * oi * 100 * spot
+        gamma = get_gamma(c, spot)
+        if gamma == 0.0:
+            continue
+
+        gex = gamma * oi * mult * spot
         if cp == "call":
             net_gex += gex
         elif cp == "put":
@@ -83,49 +57,46 @@ def _percentile_rank(value: float, history: list[float]) -> float:
 
 def check_gex(ticker: str) -> list[dict]:
     """
-    Returns a list of alert dicts for GEX extreme signals on ticker.
+    Returns alert dicts for GEX extreme signals.
+    Each dict has 'alert_text' (base, no Claude) and 'claude_prompt'.
     """
-    client = _get_client()
-    contracts = []
+    reset_fallback_counter()
+
     try:
-        for contract in client.list_snapshot_options_chain(
-            ticker, params={"limit": 250}
-        ):
-            contracts.append(contract)
+        spot, raw_contracts = fetch_chain(ticker)
     except Exception as e:
         print(f"  [gex] Error fetching chain for {ticker}: {e}")
         return []
 
-    spot = _fetch_spot(ticker)
     if spot == 0.0:
         print(f"  [gex] No spot price for {ticker}, skipping GEX.")
         return []
 
+    contracts = normalize_chain(raw_contracts, ticker)
     net_gex, strike_gex = _compute_gex(contracts, spot)
 
-    # Save to DB
     save_gex(ticker, net_gex, spot)
 
     history = get_gex_history(ticker, GEX_HISTORY_DAYS)
-    prev_row = None
-    if len(history) >= 2:
-        prev_row = history[-2]  # second-to-last (current is already saved)
-
+    prev_row = history[-2] if len(history) >= 2 else None
     gex_values = [r["net_gex"] for r in history]
     pct_rank = _percentile_rank(net_gex, gex_values[:-1]) if len(gex_values) > 1 else 50.0
+    net_gex_m = net_gex / 1_000_000
+
+    # Skip alerting for near-zero GEX (noise from tickers with sparse options activity)
+    if abs(net_gex_m) < GEX_MIN_ABS_M:
+        return []
 
     alerts = []
-    net_gex_m = net_gex / 1_000_000  # in millions
 
     def _make_alert(reason: str, signal_data: dict) -> dict:
-        signal_desc = (
+        claude_prompt = (
             f"{ticker} GEX {reason}: Net GEX ${net_gex_m:.1f}M "
             f"({pct_rank:.0f}th percentile, {GEX_HISTORY_DAYS}d)"
         )
-        observation = draft_observation(signal_desc)
         alert_text = (
             f"{ticker} GEX EXTREME — Net GEX: ${net_gex_m:.1f}M "
-            f"({pct_rank:.0f}th pct, {GEX_HISTORY_DAYS}d) | {observation}"
+            f"({pct_rank:.0f}th pct, {GEX_HISTORY_DAYS}d)"
         )
         return {
             "ticker": ticker,
@@ -133,6 +104,7 @@ def check_gex(ticker: str) -> list[dict]:
             "net_gex_m": net_gex_m,
             "pct_rank": pct_rank,
             "alert_text": alert_text,
+            "claude_prompt": claude_prompt,
             "signal_data": signal_data,
         }
 
@@ -168,8 +140,11 @@ def check_gex(ticker: str) -> list[dict]:
                     "pct_rank": pct_rank,
                     "alert_text": (
                         f"{ticker} GEX CONCENTRATION — Strike ${strike} has "
-                        f"{pct_conc:.0f}% of total GEX (${sgex/1e6:.1f}M) | "
-                        f"[gamma pin risk at {strike}]"
+                        f"{pct_conc:.0f}% of total GEX (${sgex/1e6:.1f}M)"
+                    ),
+                    "claude_prompt": (
+                        f"{ticker}: Strike ${strike} accounts for {pct_conc:.0f}% of total "
+                        f"GEX (${sgex/1e6:.1f}M) — potential gamma pin at {strike}"
                     ),
                     "signal_data": {
                         "reason": "strike_concentration",
