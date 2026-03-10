@@ -14,6 +14,7 @@ from db.database import (
     get_latest_gex_all,
     get_gex_percentile,
     get_latest_ovi_report,
+    get_latest_skew_all,
     GEX_HISTORY_DAYS,
 )
 
@@ -307,13 +308,16 @@ def _ovi_card_html(ovi_report: dict, copy_ts: str) -> str:
     also_puts_html  = _also_notable_html(also_puts, "put")
     analysis_escaped = _e(analysis)
 
-    ctx_section = ""
+    ctx_btn = ""
+    ctx_content = ""
     if market_context:
         ctx_escaped = _e(market_context)
-        ctx_section = (
-            f'<div class="ctx-section">'
+        ctx_btn = (
             f'<button class="ctx-toggle" onclick="toggleCtx(event)">'
-            f'\U0001F4F0 Context fed to AI \u25bc</button>'
+            f'\U0001F4F0 Context \u25bc</button>'
+        )
+        ctx_content = (
+            f'<div class="ctx-section">'
             f'<pre id="ctx-text" class="ctx-text">{ctx_escaped}</pre>'
             f'</div>'
         )
@@ -333,15 +337,16 @@ def _ovi_card_html(ovi_report: dict, copy_ts: str) -> str:
         <div class="ovi-section-lbl put-lbl">🔴 Top By Puts — Equity / ETF</div>
         {puts_html}
         {also_puts_html}
-        {ctx_section}
         <div id="flow-pulse-panel" class="ai-box">
           <div class="ai-box-hdr">
             <span class="ai-box-title">FLOW PULSE — AI ANALYSIS</span>
             <div style="display:flex;gap:6px;align-items:center;">
+              {ctx_btn}
               <button id="copy-btn" class="copy-btn" data-ts="{_e(analysis_ts)}" onclick="copyAnalysis()">📋 Copy Analysis</button>
               <button onclick="exportPanel('flow-pulse-panel','Flow_Pulse')" class="export-btn">📸 Save Analysis</button>
             </div>
           </div>
+          {ctx_content}
           <pre id="ai-text" class="ai-text">{analysis_escaped}</pre>
           <div class="ai-ts">Analysis as of {_e(analysis_ts)}</div>
           <div class="ai-disclaimer">Flow observations only. Inferences require confirmation from strike, tenor, and opening/closing data.</div>
@@ -385,6 +390,50 @@ def _build_gex_table(latest_gex: list[dict]) -> list[dict]:
         })
     rows.sort(key=lambda r: abs(r["net_gex_m"]), reverse=True)
     return rows[:15]
+
+
+def _gex_extreme_rows(gex_table: list[dict]) -> list[dict]:
+    """Generate signal rows for GEX watchlist tickers at extreme percentiles (>=90 or <=10)."""
+    rows = []
+    for r in gex_table:
+        pct = r.get("pct", 50.0)
+        if pct >= 90 or pct <= 10:
+            bias = "put-dominated" if r["negative"] else "call-dominated"
+            level = "ELEVATED" if pct >= 90 else "SUPPRESSED"
+            alert_text = (
+                f"Net GEX ${r['net_gex_m']:+.1f}M — {pct:.0f}th pctile (30d) | "
+                f"{level} gamma, {bias}"
+            )
+            rows.append({
+                "ticker": r["ticker"],
+                "alert_text": alert_text,
+                "time_str": "live",
+                "sentiment": "bullish" if not r["negative"] else "bearish",
+                "faded": False,
+            })
+    return rows
+
+
+def _skew_extreme_rows(latest_skew: list[dict]) -> list[dict]:
+    """Generate signal rows for tickers with skew at extreme percentiles (>=90 or <=10)."""
+    rows = []
+    for r in latest_skew:
+        pct = r.get("percentile", 50.0)
+        if pct >= 90 or pct <= 10:
+            skew_vol = r["skew_value"] * 100
+            level = "ELEVATED" if pct >= 90 else "COMPRESSED"
+            alert_text = (
+                f"25d Skew {skew_vol:+.1f}vol — {pct:.0f}th pctile (30d) | "
+                f"{level} put premium"
+            )
+            rows.append({
+                "ticker": r["ticker"],
+                "alert_text": alert_text,
+                "time_str": "live",
+                "sentiment": "bearish" if pct >= 90 else "bullish",
+                "faded": False,
+            })
+    return rows
 
 
 # ── HTML fragments ────────────────────────────────────────────────────────────
@@ -452,16 +501,21 @@ def _13f_match_card_html(matches: list[dict]) -> str:
     """Render the 13F Flow Match panel with styled match cards."""
     if not matches:
         body = (
-            '<p class="empty">No 13F overlap with today\'s OVI tickers. '
+            '<p class="empty">No 13F overlap with today\'s signal tickers. '
             'Check back as more names print.</p>'
         )
     else:
         cards = []
         for m in matches:
-            side_cls   = "bull" if m["side"] == "CALL" else "bear"
-            side_color = "#4ade80" if m["side"] == "CALL" else "#f87171"
-            align_bg   = "rgba(74,222,128,0.06)" if m["side"] == "CALL" else "rgba(248,113,113,0.06)"
-            align_border = "#4ade80" if m["side"] == "CALL" else "#f87171"
+            if m["side"] == "CALL":
+                side_cls, side_color = "bull", "#4ade80"
+                align_bg, align_border = "rgba(74,222,128,0.06)", "#4ade80"
+            elif m["side"] == "PUT":
+                side_cls, side_color = "bear", "#f87171"
+                align_bg, align_border = "rgba(248,113,113,0.06)", "#f87171"
+            else:  # GEX watchlist
+                side_cls, side_color = "neut", "#60a5fa"
+                align_bg, align_border = "rgba(96,165,250,0.06)", "#60a5fa"
             funds_html = " ".join(
                 f'<span class="f13-fund">{_e(f)}</span>' for f in m["top_funds"]
             )
@@ -537,12 +591,21 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
 (function() {
   if (typeof d3 === 'undefined') { console.warn('[gex] D3 not loaded'); return; }
   var curTicker = GEX_DEFAULT || Object.keys(GEX_DATA)[0] || 'SPY';
+  var _signMode = 'classic';
 
   window.switchGexTicker = function(t) {
     curTicker = t;
     document.querySelectorAll('.gex-tab').forEach(function(b) { b.classList.remove('gex-tab-active'); });
     var btn = document.querySelector('.gex-tab[data-t="' + t + '"]');
     if (btn) btn.classList.add('gex-tab-active');
+    renderAll();
+  };
+
+  window.switchSignMode = function(mode) {
+    _signMode = mode;
+    document.querySelectorAll('.gex-sign-btn').forEach(function(b) { b.classList.remove('gex-sign-active'); });
+    var btn = document.getElementById('gex-sign-' + mode);
+    if (btn) btn.classList.add('gex-sign-active');
     renderAll();
   };
 
@@ -568,19 +631,36 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     else b.classList.remove('gex-toggle-active');
   }
 
+  function _modeData(d) {
+    // Returns the mode-specific strikes/zdtes/net_gex_m overlay
+    var sm = (d.sign_modes || {})[_signMode] || {};
+    return {
+      strikes:   sm.strikes   || d.strikes  || [],
+      zdtes:     sm.zdtes     || d.zdtes    || [],
+      net_gex_m: (sm.net_gex_m != null) ? sm.net_gex_m : (d.net_gex_m || 0),
+      note:      sm.note || '',
+      label:     sm.label || _signMode,
+    };
+  }
+
   function renderAll() {
     var d = GEX_DATA[curTicker] || {};
-    renderRegime(d);
+    var md = _modeData(d);
+    // Update sign note
+    var noteEl = document.getElementById('gex-sign-note');
+    if (noteEl) noteEl.textContent = md.note;
+    renderRegime(d, md);
     renderKeyLevels(d);
-    renderDiagnostics(d);
-    drawStrikeBars('gex-strike-chart', d.strikes || [], d);
+    renderDiagnostics(d, md);
+    drawStrikeBars('gex-strike-chart', md.strikes, d);
     drawPriceLine(d);
-    drawStrikeBars('gex-0dte-chart', d.zdtes || [], d);
+    drawStrikeBars('gex-0dte-chart', md.zdtes, d);
     if (typeof drawHeatmap === 'function') drawHeatmap('gex-heatmap-chart', curTicker);
   }
 
-  function renderRegime(d) {
-    var gex = d.net_gex_m || 0;
+  function renderRegime(d, md) {
+    md = md || _modeData(d);
+    var gex = md.net_gex_m || 0;
     var sign = gex >= 0 ? '+' : '';
     var isPos = gex >= 0;
     var gexColor = isPos ? '#4169E1' : '#DC5078';
@@ -646,7 +726,7 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
       : '';
   }
 
-  function renderDiagnostics(d) {
+  function renderDiagnostics(d, md) {
     var el = document.getElementById('gex-diag-body');
     if (!el) return;
     var diag = d.diagnostics || {};
@@ -654,19 +734,23 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     var now  = d._fetched_at ? new Date(d._fetched_at) : null;
     var ageS = now ? Math.round((Date.now() - now.getTime()) / 1000) : null;
     var stale = ageS != null && ageS > 300;
+    md = md || _modeData(d);
+    var bsCount  = diag.bs_computed     != null ? diag.bs_computed     : '—';
+    var vndCount = diag.vendor_fallback != null ? diag.vendor_fallback : '—';
     var rows = [
       ['Contracts included', diag.included != null ? diag.included : '—'],
       ['Contracts excluded (zero OI)', diag.zero_oi != null ? diag.zero_oi : '—'],
-      ['Missing IV (vendor gamma used)', diag.missing_iv != null ? diag.missing_iv : '—'],
-      ['GEX formula', 'γ × OI × multiplier × spot² × 0.01 × sign (1% move)'],
-      ['Flip method', 'Spot-scan zero-crossing (±10% grid, 0.5% steps)'],
-      ['Sign model', 'Classic (calls +1, puts −1) — ESTIMATED'],
+      ['Gamma: Black-Scholes (IV present)', bsCount],
+      ['Gamma: Vendor fallback (no IV / t=0)', vndCount],
+      ['GEX formula', '\u03b3 \u00d7 OI \u00d7 multiplier \u00d7 spot\u00b2 \u00d7 0.01 \u00d7 sign (1% move)'],
+      ['Flip method', 'Spot-scan zero-crossing (\u00b110% grid, 0.5% steps)'],
+      ['Sign model', md.label + ' \u2014 ' + md.note],
       ['Multiplier', '100 (standard equity/ETF)'],
       ['Net GEX pctile (30d)', p30.net_gex_pctile != null ? Math.round(p30.net_gex_pctile) + 'th  (z=' + p30.net_gex_zscore + ')' : '—'],
       ['Abs GEX pctile (30d)', p30.abs_gex_pctile != null ? Math.round(p30.abs_gex_pctile) + 'th  (z=' + p30.abs_gex_zscore + ')' : '—'],
       ['0DTE share pctile (30d)', p30.zdte_share_pctile != null ? Math.round(p30.zdte_share_pctile) + 'th  (z=' + p30.zdte_share_zscore + ')' : '—'],
       ['History snapshots (30d)', p30.history_count != null ? p30.history_count : '—'],
-      ['Data age', ageS != null ? ageS + 's' + (stale ? ' ⚠ STALE (>5 min)' : '') : '—'],
+      ['Data age', ageS != null ? ageS + 's' + (stale ? ' \u26a0 STALE (>5 min)' : '') : '—'],
     ];
     var html = '<table class="diag-tbl">';
     rows.forEach(function(r) {
@@ -938,6 +1022,14 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
         f'<button onclick="exportPanel(\'gex-chart-panel\',\'GEX_Chart\')" class="export-btn">\U0001F4F8 Save Chart</button>'
         f'</div>'
         f'</div>'
+        f'<div class="gex-sign-bar">'
+        f'<span class="gex-sign-lbl">Sign Model:</span>'
+        f'<button id="gex-sign-classic" class="gex-sign-btn gex-sign-active" onclick="switchSignMode(\'classic\')" title="Standard dealer hedging: calls +1, puts \u22121">Classic</button>'
+        f'<button id="gex-sign-customer_long" class="gex-sign-btn" onclick="switchSignMode(\'customer_long\')" title="Assumes customers net long, dealer net short">Customer Long</button>'
+        f'<button id="gex-sign-heuristic" class="gex-sign-btn" onclick="switchSignMode(\'heuristic\')" title="Moneyness/TTE/volume confidence weighting">Heuristic</button>'
+        f'<button id="gex-sign-unsigned" class="gex-sign-btn" onclick="switchSignMode(\'unsigned\')" title="Absolute gamma only \u2014 no dealer sign">Unsigned</button>'
+        f'<span id="gex-sign-note" class="gex-sign-note"></span>'
+        f'</div>'
         f'<div class="card-body">'
         f'<div class="gex-tabs">{tabs_html}</div>'
         f'<div class="gex-stats-strip" id="gex-stats-strip">'
@@ -990,115 +1082,199 @@ function drawHeatmap(elemId, ticker) {
   var matrix = hd.matrix || [];
   var spotTrace = hd.spot_trace || [];
   if (!strikes.length || timestamps.length < 2) {
-    container.innerHTML = '<p class="empty" style="padding:10px 4px;">Heatmap builds throughout the trading day (needs \u22652 poll cycles)</p>';
+    container.innerHTML = '<p class="empty" style="padding:10px 4px;">Heatmap builds throughout the trading day (\u22652 poll cycles needed)</p>';
     return;
   }
-  var m = {top: 8, right: 52, bottom: 22, left: 54};
-  var W = container.offsetWidth || 500;
-  var cellH = Math.max(3, Math.min(10, Math.floor(340 / strikes.length)));
-  var H = Math.max(140, Math.min(480, strikes.length * cellH + m.top + m.bottom));
+
+  var m = {top: 10, right: 64, bottom: 24, left: 58};
+  var W = container.offsetWidth || 520;
+  var nStrikes = strikes.length;
+  var H = Math.max(160, Math.min(500, nStrikes * 6 + m.top + m.bottom));
   var w = W - m.left - m.right;
   var h = H - m.top - m.bottom;
   var dpr = window.devicePixelRatio || 1;
-  var canvas = document.createElement('canvas');
-  canvas.width = W * dpr; canvas.height = H * dpr;
-  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-  canvas.style.display = 'block';
   container.style.position = 'relative';
-  container.appendChild(canvas);
-  var ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.fillStyle = '#0d1117'; ctx.fillRect(0, 0, W, H);
-  var minS = Math.min.apply(null, strikes), maxS = Math.max.apply(null, strikes);
-  var yScale = d3.scaleLinear().domain([minS, maxS]).range([h, 0]);
-  var cellW = w / timestamps.length;
+
+  // ── Compute absMax for colour scale ──────────────────────────────────────
   var absMax = 0.01;
   for (var si2 = 0; si2 < matrix.length; si2++) {
     for (var ti2 = 0; ti2 < (matrix[si2] || []).length; ti2++) {
-      var av = Math.abs(matrix[si2][ti2] || 0); if (av > absMax) absMax = av;
+      var av2 = Math.abs(matrix[si2][ti2] || 0);
+      if (av2 > absMax) absMax = av2;
     }
   }
-  function cellColor(v) {
-    if (v === 0) return null;
-    var norm = Math.pow(Math.min(1, Math.abs(v) / absMax), 0.6);
+
+  // ── Colour mapping: blue → white → red (SpotGamma style) ─────────────────
+  // Positive GEX: deep blue (#1a56db) → white (#ffffff)
+  // Negative GEX: white (#ffffff) → deep red (#c81e1e)
+  function gexColor(v, alpha) {
+    alpha = alpha == null ? 1.0 : alpha;
+    var norm = Math.pow(Math.min(1, Math.abs(v) / absMax), 0.55);
     var r, g, b;
-    if (v > 0) {
-      // white-blue (#e8f0ff → #4169e1)
-      r = Math.round(232 - norm * (232 - 65));
-      g = Math.round(240 - norm * (240 - 105));
-      b = Math.round(255 - norm * (255 - 225));
+    if (v >= 0) {
+      r = Math.round(255 - norm * (255 - 26));
+      g = Math.round(255 - norm * (255 - 86));
+      b = Math.round(255 - norm * (255 - 219));
     } else {
-      // white-pink (#ffe8f0 → #dc5078)
-      r = Math.round(255 - norm * (255 - 220));
-      g = Math.round(232 - norm * (232 - 80));
-      b = Math.round(240 - norm * (240 - 120));
+      r = Math.round(255 - norm * (255 - 200));
+      g = Math.round(255 - norm * (255 - 30));
+      b = Math.round(255 - norm * (255 - 30));
     }
-    return 'rgba(' + r + ',' + g + ',' + b + ',0.92)';
+    return [r, g, b, Math.round(alpha * 255)];
   }
-  ctx.save(); ctx.translate(m.left, m.top);
-  for (var si = 0; si < strikes.length; si++) {
-    var sy = yScale(strikes[si]);
-    var sy2 = si + 1 < strikes.length ? yScale(strikes[si + 1]) : sy - cellH;
-    var rh = Math.max(1, Math.abs(sy2 - sy)); var ry = Math.min(sy, sy2);
-    if (!matrix[si]) continue;
-    for (var ti = 0; ti < timestamps.length; ti++) {
-      var v = matrix[si][ti] || 0;
-      var cc = cellColor(v); if (!cc) continue;
-      ctx.fillStyle = cc;
-      ctx.fillRect(ti * cellW, ry, cellW + 0.5, rh + 0.5);
+
+  // ── Bilinear interpolation helpers ───────────────────────────────────────
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function bilerp(q00, q10, q01, q11, tx, ty) {
+    return lerp(lerp(q00, q10, tx), lerp(q01, q11, tx), ty);
+  }
+  function matVal(si, ti) {
+    si = Math.max(0, Math.min(matrix.length - 1, si));
+    var row = matrix[si] || [];
+    ti = Math.max(0, Math.min(row.length - 1, ti));
+    return row[ti] || 0;
+  }
+
+  // ── Render into offscreen image buffer for smooth interpolation ──────────
+  var canvas = document.createElement('canvas');
+  canvas.width  = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  canvas.style.cssText = 'position:absolute;top:' + m.top + 'px;left:' + m.left + 'px;' +
+                         'width:' + w + 'px;height:' + h + 'px;';
+  container.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  var imgW = canvas.width, imgH = canvas.height;
+  var imgData = ctx.createImageData(imgW, imgH);
+  var px = imgData.data;
+
+  var minS = strikes[0], maxS = strikes[nStrikes - 1];
+  var nT = timestamps.length;
+
+  for (var py2 = 0; py2 < imgH; py2++) {
+    // Map pixel y → strike (y=0 is top = highest strike)
+    var strikeAtY = maxS - (py2 / imgH) * (maxS - minS);
+    // Find fractional strike index
+    var siFrac = (strikeAtY - minS) / (maxS - minS) * (nStrikes - 1);
+    siFrac = Math.max(0, Math.min(nStrikes - 1 - 0.001, siFrac));
+    var si0 = Math.floor(siFrac), si1 = Math.min(si0 + 1, nStrikes - 1);
+    var ty2 = siFrac - si0;
+
+    for (var px2 = 0; px2 < imgW; px2++) {
+      // Map pixel x → time index
+      var tFrac = (px2 / imgW) * (nT - 1);
+      tFrac = Math.max(0, Math.min(nT - 1 - 0.001, tFrac));
+      var ti0 = Math.floor(tFrac), ti1 = Math.min(ti0 + 1, nT - 1);
+      var tx2 = tFrac - ti0;
+
+      var v = bilerp(
+        matVal(si0, ti0), matVal(si1, ti0),
+        matVal(si0, ti1), matVal(si1, ti1),
+        ty2, tx2
+      );
+
+      var col = gexColor(v, 0.95);
+      var idx = (py2 * imgW + px2) * 4;
+      px[idx]   = col[0];
+      px[idx+1] = col[1];
+      px[idx+2] = col[2];
+      px[idx+3] = col[3];
     }
   }
+  ctx.putImageData(imgData, 0, 0);
+
+  // ── Spot price trace overlay ───────────────────────────────────────────────
   if (spotTrace.length > 1) {
-    ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
-    ctx.beginPath(); var started = false;
-    for (var i = 0; i < spotTrace.length; i++) {
-      if (!spotTrace[i]) continue;
-      var px = (i + 0.5) * cellW, py = yScale(spotTrace[i]);
-      if (py < 0 || py > h) { started = false; continue; }
-      if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
+    ctx.save();
+    // Glow pass
+    ctx.shadowColor = 'rgba(255,255,255,0.7)';
+    ctx.shadowBlur  = 4 * dpr;
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth   = 3 * dpr;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    var started2 = false;
+    for (var i2 = 0; i2 < spotTrace.length; i2++) {
+      if (!spotTrace[i2]) { started2 = false; continue; }
+      var spx = (i2 / (nT - 1)) * imgW;
+      var spy = ((maxS - spotTrace[i2]) / (maxS - minS)) * imgH;
+      if (spy < 0 || spy > imgH) { started2 = false; continue; }
+      if (!started2) { ctx.moveTo(spx, spy); started2 = true; } else ctx.lineTo(spx, spy);
     }
-    if (started) ctx.stroke();
+    if (started2) ctx.stroke();
+    // Sharp pass
+    ctx.shadowBlur  = 0;
+    ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+    ctx.lineWidth   = 1.5 * dpr;
+    ctx.beginPath();
+    started2 = false;
+    for (var i3 = 0; i3 < spotTrace.length; i3++) {
+      if (!spotTrace[i3]) { started2 = false; continue; }
+      var spx2 = (i3 / (nT - 1)) * imgW;
+      var spy2 = ((maxS - spotTrace[i3]) / (maxS - minS)) * imgH;
+      if (spy2 < 0 || spy2 > imgH) { started2 = false; continue; }
+      if (!started2) { ctx.moveTo(spx2, spy2); started2 = true; } else ctx.lineTo(spx2, spy2);
+    }
+    if (started2) ctx.stroke();
+    ctx.restore();
   }
-  ctx.restore();
+
+  // ── SVG axes + colour bar (drawn over canvas) ─────────────────────────────
+  var yScale = d3.scaleLinear().domain([minS, maxS]).range([h, 0]);
   var svg = d3.select(container).append('svg')
     .style('position', 'absolute').style('top', 0).style('left', 0)
     .attr('width', W).attr('height', H).style('pointer-events', 'none');
+
   var ga = svg.append('g').attr('transform', 'translate(' + m.left + ',' + m.top + ')');
-  ga.append('g').call(d3.axisLeft(yScale).ticks(7).tickFormat(function(v) { return '$' + v; }))
-    .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '8px');
+  ga.append('g').call(d3.axisLeft(yScale).ticks(7).tickFormat(function(v) { return '$' + Math.round(v); }))
+    .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '9px');
   ga.selectAll('.domain').attr('stroke', 'none');
-  ga.selectAll('.tick line').attr('stroke', '#374151').attr('stroke-width', 0.5);
+  ga.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,0.08)').attr('stroke-width', 0.5);
+
   function fmtTs(ts) {
     try {
       var d = new Date(ts);
       var etH = (d.getUTCHours() - 4 + 24) % 24;
-      return etH.toString().padStart(2, '0') + ':' + d.getUTCMinutes().toString().padStart(2, '0');
+      return etH.toString().padStart(2,'0') + ':' + d.getUTCMinutes().toString().padStart(2,'0');
     } catch(e) { return ''; }
   }
-  var tg = svg.append('g').attr('transform', 'translate(' + m.left + ',' + (m.top + h + 14) + ')');
-  tg.append('text').attr('x', 0).attr('fill', '#9ca3af').attr('font-size', '8px').text(fmtTs(timestamps[0]));
-  tg.append('text').attr('x', w).attr('text-anchor', 'end').attr('fill', '#9ca3af').attr('font-size', '8px').text(fmtTs(timestamps[timestamps.length - 1]) + ' ET');
-  var cb = svg.append('g').attr('transform', 'translate(' + (m.left + w + 4) + ',' + m.top + ')');
-  var cbSteps = 40, cbW = 8;
-  for (var cs = 0; cs < cbSteps; cs++) {
-    var frac = cs / (cbSteps - 1);       // 0 = top (+GEX), 1 = bottom (-GEX)
-    var norm2 = Math.pow(frac <= 0.5 ? (1 - frac * 2) : (frac * 2 - 1), 0.6);
-    var cr, cg, cb2;
-    if (frac <= 0.5) {
-      cr = Math.round(232 - norm2 * (232 - 65));
-      cg = Math.round(240 - norm2 * (240 - 105));
-      cb2 = Math.round(255 - norm2 * (255 - 225));
-    } else {
-      cr = Math.round(255 - norm2 * (255 - 220));
-      cg = Math.round(232 - norm2 * (232 - 80));
-      cb2 = Math.round(240 - norm2 * (240 - 120));
+  var tg = svg.append('g').attr('transform', 'translate(' + m.left + ',' + (m.top + h + 16) + ')');
+  tg.append('text').attr('x', 0).attr('fill', '#9ca3af').attr('font-size', '9px').text(fmtTs(timestamps[0]));
+  tg.append('text').attr('x', w).attr('text-anchor','end').attr('fill','#9ca3af').attr('font-size','9px')
+    .text(fmtTs(timestamps[timestamps.length-1]) + ' ET');
+
+  // ── Colour bar legend (canvas gradient) ──────────────────────────────────
+  var cbX = m.left + w + 6, cbW = 12;
+  var cbCanvas = document.createElement('canvas');
+  cbCanvas.width = cbW; cbCanvas.height = h;
+  cbCanvas.style.cssText = 'position:absolute;top:' + m.top + 'px;left:' + cbX + 'px;' +
+                           'width:' + cbW + 'px;height:' + h + 'px;border-radius:3px;';
+  container.appendChild(cbCanvas);
+  var cbCtx = cbCanvas.getContext('2d');
+  var cbImg = cbCtx.createImageData(cbW, h);
+  for (var cy = 0; cy < h; cy++) {
+    // Top = max +GEX (deep blue), mid = 0 (white), bottom = max -GEX (deep red)
+    var frac = cy / (h - 1);        // 0=top, 1=bottom
+    var cbV  = frac <= 0.5 ? (1 - frac * 2) * absMax : -(frac * 2 - 1) * absMax;
+    var cbCol = gexColor(cbV, 1.0);
+    for (var cx = 0; cx < cbW; cx++) {
+      var ci = (cy * cbW + cx) * 4;
+      cbImg.data[ci]   = cbCol[0];
+      cbImg.data[ci+1] = cbCol[1];
+      cbImg.data[ci+2] = cbCol[2];
+      cbImg.data[ci+3] = cbCol[3];
     }
-    cb.append('rect').attr('x', 0).attr('y', Math.round(frac * h))
-      .attr('width', cbW).attr('height', Math.ceil(h / cbSteps) + 1)
-      .attr('fill', 'rgba(' + cr + ',' + cg + ',' + cb2 + ',0.92)');
   }
-  cb.append('text').attr('x', cbW + 2).attr('y', 8).attr('fill', '#9ca3af').attr('font-size', '7px').text('+GEX');
-  cb.append('text').attr('x', cbW + 2).attr('y', h).attr('fill', '#9ca3af').attr('font-size', '7px').text('\u2212GEX');
+  cbCtx.putImageData(cbImg, 0, 0);
+
+  // Legend labels
+  var cbSvg = svg.append('g').attr('transform', 'translate(' + (cbX + cbW + 2) + ',' + m.top + ')');
+  var fmtM = function(v) {
+    var a = Math.abs(v);
+    return (v >= 0 ? '+' : '-') + (a >= 1000 ? Math.round(a/1000) + 'B' : a >= 1 ? Math.round(a) + 'M' : '<1M');
+  };
+  cbSvg.append('text').attr('y', 9).attr('fill','#9ca3af').attr('font-size','8px').text('+GEX');
+  cbSvg.append('text').attr('y', h/2 + 4).attr('fill','#9ca3af').attr('font-size','8px').text('0');
+  cbSvg.append('text').attr('y', h).attr('fill','#9ca3af').attr('font-size','8px').text('\u2212GEX');
 }
 </script>"""
 
@@ -1125,6 +1301,17 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     gex_table = _build_gex_table(latest_gex)
     gex_extra = _gex_table_html(gex_table)
 
+    # Augment GEX Extremes: prepend live percentile-based rows, dedupe by ticker
+    gex_live_rows = _gex_extreme_rows(gex_table)
+    seen_gex = {r["ticker"] for r in gex_live_rows}
+    gex_rows = gex_live_rows + [r for r in gex_rows if r["ticker"] not in seen_gex]
+
+    # Augment Skew Extremes: prepend live percentile-based rows, dedupe by ticker
+    latest_skew = get_latest_skew_all()
+    skew_live_rows = _skew_extreme_rows(latest_skew)
+    seen_skew = {r["ticker"] for r in skew_live_rows}
+    skew_rows = skew_live_rows + [r for r in skew_rows if r["ticker"] not in seen_skew]
+
     ovi_report = get_latest_ovi_report() or {}
     analysis_ts = _fmt_ts_short(ovi_report.get("analysis_ts", ""))
 
@@ -1132,7 +1319,7 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     gex_panel = _gex_panel_html(gex_chart_data, gex_heatmap_data)
     gex_card  = _card_html("⚡ GEX EXTREMES", gex_rows, gex_extra)
     skew_card = _card_html("⚡ SKEW EXTREMES", skew_rows)
-    f13_matches = build_13f_matches(ovi_report)
+    f13_matches = build_13f_matches(ovi_report, [r["ticker"] for r in gex_table])
     pos_card  = _13f_match_card_html(f13_matches)
 
     wl_badges = _watchlist_badges()
@@ -1517,12 +1704,14 @@ function toggleCtx(evt) {
       font-family: 'JetBrains Mono', monospace;
     }}
     .gex-tbl th {{
-      color: var(--muted);
+      color: #8b9ab5;
       text-align: left;
-      padding: 4px 8px;
-      border-bottom: 1px solid var(--border);
+      padding: 6px 8px;
+      border-bottom: 2px solid #2d5a8e;
       font-family: 'Inter', sans-serif;
       font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      background: linear-gradient(90deg, #1a2332, #1e2a3a);
+      position: sticky; top: 0;
     }}
     .gex-tr {{ transition: background .1s; cursor: default; }}
     .gex-tr:hover {{ background: var(--bg-hover) !important; }}
@@ -1548,7 +1737,16 @@ function toggleCtx(evt) {
     .footer-credits {{ color: var(--muted); font-size: 11px; }}
     .footer-logo {{ height: 20px; width: auto; opacity: 0.8; margin-left: auto; object-fit: contain; }}
     .footer-disc {{ color: var(--muted2); font-size: 10px; }}
-    .wl-badge {{ font-size: 10px; min-width: unset; padding: 1px 6px; }}
+    .wl-badge {{
+      font-size: 10px; min-width: unset; padding: 1px 6px;
+      transition: transform .15s, filter .15s, box-shadow .15s;
+      cursor: default;
+    }}
+    .wl-badge:hover {{
+      transform: translateY(-2px);
+      filter: brightness(1.35);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+    }}
 
     /* ── OVI full-width card ───────────────── */
     .ovi-full  {{ grid-column: 1 / -1; }}
@@ -1585,10 +1783,10 @@ function toggleCtx(evt) {
     .pct-pos {{ color: #4ade80; font-weight: 600; }}
     .pct-neg {{ color: #f87171; font-weight: 600; }}
     .pct-na  {{ color: #374151; }}
-    .vol-pos {{ font-weight: 600; }}
-    .vol-neg {{ font-weight: 600; }}
-    .ovi-tbl td:has(.pct-pos), .ovi-tbl td:has(.vol-pos) {{ background: rgba(34,197,94,0.08); }}
-    .ovi-tbl td:has(.pct-neg), .ovi-tbl td:has(.vol-neg) {{ background: rgba(239,68,68,0.08); }}
+    .vol-pos {{ color: #4ade80; font-weight: 600; }}
+    .vol-neg {{ color: #f87171; font-weight: 600; }}
+    .ovi-tbl td:has(.pct-pos), .ovi-tbl td:has(.vol-pos) {{ background: rgba(34,197,94,0.13); }}
+    .ovi-tbl td:has(.pct-neg), .ovi-tbl td:has(.vol-neg) {{ background: rgba(239,68,68,0.13); }}
     .also-notable {{ color: var(--muted); font-size: 10px; padding: 2px 4px 6px; font-style: italic; }}
     /* Index badges */
     .idx-badge {{ display: inline-block; margin-left: 3px; padding: 0 4px;
@@ -1679,9 +1877,13 @@ function toggleCtx(evt) {
     }}
     .ai-trade-lbl {{ color: var(--accent2) !important; }}
     .ai-trade-box {{
-      background: rgba(232,88,140,0.07); border: 1px solid rgba(232,88,140,0.2);
-      border-radius: 4px; padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
+      background: rgba(232,88,140,0.10);
+      border: 1px solid rgba(232,88,140,0.30);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 4px 4px 0;
+      padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
       font-size: 12px; line-height: 1.6; white-space: pre-wrap;
+      box-shadow: inset 0 0 20px rgba(232,88,140,0.04);
     }}
     .ai-body-line {{ font-size: 12px; color: var(--text); line-height: 1.65; }}
     .ai-ts {{ padding: 4px 16px; font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }}
@@ -1697,17 +1899,19 @@ function toggleCtx(evt) {
     .copy-btn:hover {{ background: #30363d; color: var(--text); }}
 
     /* ── Context section ───────────────────── */
-    .ctx-section {{ margin: 10px 0 4px; }}
+    .ctx-section {{ margin: 0; border-bottom: 1px solid var(--border2); }}
     .ctx-toggle {{
-      background: none; border: 1px solid #2d333b; color: var(--muted);
-      font-size: 10px; padding: 4px 10px; border-radius: 4px; cursor: pointer;
+      background: #1a2332; border: 1px solid #2d5a8e; color: #7ea8d4;
+      font-size: 10px; font-weight: 600; letter-spacing: .03em;
+      padding: 3px 10px; border-radius: 4px; cursor: pointer;
+      transition: background .12s, color .12s, border-color .12s;
     }}
-    .ctx-toggle:hover {{ color: var(--text); border-color: #8b949e; }}
+    .ctx-toggle:hover {{ background: #1e2a3a; color: #a8c8e8; border-color: #4a7aae; }}
     .ctx-text {{
       display: none; font-family: 'Consolas', 'Courier New', monospace;
       font-size: 10px; color: var(--muted); white-space: pre-wrap;
-      padding: 8px 12px; margin-top: 4px; border: 1px solid #2d333b;
-      border-radius: 4px; background: #080c10;
+      padding: 10px 16px; margin: 0; border: none;
+      background: #080c10;
     }}
 
     /* ── Refresh button ────────────────────── */
@@ -1783,6 +1987,22 @@ function toggleCtx(evt) {
     }}
     .gex-toggle-btn:hover {{ color: var(--text); border-color: #8b949e; }}
     .gex-toggle-active {{ background: #1a2f4a; color: #60a5fa; border-color: #3b82f6; }}
+
+    /* ── Sign Mode Bar ───────────────────────── */
+    .gex-sign-bar {{
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      padding: 6px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 10px;
+    }}
+    .gex-sign-lbl {{ color: var(--muted); font-size: 10px; font-weight: 600; margin-right: 2px; }}
+    .gex-sign-btn {{
+      background: var(--bg3); color: var(--muted);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 2px 9px; font-size: 10px; font-weight: 600; cursor: pointer;
+      transition: background .15s, color .15s;
+    }}
+    .gex-sign-btn:hover {{ color: var(--text); border-color: #8b949e; }}
+    .gex-sign-active {{ background: #2a1a4a; color: #c084fc; border-color: #a855f7; }}
+    .gex-sign-note {{ color: #6b7280; font-size: 9px; font-style: italic; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
 
     /* ── Key Levels Bar ──────────────────────── */
     .gex-key-levels-bar {{
