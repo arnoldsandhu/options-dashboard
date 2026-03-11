@@ -113,17 +113,17 @@ def _fmt_k(v) -> str:
 
 def _z_color(v: float | None) -> str:
     """Return a Z-Score diverging hex color for a directional percentage."""
-    if v is None: return "#484F58"
-    if v >= 200:  return "#207020"
-    if v >= 100:  return "#409030"
-    if v >= 50:   return "#70B030"
-    if v >= 20:   return "#A8C840"
-    if v >= 0:    return "#D0D860"
-    if v >= -20:  return "#E8D040"
-    if v >= -50:  return "#E88830"
-    if v >= -70:  return "#E06040"
-    if v >= -100: return "#CC3333"
-    return "#8B0000"
+    if v is None: return "#999999"
+    if v >= 200:  return "#1B5A1B"
+    if v >= 100:  return "#1B7A1B"
+    if v >= 50:   return "#2E8B2E"
+    if v >= 20:   return "#3DA03D"
+    if v >= 0:    return "#5AAB5A"
+    if v >= -20:  return "#CC7722"
+    if v >= -50:  return "#CC5533"
+    if v >= -70:  return "#CC4444"
+    if v >= -100: return "#BB3333"
+    return "#993333"
 
 
 def _fmt_vol_pct(v) -> str:
@@ -195,18 +195,26 @@ def _ovi_row_html(r: dict, side: str) -> str:
     _na = '<span class="pct-na">—</span>'
     oi_disp     = _na if (oi     is None or int(oi)     == 0) else _fmt_k(oi)
     avg_oi_disp = _na if (avg_oi is None or int(avg_oi) == 0) else _fmt_k(avg_oi)
+
+    def _tint(v) -> str:
+        """Return inline background style string for a % value (or '' if n/a)."""
+        if v is None:
+            return ""
+        return "background:rgba(34,197,94,0.12);" if v >= 0 else "background:rgba(239,68,68,0.12);"
+
+    px_pct_chg = r.get("px_pct_chg")
     return (
         f'<tr>'
         f'<td><span class="ticker-badge tk-{tk}">{_e(tk)}</span>{badges}</td>'
         f'<td>{_fmt_k(vol)}</td>'
         f'<td>{_fmt_k(avg_vol)}</td>'
-        f'<td>{_fmt_vol_pct(vol_pct)}</td>'
+        f'<td style="{_tint(vol_pct)}">{_fmt_vol_pct(vol_pct)}</td>'
         f'<td>{_fmt_pc(r.get("pc_ratio"))}</td>'
         f'<td>{price_str}</td>'
-        f'<td>{_fmt_px_pct(r.get("px_pct_chg"))}</td>'
+        f'<td style="{_tint(px_pct_chg)}">{_fmt_px_pct(px_pct_chg)}</td>'
         f'<td>{oi_disp}</td>'
         f'<td>{avg_oi_disp}</td>'
-        f'<td>{_fmt_oi_pct(oi_pct)}</td>'
+        f'<td style="{_tint(oi_pct)}">{_fmt_oi_pct(oi_pct)}</td>'
         f'<td>{_fmt_k(r.get("opt_vol"))}</td>'
         f'</tr>'
     )
@@ -392,33 +400,61 @@ def _build_gex_table(latest_gex: list[dict]) -> list[dict]:
     return rows[:15]
 
 
-def _gex_extreme_rows(gex_table: list[dict]) -> list[dict]:
-    """Generate signal rows for GEX watchlist tickers at extreme percentiles (>=90 or <=10)."""
+def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
+    """Generate signal rows for ALL GEX tickers at extreme percentiles (>=90 or <=10).
+
+    Operates on the raw latest_gex records (not the top-15 truncated gex_table)
+    so that tickers with small dollar GEX but historically extreme positioning
+    (e.g. AMD at 99th pctile) are not missed.
+    Requires at least 5 history points to avoid spurious signals.
+    """
+    from db.database import get_gex_history
     rows = []
-    for r in gex_table:
-        pct = r.get("pct", 50.0)
+    for g in latest_gex:
+        net_gex_m = g["net_gex"] / 1_000_000
+        hist = get_gex_history(g["ticker"], days=GEX_HISTORY_DAYS)
+        if len(hist) < 5:
+            continue
+        values = [h["net_gex"] for h in hist]
+        below = sum(1 for v in values if v < g["net_gex"])
+        pct = (below / len(values)) * 100.0
         if pct >= 90 or pct <= 10:
-            bias = "put-dominated" if r["negative"] else "call-dominated"
+            negative = net_gex_m < 0
+            bias = "put-dominated" if negative else "call-dominated"
             level = "ELEVATED" if pct >= 90 else "SUPPRESSED"
             alert_text = (
-                f"Net GEX ${r['net_gex_m']:+.1f}M — {pct:.0f}th pctile (30d) | "
+                f"Net GEX ${net_gex_m:+.1f}M — {pct:.0f}th pctile (30d) | "
                 f"{level} gamma, {bias}"
             )
             rows.append({
-                "ticker": r["ticker"],
+                "ticker": g["ticker"],
                 "alert_text": alert_text,
                 "time_str": "live",
-                "sentiment": "bullish" if not r["negative"] else "bearish",
+                "sentiment": "bullish" if not negative else "bearish",
                 "faded": False,
+                "_pct_dist": abs(pct - 50),
             })
+    # Sort by percentile distance from 50 (most extreme first), store pct for dedup
+    rows.sort(key=lambda r: r["_pct_dist"], reverse=True)
+    for r in rows:
+        r.pop("_pct_dist", None)
     return rows
 
 
 def _skew_extreme_rows(latest_skew: list[dict]) -> list[dict]:
-    """Generate signal rows for tickers with skew at extreme percentiles (>=90 or <=10)."""
+    """Generate signal rows for ALL tickers with skew at extreme percentiles (>=90 or <=10).
+
+    Requires at least 5 history points to avoid spurious signals from new tickers.
+    """
+    from db.database import get_skew_history
     rows = []
     for r in latest_skew:
-        pct = r.get("percentile", 50.0)
+        hist = get_skew_history(r["ticker"], days=30)
+        if len(hist) < 5:
+            continue
+        values = [h["skew_value"] for h in hist]
+        below = sum(1 for v in values if v < r["skew_value"])
+        pct = (below / len(values)) * 100.0
         if pct >= 90 or pct <= 10:
             skew_vol = r["skew_value"] * 100
             level = "ELEVATED" if pct >= 90 else "COMPRESSED"
@@ -432,7 +468,11 @@ def _skew_extreme_rows(latest_skew: list[dict]) -> list[dict]:
                 "time_str": "live",
                 "sentiment": "bearish" if pct >= 90 else "bullish",
                 "faded": False,
+                "_pct_dist": abs(pct - 50),
             })
+    rows.sort(key=lambda r: r["_pct_dist"], reverse=True)
+    for r in rows:
+        r.pop("_pct_dist", None)
     return rows
 
 
@@ -508,20 +548,52 @@ def _13f_match_card_html(matches: list[dict]) -> str:
         cards = []
         for m in matches:
             if m["side"] == "CALL":
-                side_cls, side_color = "bull", "#4ade80"
-                align_bg, align_border = "rgba(74,222,128,0.06)", "#4ade80"
+                side_cls, side_color = "bull", "#1B7A1B"
+                align_bg, align_border = "rgba(27,122,27,0.04)", "#1B7A1B"
             elif m["side"] == "PUT":
-                side_cls, side_color = "bear", "#f87171"
-                align_bg, align_border = "rgba(248,113,113,0.06)", "#f87171"
+                side_cls, side_color = "bear", "#CC4444"
+                align_bg, align_border = "rgba(204,68,68,0.04)", "#CC4444"
             else:  # GEX watchlist
-                side_cls, side_color = "neut", "#60a5fa"
-                align_bg, align_border = "rgba(96,165,250,0.06)", "#60a5fa"
-            funds_html = " ".join(
-                f'<span class="f13-fund">{_e(f)}</span>' for f in m["top_funds"]
-            )
-            more = f' <span class="f13-more">+{m["fund_count"] - len(m["top_funds"])} more</span>' \
-                   if m["fund_count"] > len(m["top_funds"]) else ""
+                side_cls, side_color = "neut", "#1B3A6B"
+                align_bg, align_border = "rgba(27,58,107,0.04)", "#1B3A6B"
             spot_str = f'${m["spot"]:.2f}' if m.get("spot") else ""
+
+            # Override side_cls if alignment has a special label
+            align_cls_map = {"warn": "warn", "bear": "bear", "bull": "bull", "neut": "neut"}
+            align_display_cls = align_cls_map.get(m.get("align_cls", "neut"), "neut")
+            if m.get("align_cls") == "warn":
+                align_border = "#B46400"
+                align_bg = "rgba(180,100,0,0.04)"
+
+            ctx = m.get("context_entries", [])
+            if ctx:
+                ctx_rows = "".join(
+                    f'<div class="f13-ctx-row">'
+                    f'<span class="f13-ctx-fund">{_e(e["fund"])}</span>'
+                    f'<span class="f13-sig f13-sig-{e["sig_type"]}">{e["sig_type"]}</span>'
+                    f'<span class="f13-ctx-detail">{_e(e["detail"])}</span>'
+                    f'</div>'
+                    for e in ctx
+                )
+                body_html = (
+                    f'<div class="f13-context">{ctx_rows}</div>'
+                    f'<div class="f13-meta">'
+                    f'<span class="f13-fund-count">{m["fund_count"]} funds</span>'
+                    f'<span class="f13-aum">${m["total_val_m"]:,.0f}M AUM</span>'
+                    f'</div>'
+                )
+            else:
+                funds_html = " ".join(
+                    f'<span class="f13-fund">{_e(f)}</span>' for f in m["top_funds"]
+                )
+                more = f' <span class="f13-more">+{m["fund_count"] - len(m["top_funds"])} more</span>' \
+                       if m["fund_count"] > len(m["top_funds"]) else ""
+                body_html = (
+                    f'<div class="f13-funds">{funds_html}{more}'
+                    f'<span class="f13-aum">${m["total_val_m"]:,.0f}M AUM</span>'
+                    f'</div>'
+                )
+
             cards.append(
                 f'<div class="f13-card" style="border-left-color:{align_border};background:{align_bg}">'
                 f'<div class="f13-top">'
@@ -529,11 +601,9 @@ def _13f_match_card_html(matches: list[dict]) -> str:
                 f'<span class="f13-side" style="color:{side_color}">{m["side"]}</span>'
                 f'<span class="f13-pct" style="color:{side_color}">{_e(m["pct_str"])}</span>'
                 f'{"<span class=f13-spot>" + _e(spot_str) + "</span>" if spot_str else ""}'
-                f'<span class="f13-align f13-{side_cls}">{m["alignment"]}</span>'
+                f'<span class="f13-align f13-{align_display_cls}">{m["alignment"]}</span>'
                 f'</div>'
-                f'<div class="f13-funds">{funds_html}{more}'
-                f'<span class="f13-aum">${m["total_val_m"]:,.0f}M AUM</span>'
-                f'</div>'
+                + body_html +
                 f'</div>'
             )
         body = "\n".join(cards)
@@ -663,9 +733,9 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     var gex = md.net_gex_m || 0;
     var sign = gex >= 0 ? '+' : '';
     var isPos = gex >= 0;
-    var gexColor = isPos ? '#4169E1' : '#DC5078';
+    var gexColor = isPos ? '#1B3A6B' : '#CC4444';
     var stab = d.stability_pct != null ? Math.round(d.stability_pct) : null;
-    var stabColor = stab != null ? (stab > 60 ? '#4169E1' : stab < 30 ? '#DC5078' : '#D0D860') : '#8B949E';
+    var stabColor = stab != null ? (stab > 60 ? '#1B3A6B' : stab < 30 ? '#CC4444' : '#555555') : '#666666';
 
     var spotEl = document.getElementById('gex-ss-spot');
     if (spotEl) spotEl.textContent = d.spot ? '$' + Number(d.spot).toLocaleString(undefined, {minimumFractionDigits:2,maximumFractionDigits:2}) : '\u2014';
@@ -676,7 +746,17 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     var flipEl = document.getElementById('gex-ss-flip');
     if (flipEl) {
       var flipTxt = d.flip_note || (d.flip_point ? 'Gamma Flip $' + d.flip_point + ' (spot-scan)' : '\u2014');
-      flipEl.textContent = d.flip_point ? '$' + d.flip_point : '\u2014';
+      if (d.flip_point) {
+        flipEl.textContent = '$' + d.flip_point;
+        flipEl.style.fontSize = '';
+      } else {
+        var fn = d.flip_note || '';
+        if (fn.indexOf('all negative') >= 0)      flipEl.textContent = 'No flip \u2014 all neg \u03b3';
+        else if (fn.indexOf('all positive') >= 0) flipEl.textContent = 'No flip \u2014 all pos \u03b3';
+        else if (fn)                               flipEl.textContent = 'No flip in \u00b110% range';
+        else                                       flipEl.textContent = '\u2014';
+        flipEl.style.fontSize = '11px';
+      }
       flipEl.title = flipTxt;
     }
 
@@ -806,20 +886,20 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
           return Math.max(0, v >= 0 ? xNetScale(v) - xZero : xZero - xNetScale(v));
         })
         .attr('height', barH)
-        .attr('fill', function(s) { return (s.net_gex_m || 0) >= 0 ? '#4169E1' : '#DC5078'; })
+        .attr('fill', function(s) { return (s.net_gex_m || 0) >= 0 ? '#1B3A6B' : '#CC4444'; })
         .attr('opacity', 0.85);
 
       // Zero divider
       g.append('line')
         .attr('x1', xZero).attr('y1', 0).attr('x2', xZero).attr('y2', h)
-        .attr('stroke', '#4b5563').attr('stroke-width', 1);
+        .attr('stroke', '#CCCCCC').attr('stroke-width', 1);
 
       // X axis labels
       g.append('text').attr('x', xZero / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#DC5078').attr('font-size', '8px')
+        .attr('text-anchor', 'middle').attr('fill', '#CC4444').attr('font-size', '8px')
         .text('\u2190 Net Neg GEX');
       g.append('text').attr('x', xZero + xZero / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#4169E1').attr('font-size', '8px')
+        .attr('text-anchor', 'middle').attr('fill', '#1B3A6B').attr('font-size', '8px')
         .text('Net Pos GEX \u2192');
     } else {
       // ── Split mode: calls right (blue), puts left (red) ──
@@ -835,7 +915,7 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
         .attr('y', function(s) { return yScale(s.strike) - barH / 2; })
         .attr('width', function(s) { return Math.max(0, xScale(s.call_gex_m || 0)); })
         .attr('height', barH)
-        .attr('fill', '#4169E1').attr('opacity', 0.85);
+        .attr('fill', '#1B3A6B').attr('opacity', 0.85);
 
       g.selectAll('.pbar').data(strikes).enter().append('rect')
         .attr('class', 'pbar')
@@ -843,17 +923,17 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
         .attr('y', function(s) { return yScale(s.strike) - barH / 2; })
         .attr('width', function(s) { return Math.max(0, xScale(s.put_gex_m || 0)); })
         .attr('height', barH)
-        .attr('fill', '#DC5078').attr('opacity', 0.85);
+        .attr('fill', '#CC4444').attr('opacity', 0.85);
 
       g.append('line')
         .attr('x1', xHalf).attr('y1', 0).attr('x2', xHalf).attr('y2', h)
-        .attr('stroke', '#4b5563').attr('stroke-width', 1);
+        .attr('stroke', '#CCCCCC').attr('stroke-width', 1);
 
       g.append('text').attr('x', xHalf / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#DC5078').attr('font-size', '8px')
+        .attr('text-anchor', 'middle').attr('fill', '#CC4444').attr('font-size', '8px')
         .text('\u2190 Puts');
       g.append('text').attr('x', xHalf + xHalf / 2).attr('y', h + 15)
-        .attr('text-anchor', 'middle').attr('fill', '#4169E1').attr('font-size', '8px')
+        .attr('text-anchor', 'middle').attr('fill', '#1B3A6B').attr('font-size', '8px')
         .text('Calls \u2192');
     }
 
@@ -862,20 +942,20 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
       var spotY = yScale(d.spot);
       g.append('line')
         .attr('x1', 0).attr('y1', spotY).attr('x2', w).attr('y2', spotY)
-        .attr('stroke', '#f9fafb').attr('stroke-width', 1.5)
+        .attr('stroke', '#CC4444').attr('stroke-width', 1.5)
         .attr('stroke-dasharray', '4,3');
       g.append('text')
         .attr('x', w + 4).attr('y', spotY + 4)
-        .attr('fill', '#f9fafb').attr('font-size', '9px').text('SPOT');
+        .attr('fill', '#CC4444').attr('font-size', '9px').text('SPOT');
     }
 
     // ── Key level reference lines (when Key Levels is on) ──────────────────
     if (_showLevels) {
       var levelDefs = [
-        { val: d.flip_point,       label: 'Flip',     color: '#a855f7' },
-        { val: d.call_wall,        label: 'Call Wall', color: '#60a5fa' },
-        { val: d.put_wall,         label: 'Put Wall',  color: '#f87171' },
-        { val: d.max_gamma_strike, label: 'Max\u0393', color: '#fbbf24' },
+        { val: d.flip_point,       label: 'Flip',     color: '#6B2D8B' },
+        { val: d.call_wall,        label: 'Call Wall', color: '#1B3A6B' },
+        { val: d.put_wall,         label: 'Put Wall',  color: '#CC4444' },
+        { val: d.max_gamma_strike, label: 'Max\u0393', color: '#D97706' },
       ];
       levelDefs.forEach(function(lv) {
         if (lv.val == null) return;
@@ -900,9 +980,9 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     var tickVals = strikeVals.filter(function(_, i) { return i % step === 0; });
     g.append('g')
       .call(d3.axisLeft(yScale).tickValues(tickVals).tickFormat(function(v) { return '$' + v; }))
-      .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '8px');
-    g.selectAll('.domain').attr('stroke', '#374151');
-    g.selectAll('.tick line').attr('stroke', '#374151');
+      .selectAll('text').attr('fill', '#666666').attr('font-size', '8px');
+    g.selectAll('.domain').attr('stroke', '#CCCCCC');
+    g.selectAll('.tick line').attr('stroke', '#CCCCCC');
   }
 
   function drawPriceLine(d) {
@@ -938,7 +1018,7 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     // Light grid
     g.append('g').call(
       d3.axisLeft(yScale).ticks(5).tickSize(-w).tickFormat('')
-    ).selectAll('line').attr('stroke', '#1e2530').attr('stroke-width', 0.5);
+    ).selectAll('line').attr('stroke', '#F0F0F0').attr('stroke-width', 0.5);
     g.selectAll('.grid .domain').attr('stroke', 'none');
 
     // Key strike reference lines (legacy key_strikes list)
@@ -946,20 +1026,20 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
       keyS.forEach(function(ks) {
         g.append('line')
           .attr('x1', 0).attr('y1', yScale(ks)).attr('x2', w).attr('y2', yScale(ks))
-          .attr('stroke', '#fbbf24').attr('stroke-width', 0.8)
+          .attr('stroke', '#D97706').attr('stroke-width', 0.8)
           .attr('stroke-dasharray', '3,3');
         g.append('text')
           .attr('x', w + 3).attr('y', yScale(ks) + 3)
-          .attr('fill', '#fbbf24').attr('font-size', '8px')
+          .attr('fill', '#D97706').attr('font-size', '8px')
           .text('$' + ks);
       });
 
       // Named key levels overlay on the price chart
       var priceLevels = [
-        { val: d.flip_point,       label: 'Flip',      color: '#a855f7' },
-        { val: d.call_wall,        label: 'Call Wall',  color: '#60a5fa' },
-        { val: d.put_wall,         label: 'Put Wall',   color: '#f87171' },
-        { val: d.max_gamma_strike, label: 'Max\u0393',  color: '#fbbf24' },
+        { val: d.flip_point,       label: 'Flip',      color: '#6B2D8B' },
+        { val: d.call_wall,        label: 'Call Wall',  color: '#1B3A6B' },
+        { val: d.put_wall,         label: 'Put Wall',   color: '#CC4444' },
+        { val: d.max_gamma_strike, label: 'Max\u0393',  color: '#D97706' },
       ];
       priceLevels.forEach(function(lv) {
         if (lv.val == null) return;
@@ -977,7 +1057,7 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     }
 
     var firstC = bars[0].c, lastC = bars[bars.length - 1].c;
-    var lineColor = lastC >= firstC ? '#22c55e' : '#ef4444';
+    var lineColor = lastC >= firstC ? '#1B7A1B' : '#CC4444';
 
     var line = d3.line()
       .x(function(b) { return xScale(b.t); })
@@ -994,16 +1074,16 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
         return dt.getHours().toString().padStart(2,'0') + ':' +
                dt.getMinutes().toString().padStart(2,'0');
       }))
-      .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '9px');
+      .selectAll('text').attr('fill', '#666666').attr('font-size', '9px');
 
     // Y axis (price)
     g.append('g').call(d3.axisLeft(yScale).ticks(5).tickFormat(function(v) {
       return '$' + (v >= 1000 ? v.toFixed(0) : v.toFixed(1));
     }))
-      .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '9px');
+      .selectAll('text').attr('fill', '#666666').attr('font-size', '9px');
 
-    g.selectAll('.domain').attr('stroke', '#374151');
-    g.selectAll('.tick line').attr('stroke', '#374151');
+    g.selectAll('.domain').attr('stroke', '#CCCCCC');
+    g.selectAll('.tick line').attr('stroke', '#CCCCCC');
   }
 
   // Kick off on load
@@ -1104,21 +1184,40 @@ function drawHeatmap(elemId, ticker) {
     }
   }
 
-  // ── Colour mapping: blue → white → red (SpotGamma style) ─────────────────
-  // Positive GEX: deep blue (#1a56db) → white (#ffffff)
-  // Negative GEX: white (#ffffff) → deep red (#c81e1e)
+  // ── Colour mapping: deep blue → sky blue → white → rose → deep red ──────
+  // 3-stop diverging gradient; gamma=0.7 keeps mid-range transitions visible
   function gexColor(v, alpha) {
     alpha = alpha == null ? 1.0 : alpha;
-    var norm = Math.pow(Math.min(1, Math.abs(v) / absMax), 0.55);
-    var r, g, b;
+    var norm = Math.pow(Math.min(1, Math.abs(v) / absMax), 0.7);
+    var r, g, b, t;
     if (v >= 0) {
-      r = Math.round(255 - norm * (255 - 26));
-      g = Math.round(255 - norm * (255 - 86));
-      b = Math.round(255 - norm * (255 - 219));
+      // norm 0→0.45: white (#fff) → sky blue (#60a5fa)
+      // norm 0.45→1: sky blue (#60a5fa) → deep blue (#1d4ed8)
+      if (norm < 0.45) {
+        t = norm / 0.45;
+        r = Math.round(255 + t * (96  - 255));
+        g = Math.round(255 + t * (165 - 255));
+        b = Math.round(255 + t * (250 - 255));
+      } else {
+        t = (norm - 0.45) / 0.55;
+        r = Math.round(96  + t * (29  - 96));
+        g = Math.round(165 + t * (78  - 165));
+        b = Math.round(250 + t * (216 - 250));
+      }
     } else {
-      r = Math.round(255 - norm * (255 - 200));
-      g = Math.round(255 - norm * (255 - 30));
-      b = Math.round(255 - norm * (255 - 30));
+      // norm 0→0.45: white (#fff) → rose (#fb7185)
+      // norm 0.45→1: rose (#fb7185) → deep crimson (#be123c)
+      if (norm < 0.45) {
+        t = norm / 0.45;
+        r = Math.round(255 + t * (251 - 255));
+        g = Math.round(255 + t * (113 - 255));
+        b = Math.round(255 + t * (133 - 255));
+      } else {
+        t = (norm - 0.45) / 0.55;
+        r = Math.round(251 + t * (190 - 251));
+        g = Math.round(113 + t * (18  - 113));
+        b = Math.round(133 + t * (60  - 133));
+      }
     }
     return [r, g, b, Math.round(alpha * 255)];
   }
@@ -1182,39 +1281,45 @@ function drawHeatmap(elemId, ticker) {
   }
   ctx.putImageData(imgData, 0, 0);
 
-  // ── Spot price trace overlay ───────────────────────────────────────────────
+  // ── Spot price trace overlay ─────────────────────────────────────────────
+  // Three passes: dark halo → soft glow → crisp white line.
+  // The halo ensures visibility against both light (white/blue) and dark areas.
   if (spotTrace.length > 1) {
     ctx.save();
-    // Glow pass
-    ctx.shadowColor = 'rgba(255,255,255,0.7)';
-    ctx.shadowBlur  = 4 * dpr;
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-    ctx.lineWidth   = 3 * dpr;
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    ctx.beginPath();
-    var started2 = false;
-    for (var i2 = 0; i2 < spotTrace.length; i2++) {
-      if (!spotTrace[i2]) { started2 = false; continue; }
-      var spx = (i2 / (nT - 1)) * imgW;
-      var spy = ((maxS - spotTrace[i2]) / (maxS - minS)) * imgH;
-      if (spy < 0 || spy > imgH) { started2 = false; continue; }
-      if (!started2) { ctx.moveTo(spx, spy); started2 = true; } else ctx.lineTo(spx, spy);
+
+    function _buildSpotPath() {
+      ctx.beginPath();
+      var ok = false;
+      for (var _i = 0; _i < spotTrace.length; _i++) {
+        if (!spotTrace[_i]) { ok = false; continue; }
+        var _x = (_i / (nT - 1)) * imgW;
+        var _y = ((maxS - spotTrace[_i]) / (maxS - minS)) * imgH;
+        if (_y < 0 || _y > imgH) { ok = false; continue; }
+        if (!ok) { ctx.moveTo(_x, _y); ok = true; } else { ctx.lineTo(_x, _y); }
+      }
+      return ok;
     }
-    if (started2) ctx.stroke();
-    // Sharp pass
+
+    // Pass 1: dark halo (contrast against white/light regions)
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+    ctx.lineWidth   = 5 * dpr;
+    if (_buildSpotPath()) ctx.stroke();
+
+    // Pass 2: soft white glow
+    ctx.shadowColor = 'rgba(255,255,255,0.85)';
+    ctx.shadowBlur  = 9 * dpr;
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth   = 4 * dpr;
+    if (_buildSpotPath()) ctx.stroke();
+
+    // Pass 3: crisp white line
     ctx.shadowBlur  = 0;
-    ctx.strokeStyle = 'rgba(255,255,255,0.95)';
-    ctx.lineWidth   = 1.5 * dpr;
-    ctx.beginPath();
-    started2 = false;
-    for (var i3 = 0; i3 < spotTrace.length; i3++) {
-      if (!spotTrace[i3]) { started2 = false; continue; }
-      var spx2 = (i3 / (nT - 1)) * imgW;
-      var spy2 = ((maxS - spotTrace[i3]) / (maxS - minS)) * imgH;
-      if (spy2 < 0 || spy2 > imgH) { started2 = false; continue; }
-      if (!started2) { ctx.moveTo(spx2, spy2); started2 = true; } else ctx.lineTo(spx2, spy2);
-    }
-    if (started2) ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.98)';
+    ctx.lineWidth   = 1.8 * dpr;
+    if (_buildSpotPath()) ctx.stroke();
+
     ctx.restore();
   }
 
@@ -1226,9 +1331,9 @@ function drawHeatmap(elemId, ticker) {
 
   var ga = svg.append('g').attr('transform', 'translate(' + m.left + ',' + m.top + ')');
   ga.append('g').call(d3.axisLeft(yScale).ticks(7).tickFormat(function(v) { return '$' + Math.round(v); }))
-    .selectAll('text').attr('fill', '#9ca3af').attr('font-size', '9px');
+    .selectAll('text').attr('fill', '#666666').attr('font-size', '9px');
   ga.selectAll('.domain').attr('stroke', 'none');
-  ga.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,0.08)').attr('stroke-width', 0.5);
+  ga.selectAll('.tick line').attr('stroke', 'rgba(0,0,0,0.08)').attr('stroke-width', 0.5);
 
   function fmtTs(ts) {
     try {
@@ -1238,8 +1343,8 @@ function drawHeatmap(elemId, ticker) {
     } catch(e) { return ''; }
   }
   var tg = svg.append('g').attr('transform', 'translate(' + m.left + ',' + (m.top + h + 16) + ')');
-  tg.append('text').attr('x', 0).attr('fill', '#9ca3af').attr('font-size', '9px').text(fmtTs(timestamps[0]));
-  tg.append('text').attr('x', w).attr('text-anchor','end').attr('fill','#9ca3af').attr('font-size','9px')
+  tg.append('text').attr('x', 0).attr('fill', '#666666').attr('font-size', '9px').text(fmtTs(timestamps[0]));
+  tg.append('text').attr('x', w).attr('text-anchor','end').attr('fill','#666666').attr('font-size','9px')
     .text(fmtTs(timestamps[timestamps.length-1]) + ' ET');
 
   // ── Colour bar legend (canvas gradient) ──────────────────────────────────
@@ -1272,10 +1377,16 @@ function drawHeatmap(elemId, ticker) {
     var a = Math.abs(v);
     return (v >= 0 ? '+' : '-') + (a >= 1000 ? Math.round(a/1000) + 'B' : a >= 1 ? Math.round(a) + 'M' : '<1M');
   };
-  cbSvg.append('text').attr('y', 9).attr('fill','#9ca3af').attr('font-size','8px').text('+GEX');
-  cbSvg.append('text').attr('y', h/2 + 4).attr('fill','#9ca3af').attr('font-size','8px').text('0');
-  cbSvg.append('text').attr('y', h).attr('fill','#9ca3af').attr('font-size','8px').text('\u2212GEX');
+  cbSvg.append('text').attr('y', 9).attr('fill','#666666').attr('font-size','8px').text('+GEX');
+  cbSvg.append('text').attr('y', h/2 + 4).attr('fill','#666666').attr('font-size','8px').text('0');
+  cbSvg.append('text').attr('y', h).attr('fill','#666666').attr('font-size','8px').text('\u2212GEX');
 }
+// Auto-render on page load: d3_script IIFE runs before this script is parsed,
+// so drawHeatmap was undefined during the initial renderGex() call. Re-draw now.
+(function() {
+  var t = typeof GEX_DEFAULT !== 'undefined' ? GEX_DEFAULT : null;
+  if (t) drawHeatmap('gex-heatmap-chart', t);
+})();
 </script>"""
 
 
@@ -1301,8 +1412,9 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     gex_table = _build_gex_table(latest_gex)
     gex_extra = _gex_table_html(gex_table)
 
-    # Augment GEX Extremes: prepend live percentile-based rows, dedupe by ticker
-    gex_live_rows = _gex_extreme_rows(gex_table)
+    # Augment GEX Extremes: scan ALL latest_gex tickers (not just top-15 gex_table)
+    # so small-dollar but historically extreme tickers (e.g. AMD 99th pctile) are included.
+    gex_live_rows = _gex_extreme_rows(latest_gex)
     seen_gex = {r["ticker"] for r in gex_live_rows}
     gex_rows = gex_live_rows + [r for r in gex_rows if r["ticker"] not in seen_gex]
 
@@ -1319,7 +1431,15 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     gex_panel = _gex_panel_html(gex_chart_data, gex_heatmap_data)
     gex_card  = _card_html("⚡ GEX EXTREMES", gex_rows, gex_extra)
     skew_card = _card_html("⚡ SKEW EXTREMES", skew_rows)
-    f13_matches = build_13f_matches(ovi_report, [r["ticker"] for r in gex_table])
+    # 13F: pass ALL GEX tickers (not just top-15 gex_table) + all skew extreme tickers
+    # so tickers like AMD/ARM/GS/JPM with extreme percentiles but small dollar GEX
+    # are still checked against institutional 13F positions.
+    all_gex_tickers = [g["ticker"] for g in latest_gex]
+    all_skew_tickers = [r["ticker"] for r in skew_live_rows]
+    f13_matches = build_13f_matches(
+        ovi_report,
+        list(dict.fromkeys(all_gex_tickers + all_skew_tickers)),
+    )
     pos_card  = _13f_match_card_html(f13_matches)
 
     wl_badges = _watchlist_badges()
@@ -1350,13 +1470,13 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     header_html = f"""<header>
   <div class="hdr-top">
     <div class="hdr-brand">
-      <img src="assets/LNlogo2.png" alt="Liquidnet" class="hdr-logo" onerror="this.style.display='none'">
+      <img src="assets/gamma-mate-logo-horizontal.svg" alt="Gamma Mate" class="hdr-logo-gm" onerror="this.style.display='none'">
       <div class="hdr-title-wrap">
-        <div class="hdr-title">Options Flow Dashboard</div>
-        <div class="hdr-subtitle">Powered by Polygon.io + Claude</div>
+        <div class="hdr-subtitle" style="font-size:11px;color:#666666;letter-spacing:.3px;">Options Flow Dashboard</div>
       </div>
     </div>
     <div class="hdr-right">
+      <img src="assets/LNlogo2.png" alt="Liquidnet" class="hdr-logo-ln" onerror="this.style.display='none'">
       <span class="hdr-time">{_e(updated)}</span>
       <span class="{market_cls}"><span class="market-dot"></span>{market_label}</span>
     </div>
@@ -1476,51 +1596,38 @@ function toggleCtx(evt) {
 
     :root {{
       /* ── Backgrounds ── */
-      --bg:        #0D1117;
-      --bg2:       #161B22;
-      --bg3:       #1C2128;
-      --bg-hover:  #21262D;
-      --border:    #30363D;
-      --border2:   #2D333B;
+      --bg:        #FFFFFF;
+      --bg2:       #FFFFFF;
+      --bg3:       #F7F7F7;
+      --bg-hover:  #F0F4F8;
+      --border:    #E0E0E0;
+      --border2:   #CCCCCC;
 
       /* ── Text ── */
-      --text:      #E6EDF3;
-      --muted:     #8B949E;
-      --muted2:    #484F58;
+      --text:      #1A1A1A;
+      --muted:     #666666;
+      --muted2:    #999999;
 
-      /* ── Liquidnet Accent ── */
-      --accent:    #E8588C;
-      --accent2:   #F5A623;
-      --accent3:   #C13584;
-
-      /* ── Z-Score diverging scale ── */
-      --z-xneg:   #8B0000;
-      --z-sneg:   #CC3333;
-      --z-mneg:   #E06040;
-      --z-lneg:   #E88830;
-      --z-slneg:  #F0B030;
-      --z-neut1:  #E8D040;
-      --z-neut:   #D0D860;
-      --z-spos:   #A8C840;
-      --z-mpos:   #70B030;
-      --z-spos2:  #409030;
-      --z-xpos:   #207020;
+      /* ── Navy Accent (BofA/GS research style) ── */
+      --accent:    #1B3A6B;
+      --accent2:   #CC4444;
+      --accent3:   #6B2D8B;
 
       /* ── Legacy aliases (keep existing code working) ── */
-      --bull:      #1a3d20;
-      --bull-fg:   #70B030;
-      --bear:      #3d1a1a;
-      --bear-fg:   #CC3333;
-      --neut:      #2a2200;
-      --neut-fg:   #E8D040;
-      --badge-bg:  #1C2128;
-      --badge-fg:  #93c5fd;
-      --ai-fg:     #E8588C;
+      --bull:      rgba(27,122,27,0.06);
+      --bull-fg:   #1B7A1B;
+      --bear:      rgba(204,68,68,0.06);
+      --bear-fg:   #CC4444;
+      --neut:      rgba(100,100,100,0.05);
+      --neut-fg:   #555555;
+      --badge-bg:  #F5F5F5;
+      --badge-fg:  #1A1A1A;
+      --ai-fg:     #1B3A6B;
     }}
 
     body {{
-      background: var(--bg);
-      color: var(--text);
+      background: #FFFFFF;
+      color: #1A1A1A;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 13px;
       min-height: 100vh;
@@ -1535,8 +1642,8 @@ function toggleCtx(evt) {
 
     /* ── Header ─────────────────────────── */
     header {{
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
+      background: #FFFFFF;
+      border-bottom: 1px solid #E0E0E0;
       padding: 0;
     }}
     .hdr-top {{
@@ -1545,61 +1652,64 @@ function toggleCtx(evt) {
     }}
     .hdr-brand {{ display: flex; align-items: center; gap: 12px; }}
     .hdr-logo {{ height: 28px; width: auto; display: block; object-fit: contain; }}
+    .hdr-logo-gm {{ height: 36px; width: auto; display: block; object-fit: contain; }}
+    .hdr-logo-ln {{ height: 22px; width: auto; display: block; object-fit: contain; opacity: 0.75; }}
     .hdr-logo-text {{
       font-size: 13px; font-weight: 700; letter-spacing: 2px;
-      color: var(--accent); text-transform: uppercase;
+      color: #1B3A6B; text-transform: uppercase;
     }}
     .hdr-title-wrap {{ display: flex; flex-direction: column; gap: 1px; }}
     .hdr-title {{
-      font-size: 16px; font-weight: 700; letter-spacing: .5px; color: var(--text);
+      font-size: 16px; font-weight: 700; letter-spacing: .5px; color: #1A1A1A;
       text-transform: uppercase;
     }}
-    .hdr-subtitle {{ font-size: 10px; color: var(--muted); letter-spacing: .3px; }}
+    .hdr-subtitle {{ font-size: 10px; color: #666666; letter-spacing: .3px; }}
     .hdr-right {{ display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }}
-    .hdr-time {{ color: var(--muted); font-size: 11px; font-family: 'JetBrains Mono', monospace; }}
+    .hdr-time {{ color: #666666; font-size: 11px; font-family: 'JetBrains Mono', monospace; }}
     .market-dot {{
       display: inline-block; width: 7px; height: 7px;
       border-radius: 50%; margin-right: 5px; vertical-align: middle;
     }}
     .status-open  {{
-      background: rgba(112,176,48,0.12); color: var(--z-mpos);
+      background: rgba(27,122,27,0.08); color: #1B7A1B;
       padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
-      border: 1px solid rgba(112,176,48,0.3);
+      border: 1px solid rgba(27,122,27,0.25);
     }}
-    .status-open .market-dot  {{ background: var(--z-mpos); box-shadow: 0 0 5px var(--z-mpos); }}
+    .status-open .market-dot  {{ background: #1B7A1B; }}
     .status-closed {{
-      background: rgba(204,51,51,0.12); color: var(--z-sneg);
+      background: rgba(204,68,68,0.08); color: #CC4444;
       padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
-      border: 1px solid rgba(204,51,51,0.3);
+      border: 1px solid rgba(204,68,68,0.25);
     }}
-    .status-closed .market-dot {{ background: var(--z-sneg); }}
+    .status-closed .market-dot {{ background: #CC4444; }}
     .count-badge {{
-      background: rgba(232,88,140,0.1); color: var(--accent);
+      background: rgba(27,58,107,0.08); color: #1B3A6B;
       padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
-      border: 1px solid rgba(232,88,140,0.25);
+      border: 1px solid rgba(27,58,107,0.25);
     }}
     /* ── Header Stat Cards ── */
     .hdr-stats {{
-      display: flex; gap: 1px; background: var(--border);
-      border-top: 1px solid var(--border); overflow-x: auto;
+      display: flex; gap: 0; background: #F7F7F7;
+      border-top: 1px solid #E0E0E0; overflow-x: auto;
     }}
     .hdr-stat {{
-      flex: 1; min-width: 110px; background: var(--bg2);
+      flex: 1; min-width: 110px; background: #FFFFFF;
+      border-right: 1px solid #E0E0E0;
       padding: 8px 16px; display: flex; flex-direction: column; gap: 2px;
     }}
     .hdr-stat-label {{
       font-size: 9px; font-weight: 600; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--muted);
+      text-transform: uppercase; color: #666666;
     }}
     .hdr-stat-val {{
       font-family: 'JetBrains Mono', monospace;
-      font-size: 18px; font-weight: 700; line-height: 1.1;
+      font-size: 18px; font-weight: 700; line-height: 1.1; color: #1A1A1A;
     }}
-    .hdr-stat-ctx {{ font-size: 10px; color: var(--muted); }}
-    .stat-neg {{ color: var(--z-sneg); }}
-    .stat-pos {{ color: var(--z-mpos); }}
-    .stat-neut {{ color: var(--z-neut1); }}
-    .updated {{ color: var(--muted); font-size: 11px; }}
+    .hdr-stat-ctx {{ font-size: 10px; color: #666666; }}
+    .stat-neg {{ color: #CC4444; }}
+    .stat-pos {{ color: #1B7A1B; }}
+    .stat-neut {{ color: #555555; }}
+    .updated {{ color: #666666; font-size: 11px; }}
     .meta {{ display: flex; align-items: center; gap: 12px; }}
 
     /* ── Grid ───────────────────────────── */
@@ -1615,26 +1725,28 @@ function toggleCtx(evt) {
 
     /* ── Card ───────────────────────────── */
     .card {{
-      background: var(--bg2);
-      border: 1px solid var(--border);
+      background: #FFFFFF;
+      border: 1px solid #E0E0E0;
       border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }}
     .card-header {{
-      background: var(--bg3);
+      background: #F7F7F7;
       padding: 9px 14px;
       font-weight: 700;
       font-size: 11px;
       letter-spacing: .07em;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid #E0E0E0;
+      border-left: 3px solid #1B3A6B;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #1A1A1A;
     }}
     .card-body {{ padding: 10px; flex: 1; overflow-y: auto; }}
     .scroll {{ max-height: 340px; }}
-    .empty {{ color: var(--muted2); font-style: italic; padding: 10px 4px; font-size: 12px; }}
+    .empty {{ color: #999999; font-style: italic; padding: 10px 4px; font-size: 12px; }}
 
     /* ── Signal / Alert rows ────────────────────── */
     .sig-row {{
@@ -1649,16 +1761,16 @@ function toggleCtx(evt) {
       border-left: 3px solid transparent;
       transition: background .12s;
     }}
-    .sig-row:hover {{ background: var(--bg-hover); }}
-    .sig-row.bull {{ background: rgba(112,176,48,0.06); border-left-color: var(--z-mpos); }}
-    .sig-row.bear {{ background: rgba(204,51,51,0.06); border-left-color: var(--z-sneg); }}
-    .sig-row.neut {{ background: rgba(232,208,64,0.05); border-left-color: var(--z-neut1); }}
+    .sig-row:hover {{ background: #F0F4F8; }}
+    .sig-row.bull {{ background: rgba(27,122,27,0.04); border-left-color: #1B7A1B; }}
+    .sig-row.bear {{ background: rgba(204,68,68,0.04); border-left-color: #CC4444; }}
+    .sig-row.neut {{ background: rgba(100,100,100,0.03); border-left-color: #999999; }}
 
     /* ── Ticker badges (base + sector overrides) ── */
     .ticker-badge {{
       display: inline-block;
-      background: var(--badge-bg);
-      color: var(--badge-fg);
+      background: #F5F5F5;
+      color: #1A1A1A;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: 11px;
@@ -1666,30 +1778,30 @@ function toggleCtx(evt) {
       border-radius: 3px;
       white-space: nowrap;
       text-align: center;
-      border: 1px solid rgba(148,163,184,0.2);
+      border: 1px solid #CCCCCC;
       min-width: 44px;
     }}
     /* Mega-cap tech */
     .tk-NVDA,.tk-AAPL,.tk-MSFT,.tk-GOOG,.tk-GOOGL,.tk-AMZN,.tk-META,.tk-ARM,.tk-MRVL {{
-      background: rgba(59,130,246,0.13); color: #60A5FA;
-      border-color: rgba(59,130,246,0.28);
+      background: #EEF2FF; color: #1B3A6B;
+      border-color: #BFCFE8;
     }}
     /* ETFs / Index */
     .tk-SPY,.tk-QQQ,.tk-IWM,.tk-XLK,.tk-XLE,.tk-XLF,.tk-XLRE,.tk-XLV,.tk-XLI,.tk-XLP,.tk-XLU,.tk-XLB,.tk-XLY,.tk-TQQQ,.tk-SQQQ,.tk-SPXL,.tk-SPXS {{
-      background: rgba(139,92,246,0.13); color: #A78BFA;
-      border-color: rgba(139,92,246,0.28);
+      background: #F0EEF8; color: #4B2D8B;
+      border-color: #C5B8E8;
     }}
     /* High-vol singles */
     .tk-TSLA,.tk-COIN,.tk-AMD,.tk-UBER,.tk-NFLX,.tk-GS,.tk-JPM {{
-      background: rgba(245,158,11,0.13); color: #FBBF24;
-      border-color: rgba(245,158,11,0.28);
+      background: #FFF8EE; color: #8B4A00;
+      border-color: #E8CFA0;
     }}
 
-    .sig-main  {{ font-size: 12px; line-height: 1.4; align-self: center; color: var(--text); }}
-    .sig-time  {{ color: var(--muted); font-size: 10px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; align-self: center; text-align: right; }}
+    .sig-main  {{ font-size: 12px; line-height: 1.4; align-self: center; color: #1A1A1A; }}
+    .sig-time  {{ color: #666666; font-size: 10px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; align-self: center; text-align: right; }}
     .ai-note   {{
       grid-column: 2 / 4;
-      color: var(--accent);
+      color: #1B3A6B;
       font-size: 11px;
       font-style: italic;
       line-height: 1.4;
@@ -1704,39 +1816,39 @@ function toggleCtx(evt) {
       font-family: 'JetBrains Mono', monospace;
     }}
     .gex-tbl th {{
-      color: #8b9ab5;
+      color: #1A1A1A;
       text-align: left;
       padding: 6px 8px;
-      border-bottom: 2px solid #2d5a8e;
+      border-bottom: 2px solid #1B3A6B;
       font-family: 'Inter', sans-serif;
       font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      background: linear-gradient(90deg, #1a2332, #1e2a3a);
+      background: #F7F7F7;
       position: sticky; top: 0;
     }}
     .gex-tr {{ transition: background .1s; cursor: default; }}
-    .gex-tr:hover {{ background: var(--bg-hover) !important; }}
-    .gex-tr td {{ padding: 5px 8px; border-bottom: 1px solid var(--bg3); }}
-    .gex-tr.neg-gex {{ background: rgba(204,51,51,0.07); border-left: 2px solid var(--z-sneg); }}
-    .gex-tr.pos-gex {{ background: rgba(112,176,48,0.07); border-left: 2px solid var(--z-mpos); }}
+    .gex-tr:hover {{ background: #F0F4F8 !important; }}
+    .gex-tr td {{ padding: 5px 8px; border-bottom: 1px solid #E0E0E0; }}
+    .gex-tr.neg-gex {{ background: rgba(204,68,68,0.04); border-left: 2px solid #CC4444; }}
+    .gex-tr.pos-gex {{ background: rgba(27,122,27,0.04); border-left: 2px solid #1B7A1B; }}
     .trend {{ font-size: 13px; }}
 
     /* ── Footer ─────────────────────────── */
     footer {{
-      background: var(--bg2);
-      border-top: 1px solid var(--border);
+      background: #FFFFFF;
+      border-top: 1px solid #E0E0E0;
     }}
     .footer-tickers {{
       padding: 10px 24px 8px;
       display: flex; flex-wrap: wrap; gap: 6px;
-      border-bottom: 1px solid var(--border2);
+      border-bottom: 1px solid #E0E0E0;
     }}
     .footer-bar {{
       padding: 10px 24px;
       display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
     }}
-    .footer-credits {{ color: var(--muted); font-size: 11px; }}
-    .footer-logo {{ height: 20px; width: auto; opacity: 0.8; margin-left: auto; object-fit: contain; }}
-    .footer-disc {{ color: var(--muted2); font-size: 10px; }}
+    .footer-credits {{ color: #666666; font-size: 11px; }}
+    .footer-logo {{ height: 20px; width: auto; opacity: 0.7; margin-left: auto; object-fit: contain; }}
+    .footer-disc {{ color: #999999; font-size: 10px; }}
     .wl-badge {{
       font-size: 10px; min-width: unset; padding: 1px 6px;
       transition: transform .15s, filter .15s, box-shadow .15s;
@@ -1744,8 +1856,8 @@ function toggleCtx(evt) {
     }}
     .wl-badge:hover {{
       transform: translateY(-2px);
-      filter: brightness(1.35);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+      filter: brightness(0.85);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }}
 
     /* ── OVI full-width card ───────────────── */
@@ -1756,8 +1868,8 @@ function toggleCtx(evt) {
       font-size: 11px; font-weight: 700; letter-spacing: .5px;
       padding: 6px 4px 4px; text-transform: uppercase;
     }}
-    .call-lbl {{ color: #3fb950; }}
-    .put-lbl  {{ color: #f85149; margin-top: 10px; }}
+    .call-lbl {{ color: #1B7A1B; }}
+    .put-lbl  {{ color: #CC4444; margin-top: 10px; }}
 
     .ovi-scroll {{ overflow-x: auto; }}
     .ovi-tbl {{
@@ -1768,58 +1880,58 @@ function toggleCtx(evt) {
     .ovi-tbl th {{
       font-family: 'Inter', sans-serif;
       font-size: 9px; font-weight: 600; letter-spacing: .06em;
-      text-transform: uppercase; color: #8b9ab5;
+      text-transform: uppercase; color: #1A1A1A;
       padding: 6px 10px; text-align: right;
-      border-bottom: 2px solid #2d5a8e;
-      background: linear-gradient(90deg, #1a2332, #1e2a3a); position: sticky; top: 0;
+      border-bottom: 2px solid #1B3A6B;
+      background: #F7F7F7; position: sticky; top: 0;
     }}
     .ovi-tbl th:first-child {{ text-align: left; }}
-    .ovi-tbl td {{ padding: 5px 10px; text-align: right; border-bottom: 1px solid var(--bg3); }}
+    .ovi-tbl td {{ padding: 5px 10px; text-align: right; border-bottom: 1px solid #F0F0F0; }}
     .ovi-tbl td:first-child {{ font-family: 'Inter', sans-serif; font-weight: 600; text-align: left; }}
-    .ovi-tbl tr:nth-child(even) {{ background: rgba(255,255,255,0.012); }}
-    .ovi-tbl tr:hover {{ background: var(--bg-hover); }}
+    .ovi-tbl tr:nth-child(even) {{ background: #FAFAFA; }}
+    .ovi-tbl tr:hover {{ background: #F0F4F8; }}
     .ovi-alt {{ background: transparent; }}
-    /* %Chg cell tints */
-    .pct-pos {{ color: #4ade80; font-weight: 600; }}
-    .pct-neg {{ color: #f87171; font-weight: 600; }}
-    .pct-na  {{ color: #374151; }}
-    .vol-pos {{ color: #4ade80; font-weight: 600; }}
-    .vol-neg {{ color: #f87171; font-weight: 600; }}
-    .ovi-tbl td:has(.pct-pos), .ovi-tbl td:has(.vol-pos) {{ background: rgba(34,197,94,0.13); }}
-    .ovi-tbl td:has(.pct-neg), .ovi-tbl td:has(.vol-neg) {{ background: rgba(239,68,68,0.13); }}
-    .also-notable {{ color: var(--muted); font-size: 10px; padding: 2px 4px 6px; font-style: italic; }}
+    /* %Chg cell colors (no background tint) */
+    .pct-pos {{ color: #1B7A1B; font-weight: 600; }}
+    .pct-neg {{ color: #CC4444; font-weight: 600; }}
+    .pct-na  {{ color: #BBBBBB; }}
+    .vol-pos {{ color: #1B7A1B; }}
+    .vol-neg {{ color: #CC4444; }}
+    .also-notable {{ color: #666666; font-size: 10px; padding: 2px 4px 6px; font-style: italic; }}
     /* Index badges */
     .idx-badge {{ display: inline-block; margin-left: 3px; padding: 0 4px;
                   border-radius: 3px; font-size: 9px; font-weight: 700; vertical-align: middle; }}
-    .idx-badge.sp500 {{ background: #1a3a5c; color: #60a5fa; }}
-    .idx-badge.ndx   {{ background: #1a3a2a; color: #4ade80; }}
-    .idx-badge.rut   {{ background: #3a1a3a; color: #c084fc; }}
+    .idx-badge.sp500 {{ background: #E8F0FB; color: #1B3A6B; }}
+    .idx-badge.ndx   {{ background: #E8F5E8; color: #1B7A1B; }}
+    .idx-badge.rut   {{ background: #F0E8F5; color: #6B2D8B; }}
     /* Extreme alerts */
     .extreme-alerts-box {{ margin-bottom: 10px; }}
     .extreme-alert {{
-      background: var(--bg2); border-left: 3px solid var(--accent2);
+      background: #FFFFFF; border-left: 3px solid #CC4444;
       border-radius: 0 4px 4px 0; padding: 8px 12px; margin-bottom: 5px;
       display: flex; align-items: center; gap: 12px; font-size: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
       transition: background .12s;
     }}
-    .extreme-alert:hover {{ background: var(--bg-hover); }}
+    .extreme-alert:hover {{ background: #F0F4F8; }}
     .extreme-badge {{
       margin-left: 8px; padding: 1px 6px; border-radius: 3px; font-size: 9px;
       font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-      background: rgba(245,166,35,0.15); color: var(--accent2);
-      border: 1px solid rgba(245,166,35,0.3);
+      background: rgba(204,68,68,0.08); color: #CC4444;
+      border: 1px solid rgba(204,68,68,0.25);
     }}
     /* Universe coverage line */
-    .universe-coverage {{ color: var(--muted); font-size: 10px; padding: 2px 4px 6px;
+    .universe-coverage {{ color: #666666; font-size: 10px; padding: 2px 4px 6px;
                           font-style: italic; }}
 
     /* ── 13F Match Cards ──────────────────────── */
     .f13-card {{
-      border-left: 3px solid #4ade80; border-radius: 0 4px 4px 0;
+      border-left: 3px solid #1B7A1B; border-radius: 0 4px 4px 0;
       padding: 7px 12px; margin-bottom: 6px; font-size: 12px;
+      background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.06);
       transition: filter .12s;
     }}
-    .f13-card:hover {{ filter: brightness(1.08); }}
+    .f13-card:hover {{ filter: brightness(0.97); }}
     .f13-top {{
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       margin-bottom: 4px;
@@ -1829,129 +1941,168 @@ function toggleCtx(evt) {
       letter-spacing: .06em; text-transform: uppercase;
     }}
     .f13-pct {{ font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; }}
-    .f13-spot {{ font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }}
+    .f13-spot {{ font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #666666; }}
     .f13-align {{
       margin-left: auto; font-size: 9px; font-weight: 700; letter-spacing: .08em;
       text-transform: uppercase; padding: 1px 6px; border-radius: 3px;
     }}
-    .f13-bull {{ background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }}
-    .f13-bear {{ background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }}
+    .f13-bull {{ background: rgba(27,122,27,0.08); color: #1B7A1B; border: 1px solid rgba(27,122,27,0.25); }}
+    .f13-bear {{ background: rgba(204,68,68,0.08); color: #CC4444; border: 1px solid rgba(204,68,68,0.25); }}
+    .f13-neut {{ background: rgba(27,58,107,0.08);  color: #1B3A6B; border: 1px solid rgba(27,58,107,0.25); }}
+    .f13-warn {{ background: rgba(180,100,0,0.08);  color: #B46400; border: 1px solid rgba(180,100,0,0.25); }}
     .f13-funds {{
       display: flex; align-items: center; flex-wrap: wrap; gap: 5px; font-size: 10px;
     }}
     .f13-fund {{
-      background: var(--bg3); color: var(--muted); border: 1px solid var(--border);
+      background: #F5F5F5; color: #666666; border: 1px solid #E0E0E0;
       border-radius: 3px; padding: 1px 6px; font-size: 9px; white-space: nowrap;
     }}
-    .f13-more {{ color: var(--muted2); font-size: 9px; }}
+    .f13-more {{ color: #999999; font-size: 9px; }}
     .f13-aum {{
       margin-left: auto; font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; color: var(--muted2);
+      font-size: 9px; color: #999999;
+    }}
+    .f13-context {{ margin: 3px 0 2px; display: flex; flex-direction: column; gap: 3px; }}
+    .f13-ctx-row {{
+      display: flex; align-items: baseline; gap: 6px; font-size: 10px; line-height: 1.4;
+    }}
+    .f13-ctx-fund {{
+      font-weight: 700; font-size: 9.5px; color: #1A1A1A; white-space: nowrap; min-width: 80px;
+    }}
+    .f13-ctx-detail {{ color: #555555; font-size: 9.5px; flex: 1; }}
+    .f13-sig {{
+      font-size: 8px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+      padding: 0px 4px; border-radius: 2px; white-space: nowrap; flex-shrink: 0;
+    }}
+    .f13-sig-conviction {{ background: rgba(27,122,27,0.10); color: #1B7A1B; border: 1px solid rgba(27,122,27,0.3); }}
+    .f13-sig-exit        {{ background: rgba(204,68,68,0.10);  color: #CC4444; border: 1px solid rgba(204,68,68,0.3);  }}
+    .f13-sig-reversal    {{ background: rgba(180,100,0,0.10);  color: #B46400; border: 1px solid rgba(180,100,0,0.3);  }}
+    .f13-sig-contrarian  {{ background: rgba(100,60,180,0.10); color: #6633AA; border: 1px solid rgba(100,60,180,0.3); }}
+    .f13-sig-options     {{ background: rgba(27,58,107,0.10);  color: #1B3A6B; border: 1px solid rgba(27,58,107,0.3);  }}
+    .f13-sig-hedge       {{ background: rgba(90,90,90,0.10);   color: #555555; border: 1px solid rgba(90,90,90,0.3);   }}
+    .f13-meta {{
+      display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 9px;
+    }}
+    .f13-fund-count {{
+      background: #F0F0F0; color: #888888; border: 1px solid #E0E0E0;
+      border-radius: 3px; padding: 0px 5px;
     }}
 
     /* ── AI Analysis box (research note style) ─── */
     .ai-box {{
-      margin-top: 12px; border: 1px solid var(--border);
-      border-radius: 6px; background: var(--bg);
+      margin-top: 12px; border: 1px solid #E0E0E0;
+      border-radius: 6px; background: #FFFFFF;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }}
     .ai-box-hdr {{
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 16px; border-bottom: 1px solid var(--border);
-      background: var(--bg3); border-radius: 6px 6px 0 0;
+      padding: 10px 16px; border-bottom: 1px solid #E0E0E0;
+      background: #F7F7F7; border-radius: 6px 6px 0 0;
+      border-left: 3px solid #1B3A6B;
     }}
     .ai-box-title {{
-      font-size: 10px; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--accent);
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: #1B3A6B;
     }}
     .ai-text {{
       margin: 0; padding: 14px 16px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; line-height: 1.65; color: var(--text);
+      font-size: 12px; line-height: 1.65; color: #1A1A1A;
       white-space: pre-wrap; word-wrap: break-word;
     }}
     .ai-formatted {{ white-space: normal; }}
     .ai-section-lbl {{
       font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase;
-      color: var(--accent); margin-top: 14px; margin-bottom: 4px; display: block;
+      color: #1B3A6B; margin-top: 14px; margin-bottom: 4px; display: block;
     }}
-    .ai-trade-lbl {{ color: var(--accent2) !important; }}
+    .ai-trade-lbl {{ color: #CC4444 !important; }}
     .ai-trade-box {{
-      background: rgba(232,88,140,0.10);
-      border: 1px solid rgba(232,88,140,0.30);
-      border-left: 3px solid var(--accent2);
+      background: rgba(204,68,68,0.04);
+      border: 1px solid rgba(204,68,68,0.2);
+      border-left: 3px solid #CC4444;
       border-radius: 0 4px 4px 0;
       padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
       font-size: 12px; line-height: 1.6; white-space: pre-wrap;
-      box-shadow: inset 0 0 20px rgba(232,88,140,0.04);
+      box-shadow: none;
     }}
-    .ai-body-line {{ font-size: 12px; color: var(--text); line-height: 1.65; }}
-    .ai-ts {{ padding: 4px 16px; font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }}
+    .ai-framework-lbl {{ color: #1B3A6B !important; }}
+    .ai-framework-box {{
+      background: rgba(27,58,107,0.04);
+      border: 1px solid rgba(27,58,107,0.2);
+      border-left: 3px solid #1B3A6B;
+      border-radius: 0 4px 4px 0;
+      padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
+      font-size: 12px; line-height: 1.6; white-space: pre-wrap;
+      box-shadow: none;
+    }}
+    .ai-body-line {{ font-size: 12px; color: #1A1A1A; line-height: 1.65; }}
+    .ai-ts {{ padding: 4px 16px; font-size: 10px; color: #666666; font-family: 'JetBrains Mono', monospace; }}
     .ai-disclaimer {{
-      padding: 4px 16px 10px; font-size: 9px; color: var(--muted2);
-      font-style: italic; border-top: 1px solid var(--border2); margin-top: 4px;
+      padding: 4px 16px 10px; font-size: 9px; color: #999999;
+      font-style: italic; border-top: 1px solid #E0E0E0; margin-top: 4px;
     }}
     .copy-btn {{
-      background: #21262d; color: #8b949e; border: 1px solid #30363d;
+      background: #F5F5F5; color: #666666; border: 1px solid #E0E0E0;
       border-radius: 4px; padding: 3px 10px; font-size: 10px;
       cursor: pointer; white-space: nowrap;
     }}
-    .copy-btn:hover {{ background: #30363d; color: var(--text); }}
+    .copy-btn:hover {{ background: #E0E0E0; color: #1A1A1A; }}
 
     /* ── Context section ───────────────────── */
-    .ctx-section {{ margin: 0; border-bottom: 1px solid var(--border2); }}
+    .ctx-section {{ margin: 0; border-bottom: 1px solid #E0E0E0; }}
     .ctx-toggle {{
-      background: #1a2332; border: 1px solid #2d5a8e; color: #7ea8d4;
+      background: #EEF2FF; border: 1px solid #BFCFE8; color: #1B3A6B;
       font-size: 10px; font-weight: 600; letter-spacing: .03em;
       padding: 3px 10px; border-radius: 4px; cursor: pointer;
       transition: background .12s, color .12s, border-color .12s;
     }}
-    .ctx-toggle:hover {{ background: #1e2a3a; color: #a8c8e8; border-color: #4a7aae; }}
+    .ctx-toggle:hover {{ background: #DEEAF8; border-color: #1B3A6B; }}
     .ctx-text {{
       display: none; font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 10px; color: var(--muted); white-space: pre-wrap;
+      font-size: 10px; color: #666666; white-space: pre-wrap;
       padding: 10px 16px; margin: 0; border: none;
-      background: #080c10;
+      background: #F7F8FA;
     }}
 
     /* ── Refresh button ────────────────────── */
     .refresh-wrap {{ display: flex; align-items: center; gap: 10px; }}
     #refresh-btn {{
-      background: #0d7377; color: #e6edf3; border: none;
+      background: #1B3A6B; color: #FFFFFF; border: none;
       border-radius: 6px; padding: 5px 14px; font-size: 12px;
       font-weight: 600; cursor: pointer; white-space: nowrap;
     }}
-    #refresh-btn:hover:not(:disabled) {{ background: #14a085; }}
+    #refresh-btn:hover:not(:disabled) {{ background: #254F8F; }}
     #refresh-btn:disabled {{ opacity: 0.6; cursor: not-allowed; }}
-    .refresh-status {{ font-size: 11px; color: var(--muted); }}
-    .refresh-ok {{ color: #4ade80; }}
-    .refresh-warn {{ color: #e3b341; }}
-    .refresh-err {{ color: #f85149; }}
+    .refresh-status {{ font-size: 11px; color: #666666; }}
+    .refresh-ok {{ color: #1B7A1B; }}
+    .refresh-warn {{ color: #8B5000; }}
+    .refresh-err {{ color: #CC4444; }}
 
     /* ── Export button ──────────────────────── */
     .export-btn {{
-      background: #1a1a2e; color: #e6edf3;
-      border: 1px solid #444; border-radius: 4px;
+      background: #F5F5F5; color: #1A1A1A;
+      border: 1px solid #CCCCCC; border-radius: 4px;
       padding: 6px 12px; font-size: 12px;
       cursor: pointer; white-space: nowrap; flex-shrink: 0;
     }}
-    .export-btn:hover {{ background: #252545; }}
+    .export-btn:hover {{ background: #E8E8E8; }}
     .export-btn:disabled {{ opacity: 0.6; cursor: not-allowed; }}
 
     /* ── GEX Chart Panel ─────────────────────── */
     .gex-viz-full {{ grid-column: 1 / -1; }}
     .gex-tabs {{ display: flex; gap: 6px; margin-bottom: 10px; }}
     .gex-tab {{
-      background: var(--bg3); color: var(--muted);
-      border: 1px solid var(--border); border-radius: 4px;
+      background: #F5F5F5; color: #666666;
+      border: 1px solid #E0E0E0; border-radius: 4px;
       padding: 4px 14px; font-size: 11px; font-weight: 600; cursor: pointer;
     }}
-    .gex-tab:hover {{ color: var(--text); }}
-    .gex-tab-active {{ background: #1a2f4a; color: #60a5fa; border-color: #3b82f6; }}
+    .gex-tab:hover {{ color: #1A1A1A; }}
+    .gex-tab-active {{ background: #EEF2FF; color: #1B3A6B; border-color: #1B3A6B; }}
     /* ── GEX Stats Strip (SpotGamma-style header) ── */
     .gex-stats-strip {{
       display: flex; align-items: stretch; gap: 0;
-      background: var(--bg3); border: 1px solid var(--border);
+      background: #F7F7F7; border: 1px solid #E0E0E0;
       border-radius: 4px; margin-bottom: 10px; overflow: hidden;
     }}
     .gex-ss-item {{
@@ -1959,15 +2110,15 @@ function toggleCtx(evt) {
     }}
     .gex-ss-regime-item {{ flex: 2; }}
     .gex-ss-sep {{
-      width: 1px; background: var(--border); flex-shrink: 0;
+      width: 1px; background: #E0E0E0; flex-shrink: 0;
     }}
     .gex-ss-lbl {{
       font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--muted2);
+      letter-spacing: .08em; text-transform: uppercase; color: #999999;
     }}
     .gex-ss-val {{
       font-family: 'JetBrains Mono', monospace; font-size: 13px;
-      font-weight: 700; color: var(--text); line-height: 1.1;
+      font-weight: 700; color: #1A1A1A; line-height: 1.1;
     }}
     .gex-chart-grid {{
       display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;
@@ -1975,81 +2126,83 @@ function toggleCtx(evt) {
     @media (max-width: 900px) {{ .gex-chart-grid {{ grid-template-columns: 1fr; }} }}
     .gex-sub-lbl {{
       font-size: 10px; font-weight: 600; letter-spacing: .5px;
-      color: var(--muted); text-transform: uppercase; margin-bottom: 6px;
+      color: #666666; text-transform: uppercase; margin-bottom: 6px;
     }}
 
     /* ── GEX Toggle Buttons ──────────────────── */
     .gex-toggle-btn {{
-      background: var(--bg3); color: var(--muted);
-      border: 1px solid var(--border); border-radius: 4px;
+      background: #F5F5F5; color: #666666;
+      border: 1px solid #E0E0E0; border-radius: 4px;
       padding: 3px 10px; font-size: 10px; font-weight: 600; cursor: pointer;
       transition: background .15s, color .15s;
     }}
-    .gex-toggle-btn:hover {{ color: var(--text); border-color: #8b949e; }}
-    .gex-toggle-active {{ background: #1a2f4a; color: #60a5fa; border-color: #3b82f6; }}
+    .gex-toggle-btn:hover {{ color: #1A1A1A; }}
+    .gex-toggle-active {{ background: #EEF2FF; color: #1B3A6B; border-color: #1B3A6B; }}
 
     /* ── Sign Mode Bar ───────────────────────── */
     .gex-sign-bar {{
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-      padding: 6px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 10px;
+      padding: 6px 0 8px; border-bottom: 1px solid #E0E0E0; margin-bottom: 10px;
     }}
-    .gex-sign-lbl {{ color: var(--muted); font-size: 10px; font-weight: 600; margin-right: 2px; }}
+    .gex-sign-lbl {{ color: #666666; font-size: 10px; font-weight: 600; margin-right: 2px; }}
     .gex-sign-btn {{
-      background: var(--bg3); color: var(--muted);
-      border: 1px solid var(--border); border-radius: 4px;
+      background: #F5F5F5; color: #666666;
+      border: 1px solid #E0E0E0; border-radius: 4px;
       padding: 2px 9px; font-size: 10px; font-weight: 600; cursor: pointer;
       transition: background .15s, color .15s;
     }}
-    .gex-sign-btn:hover {{ color: var(--text); border-color: #8b949e; }}
-    .gex-sign-active {{ background: #2a1a4a; color: #c084fc; border-color: #a855f7; }}
-    .gex-sign-note {{ color: #6b7280; font-size: 9px; font-style: italic; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+    .gex-sign-btn:hover {{ color: #1A1A1A; }}
+    .gex-sign-active {{ background: #F0EEF8; color: #6B2D8B; border-color: #6B2D8B; }}
+    .gex-sign-note {{ color: #999999; font-size: 9px; font-style: italic; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
 
     /* ── Key Levels Bar ──────────────────────── */
     .gex-key-levels-bar {{
       display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
       margin-bottom: 10px; font-size: 11px;
     }}
-    .kl-label {{ color: var(--muted); font-weight: 600; margin-right: 2px; }}
+    .kl-label {{ color: #666666; font-weight: 600; margin-right: 2px; }}
     .kl-item {{
       padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 500;
       border: 1px solid;
     }}
-    .kl-flip  {{ color: #c084fc; border-color: #a855f7; background: #1a0a2a; }}
-    .kl-call  {{ color: #93c5fd; border-color: #3b82f6; background: #0a1a2a; }}
-    .kl-put   {{ color: #fca5a5; border-color: #ef4444; background: #2a0a0a; }}
-    .kl-max   {{ color: #fcd34d; border-color: #f59e0b; background: #1a1500; }}
+    .kl-flip  {{ color: #6B2D8B; border-color: #A855F7; background: #F5F0FA; }}
+    .kl-call  {{ color: #1B3A6B; border-color: #1B3A6B; background: #EEF2FF; }}
+    .kl-put   {{ color: #CC4444; border-color: #CC4444; background: #FEF2F2; }}
+    .kl-max   {{ color: #8B5000; border-color: #D97706; background: #FFFBEB; }}
 
     /* ── GEX Heatmap ─────────────────────────── */
     .gex-heatmap-section {{
-      margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px;
+      margin-top: 16px; border-top: 1px solid #E0E0E0; padding-top: 12px;
     }}
     .gex-heatmap-canvas-wrap {{
       position: relative; width: 100%; min-height: 80px;
-      background: #0d1117; border-radius: 4px; overflow: hidden;
+      background: #F5F5F5; border-radius: 4px; overflow: hidden;
     }}
 
     /* ── GEX Diagnostics ─────────────────────── */
     .gex-diag-details {{
-      margin-top: 16px; border-top: 1px solid var(--border); padding-top: 8px;
+      margin-top: 16px; border-top: 1px solid #E0E0E0; padding-top: 8px;
     }}
     .gex-diag-summary {{
-      font-size: 11px; color: #8B949E; cursor: pointer; user-select: none;
+      font-size: 11px; color: #666666; cursor: pointer; user-select: none;
       letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 0;
     }}
-    .gex-diag-summary:hover {{ color: #c9d1d9; }}
+    .gex-diag-summary:hover {{ color: #1A1A1A; }}
     .gex-diag-body {{ margin-top: 8px; font-size: 11px; }}
     .diag-stale {{
-      background: rgba(251,191,36,0.12); color: #fbbf24;
+      background: rgba(204,68,68,0.08); color: #CC4444;
       padding: 4px 8px; border-radius: 3px; margin-bottom: 6px;
     }}
     .diag-tbl {{ width: 100%; border-collapse: collapse; }}
-    .diag-tbl tr:nth-child(even) {{ background: rgba(255,255,255,0.02); }}
+    .diag-tbl tr:nth-child(even) {{ background: rgba(0,0,0,0.02); }}
     .diag-k {{
-      color: #8B949E; padding: 3px 8px 3px 0; width: 55%; vertical-align: top;
+      color: #666666; padding: 3px 8px 3px 0; width: 55%; vertical-align: top;
     }}
     .diag-v {{
-      color: #c9d1d9; font-family: 'JetBrains Mono', monospace; padding: 3px 0;
+      color: #1A1A1A; font-family: 'JetBrains Mono', monospace; padding: 3px 0;
     }}
+    /* ── Source label ─────────────────────────── */
+    .chart-source {{ font-size: 9px; color: #999999; font-style: italic; padding: 4px 10px 6px; }}
   </style>
 </head>
 <body>
@@ -2067,8 +2220,9 @@ function toggleCtx(evt) {
 <footer>
   <div class="footer-tickers">{wl_badges}</div>
   <div class="footer-bar">
+    <img src="assets/gamma-mate-logo-horizontal.svg" alt="Gamma Mate" style="height:20px;width:auto;object-fit:contain;" onerror="this.style.display='none'">
     <span class="footer-credits">Powered by Polygon.io &times; Claude</span>
-    <img src="assets/LNlogo2.png" alt="Liquidnet" class="footer-logo" onerror="this.style.display='none'">
+    <img src="assets/LNlogo2.png" alt="Liquidnet" class="footer-logo" style="margin-left:0;" onerror="this.style.display='none'">
     <span class="footer-disc">v2.0 &nbsp;|&nbsp; Data delayed. Not investment advice. &copy; 2026</span>
   </div>
 </footer>
@@ -2084,24 +2238,39 @@ function toggleCtx(evt) {
   var lines = raw.split('\\n');
   var out = '';
   var inTradeIdea = false;
+  var inFramework = false;
   for (var i = 0; i < lines.length; i++) {{
     var line = lines[i];
     var trimmed = line.trim();
-    if (!trimmed) {{ if (inTradeIdea) out += '</div>'; inTradeIdea = false; out += '<br>'; continue; }}
+    if (!trimmed) {{
+      if (inTradeIdea) {{ out += '</div>'; inTradeIdea = false; }}
+      if (inFramework) {{ out += '</div>'; inFramework = false; }}
+      out += '<br>'; continue;
+    }}
     var upper = trimmed.toUpperCase();
     if (upper.indexOf('TRADE IDEA') === 0 || upper.indexOf('TRADE IDEAS') === 0) {{
       if (inTradeIdea) out += '</div>';
+      if (inFramework) {{ out += '</div>'; inFramework = false; }}
       out += '<div class="ai-section-lbl ai-trade-lbl">' + _esc(trimmed) + '</div>';
       out += '<div class="ai-trade-box">';
       inTradeIdea = true;
+    }} else if (upper.indexOf('TRADE FRAMEWORK') === 0) {{
+      if (inTradeIdea) {{ out += '</div>'; inTradeIdea = false; }}
+      if (inFramework) out += '</div>';
+      out += '<div class="ai-section-lbl ai-framework-lbl">' + _esc(trimmed) + '</div>';
+      out += '<div class="ai-framework-box">';
+      inFramework = true;
     }} else if (/^(HEADLINE|CALL FLOW|PUT FLOW|SECOND ORDER|KEY RISK|POSITIONING|SUMMARY|MARKET CONTEXT)/i.test(upper)) {{
       if (inTradeIdea) {{ out += '</div>'; inTradeIdea = false; }}
+      if (inFramework) {{ out += '</div>'; inFramework = false; }}
       out += '<div class="ai-section-lbl">' + _esc(trimmed) + '</div>';
     }} else {{
-      out += (inTradeIdea ? '' : '<span class="ai-body-line">') + _esc(line) + (inTradeIdea ? '\\n' : '</span><br>');
+      var inBox = inTradeIdea || inFramework;
+      out += (inBox ? '' : '<span class="ai-body-line">') + _esc(line) + (inBox ? '\\n' : '</span><br>');
     }}
   }}
   if (inTradeIdea) out += '</div>';
+  if (inFramework) out += '</div>';
   function _esc(s) {{ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }}
   pre.outerHTML = '<div id="ai-text" class="ai-text ai-formatted">' + out + '</div>';
 }})();
