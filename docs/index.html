@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="refresh" content="300">
   <meta name="poll-token" content="options_refresh_2026"><meta name="ntfy-topic" content="options-flow-3b7f19a4">
-  <title>Options Flow Dashboard</title>
+  <title>Gamma Mate — Options Flow Dashboard</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,6 +71,8 @@
     }
     .hdr-brand { display: flex; align-items: center; gap: 12px; }
     .hdr-logo { height: 28px; width: auto; display: block; object-fit: contain; }
+    .hdr-logo-gm { height: 36px; width: auto; display: block; object-fit: contain; }
+    .hdr-logo-ln { height: 22px; width: auto; display: block; object-fit: contain; opacity: 0.75; }
     .hdr-logo-text {
       font-size: 13px; font-weight: 700; letter-spacing: 2px;
       color: #1B3A6B; text-transform: uppercase;
@@ -600,13 +602,13 @@
 <header>
   <div class="hdr-top">
     <div class="hdr-brand">
-      <img src="assets/LNlogo2.png" alt="Liquidnet" class="hdr-logo" onerror="this.style.display='none'">
+      <img src="assets/gamma-mate-logo-horizontal.svg" alt="Gamma Mate" class="hdr-logo-gm" onerror="this.style.display='none'">
       <div class="hdr-title-wrap">
-        <div class="hdr-title">Options Flow Dashboard</div>
-        <div class="hdr-subtitle">Powered by Polygon.io + Claude</div>
+        <div class="hdr-subtitle" style="font-size:11px;color:#666666;letter-spacing:.3px;">Options Flow Dashboard</div>
       </div>
     </div>
     <div class="hdr-right">
+      <img src="assets/LNlogo2.png" alt="Liquidnet" class="hdr-logo-ln" onerror="this.style.display='none'">
       <span class="hdr-time">Mar 10 2026 22:24 ET</span>
       <span class="status-closed"><span class="market-dot"></span>CLOSED</span>
     </div>
@@ -1479,8 +1481,9 @@ function drawHeatmap(elemId, ticker) {
 <footer>
   <div class="footer-tickers"><span class="ticker-badge wl-badge tk-SPY">SPY</span> <span class="ticker-badge wl-badge tk-QQQ">QQQ</span> <span class="ticker-badge wl-badge tk-NVDA">NVDA</span> <span class="ticker-badge wl-badge tk-AAPL">AAPL</span> <span class="ticker-badge wl-badge tk-MSFT">MSFT</span> <span class="ticker-badge wl-badge tk-META">META</span> <span class="ticker-badge wl-badge tk-GOOG">GOOG</span> <span class="ticker-badge wl-badge tk-AMZN">AMZN</span> <span class="ticker-badge wl-badge tk-TSLA">TSLA</span> <span class="ticker-badge wl-badge tk-GS">GS</span> <span class="ticker-badge wl-badge tk-JPM">JPM</span> <span class="ticker-badge wl-badge tk-XLF">XLF</span> <span class="ticker-badge wl-badge tk-XLK">XLK</span> <span class="ticker-badge wl-badge tk-XLE">XLE</span> <span class="ticker-badge wl-badge tk-IWM">IWM</span> <span class="ticker-badge wl-badge tk-COIN">COIN</span> <span class="ticker-badge wl-badge tk-AMD">AMD</span> <span class="ticker-badge wl-badge tk-NFLX">NFLX</span> <span class="ticker-badge wl-badge tk-UBER">UBER</span> <span class="ticker-badge wl-badge tk-ARM">ARM</span> <span class="ticker-badge wl-badge tk-MRVL">MRVL</span></div>
   <div class="footer-bar">
+    <img src="assets/gamma-mate-logo-horizontal.svg" alt="Gamma Mate" style="height:20px;width:auto;object-fit:contain;" onerror="this.style.display='none'">
     <span class="footer-credits">Powered by Polygon.io &times; Claude</span>
-    <img src="assets/LNlogo2.png" alt="Liquidnet" class="footer-logo" onerror="this.style.display='none'">
+    <img src="assets/LNlogo2.png" alt="Liquidnet" class="footer-logo" style="margin-left:0;" onerror="this.style.display='none'">
     <span class="footer-disc">v2.0 &nbsp;|&nbsp; Data delayed. Not investment advice. &copy; 2026</span>
   </div>
 </footer>

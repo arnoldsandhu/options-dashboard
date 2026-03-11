@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 50" width="640" height="100">
+  <defs>
+    <linearGradient id="liquidnetGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#C13584;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E8588C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F5A623;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="wheelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8588C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F5A623;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ship's Wheel -->
+  <g transform="translate(22, 25)">
+    <circle cx="0" cy="0" r="16" fill="none" stroke="url(#wheelGrad)" stroke-width="2"/>
+    <circle cx="0" cy="0" r="6" fill="none" stroke="url(#wheelGrad)" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="2" fill="url(#wheelGrad)"/>
+
+    <line x1="0" y1="-6" x2="0" y2="-16" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="0" y1="6" x2="0" y2="16" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-6" y1="0" x2="-16" y2="0" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="6" y1="0" x2="16" y2="0" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-4.24" y1="-4.24" x2="-11.31" y2="-11.31" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="4.24" y1="4.24" x2="11.31" y2="11.31" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-4.24" y1="4.24" x2="-11.31" y2="11.31" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="4.24" y1="-4.24" x2="11.31" y2="-11.31" stroke="url(#wheelGrad)" stroke-width="1.5" stroke-linecap="round"/>
+
+    <circle cx="0" cy="-18" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="0" cy="18" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="-18" cy="0" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="18" cy="0" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="-12.73" cy="-12.73" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="12.73" cy="12.73" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="-12.73" cy="12.73" r="2" fill="url(#wheelGrad)"/>
+    <circle cx="12.73" cy="-12.73" r="2" fill="url(#wheelGrad)"/>
+  </g>
+
+  <!-- GAMMA MATE text - single line -->
+  <text x="50" y="32" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="0.1em" fill="url(#liquidnetGrad)">GAMMA MATE</text>
+</svg>
