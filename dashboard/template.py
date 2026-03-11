@@ -2140,7 +2140,7 @@ function toggleCtx(evt) {
     /* ── GEX Stats Strip (SpotGamma-style header) ── */
     .gex-stats-strip {{
       display: flex; align-items: stretch; gap: 0;
-      background: #F7F7F7; border: 1px solid #E0E0E0;
+      background: #FFFFFF; border: 1px solid #E0E0E0;
       border-radius: 4px; margin-bottom: 10px; overflow: hidden;
     }}
     .gex-ss-item {{
@@ -2214,7 +2214,7 @@ function toggleCtx(evt) {
     }}
     .gex-heatmap-canvas-wrap {{
       position: relative; width: 100%; min-height: 80px;
-      background: #F5F5F5; border-radius: 4px; overflow: hidden;
+      background: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 4px; overflow: hidden;
     }}
 
     /* ── GEX Diagnostics ─────────────────────── */
