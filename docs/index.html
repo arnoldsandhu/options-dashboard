@@ -784,7 +784,17 @@ The cleaner expression is relative — watch whether energy sector defensive flo
     var flipEl = document.getElementById('gex-ss-flip');
     if (flipEl) {
       var flipTxt = d.flip_note || (d.flip_point ? 'Gamma Flip $' + d.flip_point + ' (spot-scan)' : '—');
-      flipEl.textContent = d.flip_point ? '$' + d.flip_point : '—';
+      if (d.flip_point) {
+        flipEl.textContent = '$' + d.flip_point;
+        flipEl.style.fontSize = '';
+      } else {
+        var fn = d.flip_note || '';
+        if (fn.indexOf('all negative') >= 0)      flipEl.textContent = 'No flip — all neg γ';
+        else if (fn.indexOf('all positive') >= 0) flipEl.textContent = 'No flip — all pos γ';
+        else if (fn)                               flipEl.textContent = 'No flip in ±10% range';
+        else                                       flipEl.textContent = '—';
+        flipEl.style.fontSize = '11px';
+      }
       flipEl.title = flipTxt;
     }
 
@@ -1347,6 +1357,12 @@ function drawHeatmap(elemId, ticker) {
   cbSvg.append('text').attr('y', h/2 + 4).attr('fill','#666666').attr('font-size','8px').text('0');
   cbSvg.append('text').attr('y', h).attr('fill','#666666').attr('font-size','8px').text('−GEX');
 }
+// Auto-render on page load: d3_script IIFE runs before this script is parsed,
+// so drawHeatmap was undefined during the initial renderGex() call. Re-draw now.
+(function() {
+  var t = typeof GEX_DEFAULT !== 'undefined' ? GEX_DEFAULT : null;
+  if (t) drawHeatmap('gex-heatmap-chart', t);
+})();
 </script>
   
     <div class="card">
