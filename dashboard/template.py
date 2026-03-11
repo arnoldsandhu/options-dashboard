@@ -400,6 +400,41 @@ def _build_gex_table(latest_gex: list[dict]) -> list[dict]:
     return rows[:15]
 
 
+def _gex_commentary(ticker: str, pct: float, negative: bool, net_gex_m: float, spot_str: str) -> str:
+    """Generate a one-line trade commentary for a GEX extreme signal."""
+    abs_gex = abs(net_gex_m)
+    size_desc = "massive" if abs_gex >= 500 else "significant" if abs_gex >= 100 else "notable"
+
+    if pct >= 98:
+        if not negative:
+            return (f"{ticker} at extreme positive gamma{spot_str} — dealers buying every dip and selling every rip; "
+                    f"expect range compression and pinning behavior into expiry")
+        else:
+            return (f"{ticker} at extreme negative gamma{spot_str} — dealers short vol, hedging amplifies moves; "
+                    f"long vol strategies favored, breakouts likely to accelerate")
+    elif pct >= 90:
+        if not negative:
+            return (f"{ticker} elevated positive gamma{spot_str} — {size_desc} dealer long book suppresses realized vol; "
+                    f"fades outperform breakouts in this regime")
+        else:
+            return (f"{ticker} elevated negative gamma{spot_str} — {size_desc} dealer short book adds fuel to directional moves; "
+                    f"momentum and gap strategies benefit")
+    elif pct <= 2:
+        if not negative:
+            return (f"{ticker} at multi-week gamma low{spot_str} — reduced dealer dampening; "
+                    f"directional moves likely to extend further than normal")
+        else:
+            return (f"{ticker} at max negative gamma{spot_str} — extreme short-gamma regime; "
+                    f"expect outsized moves in both directions, vol buyers have edge")
+    else:  # pct <= 10
+        if not negative:
+            return (f"{ticker} low positive gamma{spot_str} — minimal dealer pinning, trending moves more likely; "
+                    f"consider directional strategies over mean-reversion")
+        else:
+            return (f"{ticker} negative gamma at low end{spot_str} — dealer hedging pressure building; "
+                    f"watch for accelerated moves if key levels break")
+
+
 def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
     """Generate signal rows for ALL GEX tickers at extreme percentiles (>=90 or <=10).
 
@@ -420,14 +455,17 @@ def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
         pct = (below / len(values)) * 100.0
         if pct >= 90 or pct <= 10:
             negative = net_gex_m < 0
-            bias = "put-dominated" if negative else "call-dominated"
             level = "ELEVATED" if pct >= 90 else "SUPPRESSED"
+            spot = g.get("spot_price") or g.get("spot") or 0
+            spot_str = f" near ${spot:,.0f}" if spot else ""
+            tk = g["ticker"]
+            commentary = _gex_commentary(tk, pct, negative, net_gex_m, spot_str)
             alert_text = (
                 f"Net GEX ${net_gex_m:+.1f}M — {pct:.0f}th pctile (30d) | "
-                f"{level} gamma, {bias}"
+                f"{commentary}"
             )
             rows.append({
-                "ticker": g["ticker"],
+                "ticker": tk,
                 "alert_text": alert_text,
                 "time_str": "live",
                 "sentiment": "bullish" if not negative else "bearish",
