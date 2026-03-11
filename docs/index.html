@@ -243,13 +243,13 @@
       font-family: 'JetBrains Mono', monospace;
     }
     .gex-tbl th {
-      color: #8b9ab5;
+      color: #9db5d4;
       text-align: left;
       padding: 6px 8px;
-      border-bottom: 2px solid #2d5a8e;
+      border-bottom: 2px solid #3b7dd8;
       font-family: 'Inter', sans-serif;
       font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      background: linear-gradient(90deg, #1a2332, #1e2a3a);
+      background: linear-gradient(180deg, #1e3354 0%, #142238 100%);
       position: sticky; top: 0;
     }
     .gex-tr { transition: background .1s; cursor: default; }
@@ -283,8 +283,8 @@
     }
     .wl-badge:hover {
       transform: translateY(-2px);
-      filter: brightness(1.35);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+      filter: brightness(1.45);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5), 0 0 8px rgba(147,197,253,0.15);
     }
 
     /* ── OVI full-width card ───────────────── */
@@ -307,10 +307,10 @@
     .ovi-tbl th {
       font-family: 'Inter', sans-serif;
       font-size: 9px; font-weight: 600; letter-spacing: .06em;
-      text-transform: uppercase; color: #8b9ab5;
+      text-transform: uppercase; color: #9db5d4;
       padding: 6px 10px; text-align: right;
-      border-bottom: 2px solid #2d5a8e;
-      background: linear-gradient(90deg, #1a2332, #1e2a3a); position: sticky; top: 0;
+      border-bottom: 2px solid #3b7dd8;
+      background: linear-gradient(180deg, #1e3354 0%, #142238 100%); position: sticky; top: 0;
     }
     .ovi-tbl th:first-child { text-align: left; }
     .ovi-tbl td { padding: 5px 10px; text-align: right; border-bottom: 1px solid var(--bg3); }
@@ -324,8 +324,8 @@
     .pct-na  { color: #374151; }
     .vol-pos { color: #4ade80; font-weight: 600; }
     .vol-neg { color: #f87171; font-weight: 600; }
-    .ovi-tbl td:has(.pct-pos), .ovi-tbl td:has(.vol-pos) { background: rgba(34,197,94,0.13); }
-    .ovi-tbl td:has(.pct-neg), .ovi-tbl td:has(.vol-neg) { background: rgba(239,68,68,0.13); }
+    .ovi-tbl td:has(.pct-pos), .ovi-tbl td:has(.vol-pos) { background: rgba(34,197,94,0.18); }
+    .ovi-tbl td:has(.pct-neg), .ovi-tbl td:has(.vol-neg) { background: rgba(239,68,68,0.18); }
     .also-notable { color: var(--muted); font-size: 10px; padding: 2px 4px 6px; font-style: italic; }
     /* Index badges */
     .idx-badge { display: inline-block; margin-left: 3px; padding: 0 4px;
@@ -423,6 +423,16 @@
       padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
       font-size: 12px; line-height: 1.6; white-space: pre-wrap;
       box-shadow: inset 0 0 20px rgba(232,88,140,0.04);
+    }
+    .ai-framework-lbl { color: #60a5fa !important; }
+    .ai-framework-box {
+      background: rgba(59,125,216,0.08);
+      border: 1px solid rgba(59,125,216,0.35);
+      border-left: 3px solid #3b7dd8;
+      border-radius: 0 4px 4px 0;
+      padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
+      font-size: 12px; line-height: 1.6; white-space: pre-wrap;
+      box-shadow: inset 0 0 20px rgba(59,125,216,0.04);
     }
     .ai-body-line { font-size: 12px; color: var(--text); line-height: 1.65; }
     .ai-ts { padding: 4px 16px; font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
@@ -1554,24 +1564,39 @@ function toggleCtx(evt) {
   var lines = raw.split('\n');
   var out = '';
   var inTradeIdea = false;
+  var inFramework = false;
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
     var trimmed = line.trim();
-    if (!trimmed) { if (inTradeIdea) out += '</div>'; inTradeIdea = false; out += '<br>'; continue; }
+    if (!trimmed) {
+      if (inTradeIdea) { out += '</div>'; inTradeIdea = false; }
+      if (inFramework) { out += '</div>'; inFramework = false; }
+      out += '<br>'; continue;
+    }
     var upper = trimmed.toUpperCase();
     if (upper.indexOf('TRADE IDEA') === 0 || upper.indexOf('TRADE IDEAS') === 0) {
       if (inTradeIdea) out += '</div>';
+      if (inFramework) { out += '</div>'; inFramework = false; }
       out += '<div class="ai-section-lbl ai-trade-lbl">' + _esc(trimmed) + '</div>';
       out += '<div class="ai-trade-box">';
       inTradeIdea = true;
+    } else if (upper.indexOf('TRADE FRAMEWORK') === 0) {
+      if (inTradeIdea) { out += '</div>'; inTradeIdea = false; }
+      if (inFramework) out += '</div>';
+      out += '<div class="ai-section-lbl ai-framework-lbl">' + _esc(trimmed) + '</div>';
+      out += '<div class="ai-framework-box">';
+      inFramework = true;
     } else if (/^(HEADLINE|CALL FLOW|PUT FLOW|SECOND ORDER|KEY RISK|POSITIONING|SUMMARY|MARKET CONTEXT)/i.test(upper)) {
       if (inTradeIdea) { out += '</div>'; inTradeIdea = false; }
+      if (inFramework) { out += '</div>'; inFramework = false; }
       out += '<div class="ai-section-lbl">' + _esc(trimmed) + '</div>';
     } else {
-      out += (inTradeIdea ? '' : '<span class="ai-body-line">') + _esc(line) + (inTradeIdea ? '\n' : '</span><br>');
+      var inBox = inTradeIdea || inFramework;
+      out += (inBox ? '' : '<span class="ai-body-line">') + _esc(line) + (inBox ? '\n' : '</span><br>');
     }
   }
   if (inTradeIdea) out += '</div>';
+  if (inFramework) out += '</div>';
   function _esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   pre.outerHTML = '<div id="ai-text" class="ai-text ai-formatted">' + out + '</div>';
 })();
