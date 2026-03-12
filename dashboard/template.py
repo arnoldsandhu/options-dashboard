@@ -1122,11 +1122,14 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     // Returns the mode-specific strikes/zdtes/net_gex_m overlay
     var sm = (d.sign_modes || {})[_signMode] || {};
     return {
-      strikes:   sm.strikes   || d.strikes  || [],
-      zdtes:     sm.zdtes     || d.zdtes    || [],
-      net_gex_m: (sm.net_gex_m != null) ? sm.net_gex_m : (d.net_gex_m || 0),
-      note:      sm.note || '',
-      label:     sm.label || _signMode,
+      strikes:             sm.strikes   || d.strikes  || [],
+      zdtes:               sm.zdtes     || d.zdtes    || [],
+      net_gex_m:           (sm.net_gex_m != null) ? sm.net_gex_m : (d.net_gex_m || 0),
+      net_gex_low_m:       sm.net_gex_low_m  != null ? sm.net_gex_low_m  : null,
+      net_gex_high_m:      sm.net_gex_high_m != null ? sm.net_gex_high_m : null,
+      uncertainty_width_m: sm.uncertainty_width_m != null ? sm.uncertainty_width_m : null,
+      note:                sm.note || '',
+      label:               sm.label || _signMode,
     };
   }
 
@@ -1158,7 +1161,20 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
     if (spotEl) spotEl.textContent = d.spot ? '$' + Number(d.spot).toLocaleString(undefined, {minimumFractionDigits:2,maximumFractionDigits:2}) : '\u2014';
 
     var netEl = document.getElementById('gex-ss-netgex');
-    if (netEl) { netEl.textContent = '$' + sign + gex.toFixed(1) + 'M'; netEl.style.color = gexColor; }
+    if (netEl) {
+      var baseTxt = '$' + sign + Math.abs(gex).toFixed(1) + 'M';
+      if (_signMode === 'probabilistic' && md.net_gex_low_m != null && md.net_gex_high_m != null) {
+        var lo = Math.min(md.net_gex_low_m, md.net_gex_high_m);
+        var hi = Math.max(md.net_gex_low_m, md.net_gex_high_m);
+        var fmtM = function(v) { return (v >= 0 ? '+' : '') + v.toFixed(0) + 'M'; };
+        baseTxt += ' (range: $' + fmtM(lo) + ' to $' + fmtM(hi) + ')';
+        netEl.style.fontSize = '11px';
+      } else {
+        netEl.style.fontSize = '';
+      }
+      netEl.textContent = baseTxt;
+      netEl.style.color = gexColor;
+    }
 
     var flipEl = document.getElementById('gex-ss-flip');
     if (flipEl) {
@@ -1525,6 +1541,7 @@ def _gex_panel_html(gex_chart_data: dict | None, gex_heatmap_data: dict | None =
         f'<button id="gex-sign-customer_long" class="gex-sign-btn" onclick="switchSignMode(\'customer_long\')" title="Assumes customers net long, dealer net short">Customer Long</button>'
         f'<button id="gex-sign-heuristic" class="gex-sign-btn" onclick="switchSignMode(\'heuristic\')" title="Moneyness/TTE/volume confidence weighting">Heuristic</button>'
         f'<button id="gex-sign-unsigned" class="gex-sign-btn" onclick="switchSignMode(\'unsigned\')" title="Absolute gamma only \u2014 no dealer sign">Unsigned</button>'
+        f'<button id="gex-sign-probabilistic" class="gex-sign-btn" onclick="switchSignMode(\'probabilistic\')" title="Per-contract p\u2082dealer\u2080short via delta/DTE/vol. Shows uncertainty band.">Probabilistic</button>'
         f'<span id="gex-sign-note" class="gex-sign-note"></span>'
         f'</div>'
         f'<div class="card-body">'

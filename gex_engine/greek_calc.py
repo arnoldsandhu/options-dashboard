@@ -28,6 +28,11 @@ def _norm_pdf(x: float) -> float:
     return math.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)
 
 
+def _norm_cdf(x: float) -> float:
+    """Standard normal CDF."""
+    return 0.5 * math.erfc(-x / math.sqrt(2.0))
+
+
 # ── Time-to-expiry ────────────────────────────────────────────────────────────
 
 def time_to_expiry_years(expiration: str,
@@ -96,6 +101,39 @@ def bs_gamma(spot: float, strike: float, t: float,
         return gamma if math.isfinite(gamma) else None
     except (ValueError, ZeroDivisionError):
         return None
+
+
+# ── Black-Scholes delta ───────────────────────────────────────────────────────
+
+def bs_delta(spot: float, strike: float, t: float,
+             iv: float, option_type: str, rate: float = 0.05) -> float | None:
+    """
+    Black-Scholes delta.
+
+    Returns:
+        call delta ∈ (0, 1), put delta ∈ (-1, 0), or None if inputs invalid.
+    """
+    if spot <= 0 or strike <= 0 or t <= 0 or iv <= 0:
+        return None
+    try:
+        d1 = (math.log(spot / strike) + (rate + 0.5 * iv ** 2) * t) / (iv * math.sqrt(t))
+        delta = _norm_cdf(d1) if option_type == "call" else _norm_cdf(d1) - 1.0
+        return delta if math.isfinite(delta) else None
+    except (ValueError, ZeroDivisionError):
+        return None
+
+
+def get_delta(contract: dict, spot: float, rate: float = 0.05) -> float | None:
+    """Return BS delta for a contract dict. Returns None if not computable."""
+    iv          = contract.get("iv", 0.0)
+    expiration  = contract.get("expiration", "")
+    option_type = contract.get("option_type", "")
+    strike      = contract.get("strike", 0.0)
+    if iv > 0:
+        t = time_to_expiry_years(expiration)
+        if t > 0:
+            return bs_delta(spot, strike, t, iv, option_type, rate)
+    return None
 
 
 # ── Public entry point ────────────────────────────────────────────────────────

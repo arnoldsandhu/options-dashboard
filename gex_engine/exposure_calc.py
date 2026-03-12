@@ -77,6 +77,7 @@ def calc_chain_metrics(
     spot: float,
     mode: str = "1pct",
     today_str: str | None = None,
+    sign_mode: str = "classic",
 ) -> dict:
     """
     Aggregate GEX metrics across an entire chain.
@@ -86,6 +87,7 @@ def calc_chain_metrics(
         spot:       current underlying price
         mode:       "1pct" (default) or "1usd"
         today_str:  ISO date string for 0DTE filter; defaults to today
+        sign_mode:  "classic" (calls +1 puts -1) or "unsigned" (all +1)
 
     Returns dict with:
         net_gex         float  — signed sum (primary, in selected units)
@@ -113,9 +115,11 @@ def calc_chain_metrics(
     call_gex_by_s: dict[float, float] = {}
     put_gex_by_s:  dict[float, float] = {}
 
-    n_included = 0
-    n_missing_iv = 0
-    n_zero_oi = 0
+    n_included       = 0
+    n_missing_iv     = 0
+    n_zero_oi        = 0
+    n_bs_computed    = 0   # contracts where Black-Scholes gamma was used
+    n_vendor_fallback = 0  # contracts where vendor gamma was the fallback
 
     for c in contracts:
         oi      = c.get("oi", 0)
@@ -139,7 +143,26 @@ def calc_chain_metrics(
         if gamma == 0.0:
             continue
 
-        sign    = dealer_sign(cp)
+        # Track gamma source: BS when IV available and t > 0, else vendor
+        from gex_engine.greek_calc import time_to_expiry_years
+        if iv > 0 and time_to_expiry_years(c.get("expiration", "")) > 0:
+            n_bs_computed += 1
+        else:
+            n_vendor_fallback += 1
+
+        if sign_mode == "unsigned":
+            sign = 1.0
+        elif sign_mode == "heuristic":
+            from gex_engine.sign_engine import get_sign as _gs
+            _raw, _conf = _gs(c, spot, "heuristic")
+            sign = _raw * (_conf / 100.0)
+        elif sign_mode == "probabilistic":
+            from gex_engine.sign_engine import get_p_dealer_short as _gp
+            p = _gp(c, spot)
+            sign = 2.0 * p - 1.0
+        else:  # "classic" or "customer_long"
+            sign = dealer_sign(cp)
+
         contrib = calc_fn(gamma, oi, mult, spot, sign)
         abs_c   = abs(contrib)
 
@@ -174,9 +197,87 @@ def calc_chain_metrics(
         "abs_gex_0dte":   abs_gex_0dte,
         "mode":           mode,
         "diagnostics": {
-            "included":    n_included,
-            "zero_oi":     n_zero_oi,
-            "missing_iv":  n_missing_iv,
-            "total":       n_included + n_zero_oi,
+            "included":         n_included,
+            "zero_oi":          n_zero_oi,
+            "missing_iv":       n_missing_iv,
+            "bs_computed":      n_bs_computed,
+            "vendor_fallback":  n_vendor_fallback,
+            "total":            n_included + n_zero_oi,
         },
+    }
+
+
+def calc_probabilistic_range(
+    contracts: list[dict],
+    spot: float,
+    mode: str = "1pct",
+    today_str: str | None = None,
+) -> dict:
+    """
+    Compute GEX under three probabilistic dealer-short scenarios.
+
+    Returns:
+        net_gex_base   — per-contract heuristic p_dealer_short
+        net_gex_low    — conservative: all contracts at p = 0.40 (expected_sign = -0.20)
+        net_gex_high   — aggressive:   all contracts at p = 0.95 (expected_sign = +0.90)
+        uncertainty_width — |net_gex_high - net_gex_low|
+        strike_gex_base   — per-strike |gex| dict for the base scenario
+        call_gex_by_s_base, put_gex_by_s_base — for bar chart rendering
+    """
+    from gex_engine.sign_engine import get_p_dealer_short
+
+    if today_str is None:
+        today_str = date.today().isoformat()
+
+    calc_fn = gex_1pct if mode == "1pct" else gex_1usd
+
+    P_LOW  = 0.40
+    P_HIGH = 0.95
+    S_LOW  = 2.0 * P_LOW  - 1.0   # -0.20
+    S_HIGH = 2.0 * P_HIGH - 1.0   # +0.90
+
+    net_base = net_low = net_high = 0.0
+    strike_gex_base:    dict[float, float] = {}
+    call_gex_by_s_base: dict[float, float] = {}
+    put_gex_by_s_base:  dict[float, float] = {}
+
+    for c in contracts:
+        oi     = c.get("oi", 0)
+        cp     = c.get("option_type", "")
+        strike = c.get("strike", 0.0)
+        mult   = c.get("multiplier", 100)
+
+        if oi == 0 or strike == 0.0 or cp not in ("call", "put"):
+            continue
+
+        gamma = get_gamma(c, spot)
+        if gamma == 0.0:
+            continue
+
+        p_base   = get_p_dealer_short(c, spot)
+        s_base   = 2.0 * p_base - 1.0
+
+        contrib_base = calc_fn(gamma, oi, mult, spot, s_base)
+        contrib_low  = calc_fn(gamma, oi, mult, spot, S_LOW)
+        contrib_high = calc_fn(gamma, oi, mult, spot, S_HIGH)
+
+        net_base += contrib_base
+        net_low  += contrib_low
+        net_high += contrib_high
+
+        abs_b = abs(contrib_base)
+        strike_gex_base[strike] = strike_gex_base.get(strike, 0.0) + abs_b
+        if cp == "call":
+            call_gex_by_s_base[strike] = call_gex_by_s_base.get(strike, 0.0) + contrib_base
+        else:
+            put_gex_by_s_base[strike]  = put_gex_by_s_base.get(strike, 0.0) + contrib_base
+
+    return {
+        "net_gex_base":        net_base,
+        "net_gex_low":         net_low,
+        "net_gex_high":        net_high,
+        "uncertainty_width":   abs(net_high - net_low),
+        "strike_gex_base":     strike_gex_base,
+        "call_gex_by_s_base":  call_gex_by_s_base,
+        "put_gex_by_s_base":   put_gex_by_s_base,
     }

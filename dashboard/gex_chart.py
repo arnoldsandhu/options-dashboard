@@ -12,7 +12,8 @@ from db.database import (
 from gex_engine.vendor_ingest import fetch_chain, fetch_spot_fallback
 from gex_engine.greek_calc import get_gamma, reset_fallback_counter
 from gex_engine.contract_model import normalize_chain
-from gex_engine.exposure_calc import calc_chain_metrics
+from gex_engine.exposure_calc import calc_chain_metrics, gex_1pct, calc_probabilistic_range
+from gex_engine.sign_engine import get_sign as _get_sign
 from gex_engine.spot_scan import run_spot_scan
 from gex_engine.levels import compute_levels
 
@@ -49,7 +50,12 @@ def get_gex_by_strike(ticker: str) -> dict:
     contracts = normalize_chain(raw_contracts, ticker)
 
     # Use exposure_calc for all GEX math (1% move — primary metric)
-    metrics = calc_chain_metrics(contracts, spot, mode="1pct", today_str=today_str)
+    # Classic signed mode (calls +1, puts -1) — primary
+    metrics = calc_chain_metrics(contracts, spot, mode="1pct", today_str=today_str,
+                                 sign_mode="classic")
+    # Unsigned mode (|gamma| only, no directional sign)
+    metrics_unsigned = calc_chain_metrics(contracts, spot, mode="1pct", today_str=today_str,
+                                          sign_mode="unsigned")
 
     call_gex_by_s  = metrics["call_gex_by_s"]
     put_gex_by_s   = metrics["put_gex_by_s"]
@@ -81,6 +87,12 @@ def get_gex_by_strike(ticker: str) -> dict:
 
     strike_rows = _rows(call_gex_by_s, put_gex_by_s, all_strikes)
 
+    # Unsigned rows (absolute gamma only — puts shown positive)
+    u_call = metrics_unsigned["call_gex_by_s"]
+    u_put  = metrics_unsigned["put_gex_by_s"]
+    u_all  = sorted(set(u_call) | set(u_put))
+    unsigned_strike_rows = _rows(u_call, u_put, u_all)
+
     # 0DTE rows: filter contracts by expiry == today
     zdte_call_by_s: dict[float, float] = {}
     zdte_put_by_s:  dict[float, float] = {}
@@ -96,7 +108,7 @@ def get_gex_by_strike(ticker: str) -> dict:
         gamma = get_gamma(c, spot)
         if gamma == 0.0:
             continue
-        from gex_engine.exposure_calc import gex_1pct, dealer_sign
+        from gex_engine.exposure_calc import dealer_sign
         sign   = dealer_sign(cp)
         contrib = gex_1pct(gamma, oi, mult, spot, sign)
         if cp == "call":
@@ -107,13 +119,119 @@ def get_gex_by_strike(ticker: str) -> dict:
     zdte_all  = sorted(set(zdte_call_by_s) | set(zdte_put_by_s))
     zdte_rows = _rows(zdte_call_by_s, zdte_put_by_s, zdte_all)
 
+    # Unsigned 0DTE rows
+    uzdte_call_by_s: dict[float, float] = {}
+    uzdte_put_by_s:  dict[float, float] = {}
+    for c in contracts:
+        if c.get("expiration", "") != today_str:
+            continue
+        oi     = c.get("oi", 0)
+        cp     = c.get("option_type", "")
+        strike = c.get("strike", 0.0)
+        mult   = c.get("multiplier", 100)
+        if oi == 0 or strike == 0.0:
+            continue
+        gamma = get_gamma(c, spot)
+        if gamma == 0.0:
+            continue
+        contrib = gex_1pct(gamma, oi, mult, spot, 1.0)  # sign=+1 (unsigned)
+        if cp == "call":
+            uzdte_call_by_s[strike] = uzdte_call_by_s.get(strike, 0.0) + contrib
+        else:
+            uzdte_put_by_s[strike]  = uzdte_put_by_s.get(strike, 0.0) + contrib
+    uzdte_all  = sorted(set(uzdte_call_by_s) | set(uzdte_put_by_s))
+    unsigned_zdte_rows = _rows(uzdte_call_by_s, uzdte_put_by_s, uzdte_all)
+
+    # Probabilistic mode: per-contract p_dealer_short with uncertainty band
+    prob_range = calc_probabilistic_range(contracts, spot, mode="1pct", today_str=today_str)
+    prob_base_m  = prob_range["net_gex_base"] / 1e6
+    prob_low_m   = prob_range["net_gex_low"]  / 1e6
+    prob_high_m  = prob_range["net_gex_high"] / 1e6
+    prob_width_m = prob_range["uncertainty_width"] / 1e6
+    prob_call    = prob_range["call_gex_by_s_base"]
+    prob_put     = prob_range["put_gex_by_s_base"]
+    prob_all     = sorted(set(prob_call) | set(prob_put))
+    prob_strike_rows = _rows(prob_call, prob_put, prob_all)
+    if len(prob_strike_rows) > MAX_STRIKES:
+        prob_strike_rows.sort(key=lambda r: abs(r["net_gex_m"]), reverse=True)
+        prob_strike_rows = prob_strike_rows[:MAX_STRIKES]
+        prob_strike_rows.sort(key=lambda r: r["strike"])
+
+    # Probabilistic 0DTE rows
+    pzdte_call_by_s: dict[float, float] = {}
+    pzdte_put_by_s:  dict[float, float] = {}
+    from gex_engine.sign_engine import get_p_dealer_short as _gp
+    for c in contracts:
+        if c.get("expiration", "") != today_str:
+            continue
+        oi     = c.get("oi", 0)
+        cp     = c.get("option_type", "")
+        strike = c.get("strike", 0.0)
+        mult   = c.get("multiplier", 100)
+        if oi == 0 or strike == 0.0 or cp not in ("call", "put"):
+            continue
+        gamma = get_gamma(c, spot)
+        if gamma == 0.0:
+            continue
+        p = _gp(c, spot)
+        sign = 2.0 * p - 1.0
+        contrib = gex_1pct(gamma, oi, mult, spot, sign)
+        if cp == "call":
+            pzdte_call_by_s[strike] = pzdte_call_by_s.get(strike, 0.0) + contrib
+        else:
+            pzdte_put_by_s[strike]  = pzdte_put_by_s.get(strike, 0.0) + contrib
+    pzdte_all = sorted(set(pzdte_call_by_s) | set(pzdte_put_by_s))
+    prob_zdte_rows = _rows(pzdte_call_by_s, pzdte_put_by_s, pzdte_all)
+
+    # Heuristic mode: confidence-weighted signs via sign_engine (moneyness/TTE/volume)
+    metrics_heuristic = calc_chain_metrics(contracts, spot, mode="1pct",
+                                           today_str=today_str, sign_mode="heuristic")
+    h_call = metrics_heuristic["call_gex_by_s"]
+    h_put  = metrics_heuristic["put_gex_by_s"]
+    h_all  = sorted(set(h_call) | set(h_put))
+    heuristic_strike_rows = _rows(h_call, h_put, h_all)
+
+    # Heuristic 0DTE rows
+    hzdte_call_by_s: dict[float, float] = {}
+    hzdte_put_by_s:  dict[float, float] = {}
+    for c in contracts:
+        if c.get("expiration", "") != today_str:
+            continue
+        oi     = c.get("oi", 0)
+        cp     = c.get("option_type", "")
+        strike = c.get("strike", 0.0)
+        mult   = c.get("multiplier", 100)
+        if oi == 0 or strike == 0.0 or cp not in ("call", "put"):
+            continue
+        gamma = get_gamma(c, spot)
+        if gamma == 0.0:
+            continue
+        raw_sign, conf = _get_sign(c, spot, "heuristic")
+        contrib = gex_1pct(gamma, oi, mult, spot, raw_sign * (conf / 100.0))
+        if cp == "call":
+            hzdte_call_by_s[strike] = hzdte_call_by_s.get(strike, 0.0) + contrib
+        else:
+            hzdte_put_by_s[strike]  = hzdte_put_by_s.get(strike, 0.0) + contrib
+    hzdte_all = sorted(set(hzdte_call_by_s) | set(hzdte_put_by_s))
+    heuristic_zdte_rows = _rows(hzdte_call_by_s, hzdte_put_by_s, hzdte_all)
+
     # Cap to MAX_STRIKES by keeping top abs(net_gex_m), then re-sort by strike
     if len(strike_rows) > MAX_STRIKES:
         strike_rows.sort(key=lambda r: abs(r["net_gex_m"]), reverse=True)
         strike_rows = strike_rows[:MAX_STRIKES]
         strike_rows.sort(key=lambda r: r["strike"])
+    if len(unsigned_strike_rows) > MAX_STRIKES:
+        unsigned_strike_rows.sort(key=lambda r: abs(r["net_gex_m"]), reverse=True)
+        unsigned_strike_rows = unsigned_strike_rows[:MAX_STRIKES]
+        unsigned_strike_rows.sort(key=lambda r: r["strike"])
+    if len(heuristic_strike_rows) > MAX_STRIKES:
+        heuristic_strike_rows.sort(key=lambda r: abs(r["net_gex_m"]), reverse=True)
+        heuristic_strike_rows = heuristic_strike_rows[:MAX_STRIKES]
+        heuristic_strike_rows.sort(key=lambda r: r["strike"])
 
     net_gex_m = net_gex_raw / 1e6
+    unsigned_net_gex_m  = metrics_unsigned["net_gex"] / 1e6
+    heuristic_net_gex_m = metrics_heuristic["net_gex"] / 1e6
 
     total_abs   = sum(abs(r["net_gex_m"]) for r in strike_rows) or 1.0
     key_strikes = [r["strike"] for r in strike_rows
@@ -203,11 +321,54 @@ def get_gex_by_strike(ticker: str) -> dict:
     except Exception:
         pctiles_30d = {}
 
+    # Sign mode metadata for each of the 4 modes
+    sign_modes = {
+        "classic": {
+            "strikes":   strike_rows,
+            "zdtes":     zdte_rows,
+            "net_gex_m": round(net_gex_m, 2),
+            "label":     "Classic",
+            "note":      "Standard dealer hedging convention — calls +1, puts \u22121 (ESTIMATED)",
+        },
+        "customer_long": {
+            "strikes":   strike_rows,          # same bars as classic
+            "zdtes":     zdte_rows,
+            "net_gex_m": round(net_gex_m, 2),
+            "label":     "Customer Long",
+            "note":      "Assumes customers net long options; dealer net short. Confidence 80% (ESTIMATED)",
+        },
+        "heuristic": {
+            "strikes":   heuristic_strike_rows,
+            "zdtes":     heuristic_zdte_rows,
+            "net_gex_m": round(heuristic_net_gex_m, 2),
+            "label":     "Heuristic",
+            "note":      "Confidence weighted by moneyness, TTE, and volume flow (ESTIMATED)",
+        },
+        "unsigned": {
+            "strikes":   unsigned_strike_rows,
+            "zdtes":     unsigned_zdte_rows,
+            "net_gex_m": round(unsigned_net_gex_m, 2),
+            "label":     "Unsigned",
+            "note":      "Absolute gamma concentration only \u2014 no directional dealer sign applied",
+        },
+        "probabilistic": {
+            "strikes":           prob_strike_rows,
+            "zdtes":             prob_zdte_rows,
+            "net_gex_m":         round(prob_base_m, 2),
+            "net_gex_low_m":     round(prob_low_m, 2),
+            "net_gex_high_m":    round(prob_high_m, 2),
+            "uncertainty_width_m": round(prob_width_m, 2),
+            "label":             "Probabilistic",
+            "note":              "Per-contract p_dealer_short via delta/DTE/vol heuristics. Band = p\u2208[0.40, 0.95] scenarios (ESTIMATED)",
+        },
+    }
+
     return {
         "ticker":            ticker,
         "spot":              round(spot, 2),
         "net_gex_m":         round(net_gex_m, 2),      # 1%-move $ units / 1M
         "gex_mode":          "1pct",
+        "sign_modes":        sign_modes,
         "regime":            regime,
         "regime_summary":    regime_summary,
         "stability_pct":     stability_pct,

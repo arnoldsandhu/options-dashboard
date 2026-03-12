@@ -60,8 +60,9 @@ def fetch_chain(ticker: str) -> tuple[float, list[dict]]:
             cp         = (getattr(details, "contract_type",            "") or "").lower() if details else ""
             oi         = int(getattr(contract, "open_interest",          0) or 0)
             volume     = int(getattr(day,      "volume",                  0) or 0) if day else 0
-            iv         = float(getattr(greeks,  "implied_volatility",  0.0) or 0.0) if greeks else 0.0
-            vendor_gamma = float(getattr(greeks, "gamma",              0.0) or 0.0) if greeks else 0.0
+            # implied_volatility is a TOP-LEVEL contract field, NOT inside greeks
+            iv           = float(getattr(contract, "implied_volatility", 0.0) or 0.0)
+            vendor_gamma = float(getattr(greeks,   "gamma",             0.0) or 0.0) if greeks else 0.0
 
             # Drop contracts missing required identifiers
             if strike == 0.0 or cp not in ("call", "put") or not expiration:
