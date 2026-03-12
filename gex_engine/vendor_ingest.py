@@ -40,7 +40,9 @@ def fetch_chain(ticker: str) -> tuple[float, list[dict]]:
     spot = 0.0
 
     try:
-        for contract in client.list_snapshot_options_chain(ticker):
+        # limit=250 is Polygon's max per page; the SDK auto-paginates via next_url
+        # so the full chain is always returned — this just minimises round-trips.
+        for contract in client.list_snapshot_options_chain(ticker, params={"limit": 250}):
             # Extract spot from the first contract's underlying_asset.price
             if spot == 0.0:
                 ua = getattr(contract, "underlying_asset", None)
@@ -79,6 +81,7 @@ def fetch_chain(ticker: str) -> tuple[float, list[dict]]:
     except Exception as e:
         print(f"  [vendor_ingest] chain fetch error {ticker}: {e}")
 
+    print(f"  [vendor_ingest] {ticker}: {len(contracts)} contracts, spot={spot:.2f}")
     return spot, contracts
 
 
