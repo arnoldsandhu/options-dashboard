@@ -7,7 +7,10 @@ import math
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-from config import WATCHLIST, DASHBOARD_TITLE, MARKET_OPEN_ET, MARKET_CLOSE_ET, POLL_TOKEN, NTFY_TOPIC
+from config import (
+    WATCHLIST, DASHBOARD_TITLE, MARKET_OPEN_ET, MARKET_CLOSE_ET,
+    POLL_TOKEN, NTFY_TOPIC, FLASK_API_URL,
+)
 from dashboard.match_13f import build_13f_matches
 from dashboard.alpha_signals import generate_alpha_signals
 from db.database import (
@@ -19,6 +22,8 @@ from db.database import (
     GEX_HISTORY_DAYS,
     save_intraday_snapshot,
     get_prior_snapshot,
+    get_recent_alert_log,
+    get_spy_gex_history_30d,
 )
 
 ET = ZoneInfo("America/New_York")
@@ -681,7 +686,34 @@ def _alpha_panel_html(theses: list[dict]) -> str:
 
 
 def _13f_match_card_html(matches: list[dict]) -> str:
-    """Render the 13F Flow Match panel with styled match cards."""
+    """Render the 13F Flow Match panel with styled match cards and client note generator."""
+    # Extract unique fund names from context entries for the dropdown
+    fund_set: list[str] = []
+    seen_funds: set[str] = set()
+    for m in matches:
+        for e in m.get("context_entries", []):
+            f = e.get("fund", "")
+            if f and f not in seen_funds:
+                seen_funds.add(f)
+                fund_set.append(f)
+    fund_opts = "".join(f'<option value="{_e(f)}">{_e(f)}</option>' for f in fund_set)
+    note_controls = (
+        f'<div class="f13-note-ctrl">'
+        f'<select id="f13-fund-sel" class="f13-fund-select">'
+        f'<option value="">&#8212; Select fund &#8212;</option>'
+        f'{fund_opts}'
+        f'</select>'
+        f'<button class="f13-gen-btn" onclick="generateClientNote()">&#128203; Generate Note</button>'
+        f'</div>'
+        f'<div id="f13-note-output" class="f13-note-output" style="display:none">'
+        f'<div class="f13-note-hdr">'
+        f'<span class="f13-note-title">BLOOMBERG IB NOTE</span>'
+        f'<button class="copy-btn" onclick="copyClientNote()">Copy</button>'
+        f'</div>'
+        f'<pre id="f13-note-text" class="f13-note-text">Generating\u2026</pre>'
+        f'</div>'
+    ) if fund_set else ""
+
     if not matches:
         body = (
             '<p class="empty">No 13F overlap with today\'s signal tickers. '
@@ -753,6 +785,199 @@ def _13f_match_card_html(matches: list[dict]) -> str:
     return f"""
     <div class="card pos-full">
       <div class="card-header">&#128202; 13F FLOW MATCH</div>
+      {note_controls}
+      <div class="card-body scroll">
+        {body}
+      </div>
+    </div>"""
+
+
+# ── NET GEX History Chart ─────────────────────────────────────────────────────
+
+def _gex_history_chart_html(history: list[dict]) -> str:
+    """
+    Full-width card with a D3.js SPY Net GEX 30-day time-series chart.
+    Navy blue line, 10th/90th pctile dashed rules, current-reading dot, Y-axis in $Bn.
+    """
+    if len(history) < 3:
+        return (
+            '<div class="card pos-full gex-history-card">'
+            '<div class="card-header">&#128200; SPY NET GEX \u2014 30 DAY HISTORY</div>'
+            '<div class="card-body"><p class="empty">Accumulating history\u2026 check back after a few poll cycles.</p></div>'
+            '</div>'
+        )
+
+    # Build data for chart: list of {ts_ms, val_bn}
+    pts = []
+    for row in history:
+        try:
+            from datetime import datetime as _dt
+            ts_str = row["timestamp"]
+            # Parse UTC ISO timestamp → ms epoch for D3
+            dt = _dt.fromisoformat(ts_str.replace("Z", "+00:00"))
+            ts_ms = int(dt.timestamp() * 1000)
+            val_bn = row["net_gex"] / 1_000_000_000
+            pts.append({"ts": ts_ms, "val": val_bn})
+        except Exception:
+            continue
+
+    if len(pts) < 3:
+        return ""
+
+    # Compute 10th / 90th percentile
+    vals_sorted = sorted(p["val"] for p in pts)
+    n = len(vals_sorted)
+    p10 = vals_sorted[max(0, int(n * 0.10) - 1)]
+    p90 = vals_sorted[min(n - 1, int(n * 0.90))]
+    current_val = pts[-1]["val"]
+
+    data_json = json.dumps(pts)
+
+    return f"""
+    <div class="card pos-full gex-history-card">
+      <div class="card-header">&#128200; SPY NET GEX \u2014 30 DAY HISTORY</div>
+      <div class="card-body" style="padding:10px 14px 14px;">
+        <div id="gex-hist-wrap" style="width:100%;height:160px;position:relative;"></div>
+        <div class="chart-source" style="margin-top:4px;">Net GEX in $Bn \u00b7 30-day rolling \u00b7 10th / 90th pctile bands shown</div>
+      </div>
+    </div>
+    <script>
+(function() {{
+  var pts = {data_json};
+  var p10 = {p10:.6f}, p90 = {p90:.6f};
+  var curVal = {current_val:.6f};
+  if (!pts || pts.length < 3) return;
+
+  var wrap = document.getElementById('gex-hist-wrap');
+  if (!wrap) return;
+
+  var W = wrap.offsetWidth || 700, H = 160;
+  var m = {{top: 12, right: 14, bottom: 28, left: 52}};
+  var w = W - m.left - m.right, h = H - m.top - m.bottom;
+
+  var svg = d3.select('#gex-hist-wrap').append('svg')
+    .attr('width', W).attr('height', H);
+  var g = svg.append('g').attr('transform', 'translate(' + m.left + ',' + m.top + ')');
+
+  var xDom = d3.extent(pts, function(d) {{ return d.ts; }});
+  var yVals = pts.map(function(d) {{ return d.val; }});
+  var yMin = Math.min(d3.min(yVals), p10) * 1.08;
+  var yMax = Math.max(d3.max(yVals), p90) * 1.08;
+  // Ensure zero is always visible
+  if (yMin > 0) yMin = -0.1;
+  if (yMax < 0) yMax = 0.1;
+
+  var x = d3.scaleTime().domain(xDom).range([0, w]);
+  var y = d3.scaleLinear().domain([yMin, yMax]).range([h, 0]).nice();
+
+  // Grid lines
+  g.append('g').attr('class', 'gex-hist-grid')
+    .call(d3.axisLeft(y).ticks(4).tickSize(-w).tickFormat(''))
+    .selectAll('line').style('stroke', '#E8E8E8').style('stroke-dasharray', '2,3');
+  g.select('.gex-hist-grid .domain').remove();
+
+  // Zero line
+  g.append('line')
+    .attr('x1', 0).attr('x2', w)
+    .attr('y1', y(0)).attr('y2', y(0))
+    .style('stroke', '#CCCCCC').style('stroke-width', '1px');
+
+  // 10th / 90th pctile dashed rules
+  [{{v: p10, lbl: '10th'}}, {{v: p90, lbl: '90th'}}].forEach(function(band) {{
+    g.append('line')
+      .attr('x1', 0).attr('x2', w)
+      .attr('y1', y(band.v)).attr('y2', y(band.v))
+      .style('stroke', '#B0B0B0').style('stroke-width', '1px')
+      .style('stroke-dasharray', '4,4');
+    g.append('text')
+      .attr('x', w + 2).attr('y', y(band.v) + 3)
+      .style('font-size', '8px').style('fill', '#888888').text(band.lbl);
+  }});
+
+  // X axis
+  g.append('g').attr('transform', 'translate(0,' + h + ')')
+    .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat('%b %d')))
+    .selectAll('text').style('font-size', '9px').style('fill', '#888888');
+
+  // Y axis ($Bn)
+  g.append('g')
+    .call(d3.axisLeft(y).ticks(4).tickFormat(function(v) {{
+      return (v >= 0 ? '+' : '') + v.toFixed(1) + 'B';
+    }}))
+    .selectAll('text').style('font-size', '9px').style('fill', '#888888');
+  g.select('.domain').style('stroke', '#CCCCCC');
+
+  // Area fill under line
+  var area = d3.area()
+    .x(function(d) {{ return x(d.ts); }})
+    .y0(y(0))
+    .y1(function(d) {{ return y(d.val); }})
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  var areaColor = curVal >= 0 ? 'rgba(27,58,107,0.06)' : 'rgba(204,68,68,0.06)';
+  g.append('path').datum(pts).attr('d', area).style('fill', areaColor);
+
+  // Main line (navy)
+  var line = d3.line()
+    .x(function(d) {{ return x(d.ts); }})
+    .y(function(d) {{ return y(d.val); }})
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  g.append('path').datum(pts)
+    .attr('d', line)
+    .style('fill', 'none')
+    .style('stroke', '#1B3A6B')
+    .style('stroke-width', '1.5px');
+
+  // Current reading dot
+  var last = pts[pts.length - 1];
+  var dotColor = last.val >= 0 ? '#1B3A6B' : '#CC4444';
+  g.append('circle')
+    .attr('cx', x(last.ts)).attr('cy', y(last.val))
+    .attr('r', 4)
+    .style('fill', dotColor).style('stroke', '#fff').style('stroke-width', '1.5px');
+
+  // Current value label
+  g.append('text')
+    .attr('x', x(last.ts) - 4).attr('y', y(last.val) - 7)
+    .style('font-size', '9px').style('fill', dotColor)
+    .style('font-weight', '700').style('text-anchor', 'end')
+    .text((last.val >= 0 ? '+' : '') + last.val.toFixed(2) + 'B');
+}})();
+</script>"""
+
+
+# ── Alert Log Panel ────────────────────────────────────────────────────────────
+
+def _alert_log_panel_html(log_entries: list[dict]) -> str:
+    """Render the ALERT LOG panel showing the last 20 threshold alerts."""
+    if not log_entries:
+        body = '<p class="empty">No threshold alerts logged yet. Conditions: GEX &ge;95th/&le;5th pctile, OVI &ge;500%, skew &ge;90th, gamma flip.</p>'
+    else:
+        rows = []
+        for e in log_entries:
+            sev = e.get("severity", "MEDIUM")
+            sev_cls = {"CRITICAL": "alog-crit", "HIGH": "alog-high", "MEDIUM": "alog-med"}.get(sev, "alog-med")
+            ts_raw = e.get("timestamp", "")
+            try:
+                from datetime import datetime as _dt, timezone as _tz
+                dt_utc = _dt.fromisoformat(ts_raw).replace(tzinfo=_tz.utc)
+                ts_et = dt_utc.astimezone(ET).strftime("%m/%d %H:%M")
+            except Exception:
+                ts_et = ts_raw[:16]
+            rows.append(
+                f'<div class="alog-row">'
+                f'<span class="alog-sev {sev_cls}">{_e(sev[:4])}</span>'
+                f'<span class="ticker-badge">{_e(e["ticker"])}</span>'
+                f'<span class="alog-type">{_e(e["alert_type"].replace("_"," "))}</span>'
+                f'<span class="alog-detail">{_e(e["detail"])}</span>'
+                f'<span class="alog-ts">{_e(ts_et)}</span>'
+                f'</div>'
+            )
+        body = "\n".join(rows)
+    return f"""
+    <div class="card pos-full">
+      <div class="card-header">&#128680; ALERT LOG <span style="font-weight:400;color:#888;font-size:9px;margin-left:6px;">last 20 threshold triggers</span></div>
       <div class="card-body scroll">
         {body}
       </div>
@@ -1645,6 +1870,12 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
         alpha_theses = generate_alpha_signals(ovi_report, gex_live_rows, skew_live_rows, f13_matches)
     alpha_card = _alpha_panel_html(alpha_theses)
 
+    # ── NET GEX History chart + Alert Log ────────────────────────────────────
+    spy_gex_hist = get_spy_gex_history_30d()
+    gex_history_card = _gex_history_chart_html(spy_gex_hist)
+    alert_log_entries = get_recent_alert_log(20)
+    alert_log_card = _alert_log_panel_html(alert_log_entries)
+
     wl_badges = _watchlist_badges()
 
     # ── Header stat card computation ──────────────────────────────────────
@@ -1725,6 +1956,7 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     poll_meta = (
         f'<meta name="poll-token" content="{_e(POLL_TOKEN)}">'
         f'<meta name="ntfy-topic" content="{_e(NTFY_TOPIC)}">'
+        f'<meta name="api-base-url" content="{_e(FLASK_API_URL)}">'
     )
     refresh_js = """<script>
 async function triggerPoll() {
@@ -1789,6 +2021,41 @@ function toggleCtx(evt) {
     el.style.display = 'block';
     btn.innerHTML = btn.innerHTML.replace('\u25bc', '\u25b2');
   }
+}
+</script>"""
+
+    client_note_js = """<script>
+async function generateClientNote() {
+  var sel = document.getElementById('f13-fund-sel');
+  if (!sel) return;
+  var fund = sel.value;
+  if (!fund) { alert('Select a fund first'); return; }
+  var output = document.getElementById('f13-note-output');
+  var noteEl = document.getElementById('f13-note-text');
+  output.style.display = 'block';
+  noteEl.textContent = 'Generating note for ' + fund + '\u2026';
+  try {
+    var apiBase = document.querySelector('meta[name="api-base-url"]').content;
+    var token = document.querySelector('meta[name="poll-token"]').content;
+    var res = await fetch(apiBase + '/generate-client-note', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Poll-Token': token},
+      body: JSON.stringify({fund: fund})
+    });
+    var data = await res.json();
+    noteEl.textContent = data.note || data.error || 'No note returned';
+  } catch(e) {
+    noteEl.textContent = 'Error: ' + e.message + '\n\nMake sure the local API server is running (python main.py).';
+  }
+}
+function copyClientNote() {
+  var noteEl = document.getElementById('f13-note-text');
+  if (!noteEl) return;
+  navigator.clipboard.writeText(noteEl.textContent).then(function() {
+    var btn = event.currentTarget;
+    btn.textContent = '\u2713 Copied!';
+    setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+  });
 }
 </script>"""
 
@@ -2207,6 +2474,73 @@ function toggleCtx(evt) {
       margin-left: 4px; white-space: nowrap; font-family: 'JetBrains Mono', monospace;
     }}
 
+    /* ── Client Note Generator (13F panel) ──────────── */
+    .f13-note-ctrl {{
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-bottom: 1px solid #E0E0E0;
+      background: #F9FAFB; flex-wrap: wrap;
+    }}
+    .f13-fund-select {{
+      font-size: 11px; padding: 4px 8px; border: 1px solid #CCCCCC;
+      border-radius: 4px; background: #FFFFFF; color: #1A1A1A;
+      font-family: 'Inter', sans-serif; flex: 1; min-width: 160px; max-width: 220px;
+    }}
+    .f13-gen-btn {{
+      background: #1B3A6B; color: #FFFFFF; border: none;
+      border-radius: 4px; padding: 4px 12px; font-size: 11px; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+    }}
+    .f13-gen-btn:hover {{ background: #254F8F; }}
+    .f13-note-output {{
+      border-bottom: 1px solid #E0E0E0;
+    }}
+    .f13-note-hdr {{
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 12px; background: #1B3A6B;
+    }}
+    .f13-note-title {{
+      font-size: 9px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #FFFFFF;
+    }}
+    .f13-note-text {{
+      margin: 0; padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; line-height: 1.7; color: #1A1A1A;
+      white-space: pre-wrap; word-wrap: break-word;
+      background: #FAFCFF;
+      border: none; max-height: 220px; overflow-y: auto;
+    }}
+
+    /* ── GEX History Chart ──────────────────────────── */
+    .gex-history-card {{ grid-column: 1 / -1; }}
+    .gex-history-card .card-body {{ padding: 10px 14px 4px; }}
+
+    /* ── Alert Log Panel ────────────────────────────── */
+    .alog-row {{
+      display: grid;
+      grid-template-columns: 42px 52px 160px 1fr 68px;
+      gap: 8px; align-items: start;
+      padding: 6px 4px; border-bottom: 1px solid #F0F0F0;
+      font-size: 11px; line-height: 1.4;
+    }}
+    .alog-row:last-child {{ border-bottom: none; }}
+    .alog-sev {{
+      font-size: 9px; font-weight: 700; letter-spacing: .06em;
+      padding: 1px 4px; border-radius: 3px; text-align: center;
+    }}
+    .alog-crit {{ background: rgba(139,0,0,0.12); color: #8B0000; }}
+    .alog-high {{ background: rgba(204,68,68,0.10); color: #CC4444; }}
+    .alog-med  {{ background: rgba(180,100,0,0.10); color: #B46400; }}
+    .alog-type {{
+      font-size: 10px; font-weight: 600; color: #1B3A6B;
+      font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden;
+    }}
+    .alog-detail {{ color: #444444; font-size: 11px; }}
+    .alog-ts {{
+      font-size: 9px; color: #888888; font-family: 'JetBrains Mono', monospace;
+      text-align: right; white-space: nowrap;
+    }}
+
     /* ── Alpha Signals panel ─────────────────────── */
     .alpha-panel {{
       max-width: 1400px; margin: 12px auto 0; padding: 0 24px;
@@ -2476,9 +2810,11 @@ function toggleCtx(evt) {
 <div class="grid">
   {ovi_card}
   {gex_panel}
+  {gex_history_card}
   {gex_card}
   {skew_card}
   {pos_card}
+  {alert_log_card}
 </div>
 
 <footer>
@@ -2493,6 +2829,7 @@ function toggleCtx(evt) {
 
 {refresh_js}
 {copy_js}
+{client_note_js}
 <script>
 (function() {{
   var pre = document.getElementById('ai-text');

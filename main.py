@@ -22,12 +22,13 @@ from db.database import (
     init_db,
     is_already_alerted, record_alert, log_signal,
     get_day_signals, save_positioning_match,
+    log_threshold_alert, is_threshold_alerted,
 )
 from signals.unusual_vol import scan_ovi
 from signals.gex import check_gex
 from signals.skew import check_skew
 from signals.positioning import check_positioning
-from delivery.gmail import send_digest, send_market_open_digest, send_eod_summary
+from delivery.gmail import send_digest, send_market_open_digest, send_eod_summary, send_threshold_alert
 from dashboard.publisher import publish as publish_dashboard
 from dashboard.alpha_signals import generate_alpha_signals
 from claude_draft import draft_observation
@@ -90,6 +91,30 @@ def poll_cycle(is_open_bell: bool = False, is_close_bell: bool = False):
         alpha_theses = generate_alpha_signals(ovi_report, _gex_rows, _skew_rows, _f13)
     except Exception as e:
         print(f"[alpha_signals] Pre-generation error: {e}")
+
+    # ── Threshold Alerts ─────────────────────────────────────────────────────
+    try:
+        from signals.threshold_alerts import check_thresholds
+        from db.database import get_prior_snapshot
+        _prior = get_prior_snapshot()
+        raw_threshold_alerts = check_thresholds(
+            ovi_report, _latest_gex, _latest_skew, _prior
+        )
+        # Dedup: skip if same ticker+type fired within 4h
+        new_threshold = [
+            a for a in raw_threshold_alerts
+            if not is_threshold_alerted(a["ticker"], a["alert_type"], hours=4)
+        ]
+        if new_threshold:
+            for ta in new_threshold:
+                log_threshold_alert(ta["ticker"], ta["alert_type"],
+                                    ta["detail"], ta.get("severity", "MEDIUM"))
+            send_threshold_alert(new_threshold)
+            print(f"  [threshold] {len(new_threshold)} new alert(s) triggered")
+        elif raw_threshold_alerts:
+            print(f"  [threshold] {len(raw_threshold_alerts)} condition(s) active (deduped)")
+    except Exception as e:
+        print(f"[threshold] Error: {e}")
 
     for ticker in WATCHLIST:
         print(f"  Checking {ticker}...", end="", flush=True)

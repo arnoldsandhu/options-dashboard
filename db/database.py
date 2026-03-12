@@ -143,6 +143,15 @@ def init_db():
                 timestamp TEXT NOT NULL,
                 data_json TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS alert_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ticker TEXT NOT NULL,
+                alert_type TEXT NOT NULL,
+                detail TEXT NOT NULL,
+                severity TEXT NOT NULL DEFAULT 'MEDIUM',
+                timestamp TEXT NOT NULL
+            );
         """)
     # Add new columns to ovi_history if they don't exist yet (idempotent)
     with get_conn() as conn:
@@ -741,3 +750,40 @@ def get_prior_snapshot() -> dict | None:
         return json.loads(rows[1]["data_json"])
     except Exception:
         return None
+
+
+# ── Alert Log ─────────────────────────────────────────────────────────────────
+
+def log_threshold_alert(ticker: str, alert_type: str, detail: str,
+                        severity: str = "MEDIUM") -> None:
+    ts = datetime.utcnow().isoformat()
+    with get_conn() as conn:
+        conn.execute(
+            "INSERT INTO alert_log (ticker, alert_type, detail, severity, timestamp) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (ticker, alert_type, detail, severity, ts),
+        )
+
+
+def is_threshold_alerted(ticker: str, alert_type: str, hours: int = 4) -> bool:
+    """Return True if the same ticker+alert_type fired within the last N hours."""
+    cutoff = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT id FROM alert_log WHERE ticker = ? AND alert_type = ? AND timestamp >= ?",
+            (ticker, alert_type, cutoff),
+        ).fetchone()
+    return row is not None
+
+
+def get_recent_alert_log(limit: int = 20) -> list[dict]:
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT * FROM alert_log ORDER BY id DESC LIMIT ?", (limit,)
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_spy_gex_history_30d() -> list[dict]:
+    """Return 30-day SPY GEX history for the Net GEX History chart."""
+    return get_gex_history("SPY", days=30)

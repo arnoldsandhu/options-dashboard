@@ -40,15 +40,55 @@ def _mcp_call(method: str, params: dict) -> dict:
         raise RuntimeError(f"Gmail MCP HTTP {e.code}: {body}") from e
 
 
-def _build_digest_body(alerts_by_type: dict[str, list[str]]) -> str:
+def _fmt_ovi_section(ovi_report: dict) -> list[str]:
+    """Format OVI top-5 calls + top-5 puts + AI analysis for email."""
+    if not ovi_report:
+        return []
+    lines = ["── OPTION VOLUME INTELLIGENCE ──────────────", ""]
+
+    def fmt_row(r, side):
+        vol = r["c_vol"] if side == "call" else r["p_vol"]
+        pct = r.get("c_vol_pct") if side == "call" else r.get("p_vol_pct")
+        pct_str = f"{pct:+.0f}% vs avg" if pct is not None else "n/a"
+        pc = f"{r['pc_ratio']:.2f}" if r.get("pc_ratio") is not None else "n/a"
+        px = f"{r['px_pct_chg']:+.1f}%" if r.get("px_pct_chg") is not None else "n/a"
+        label = "CVol" if side == "call" else "PVol"
+        return f"  {r['ticker']:<6} | {label}: {int(vol):>7,} | {pct_str:>16} | P/C: {pc} | {px}"
+
+    top_calls = ovi_report.get("top_calls", [])[:5]
+    top_puts  = ovi_report.get("top_puts",  [])[:5]
+
+    if top_calls:
+        lines.append("TOP CALLS (by vol spike vs 20d avg)")
+        lines += [fmt_row(r, "call") for r in top_calls]
+        lines.append("")
+    if top_puts:
+        lines.append("TOP PUTS (by vol spike vs 20d avg)")
+        lines += [fmt_row(r, "put") for r in top_puts]
+        lines.append("")
+
+    analysis = ovi_report.get("analysis", "").strip()
+    if analysis:
+        lines.append("FLOW PULSE SUMMARY:")
+        lines.append(analysis)
+        lines.append("")
+
+    return lines
+
+
+def _build_digest_body(alerts_by_type: dict[str, list[str]], ovi_report: dict | None = None) -> str:
     """Format alerts into a clean digest email body."""
     section_headers = {
-        "UNUSUAL_VOL": "── UNUSUAL VOL ──────────────────",
         "GEX": "── GEX EXTREME ──────────────────",
-        "ROLL": "── ROLL OPPORTUNITY ─────────────",
-        "EARNINGS": "── EARNINGS VOL ─────────────────",
+        "SKEW": "── SKEW EXTREMES ────────────────",
+        "POSITIONING": "── 13F FLOW MATCH ───────────────",
     }
     lines = [f"Options Alert Digest — {_now_et_str()}", ""]
+
+    ovi_lines = _fmt_ovi_section(ovi_report or {})
+    if ovi_lines:
+        lines += ovi_lines
+
     for key, header in section_headers.items():
         if key in alerts_by_type and alerts_by_type[key]:
             lines.append(header)
@@ -60,23 +100,24 @@ def _build_digest_body(alerts_by_type: dict[str, list[str]]) -> str:
     return "\n".join(lines)
 
 
-def send_digest(alerts_by_type: dict[str, list[str]], is_eod: bool = False) -> bool:
+def send_digest(alerts_by_type: dict[str, list[str]], is_eod: bool = False,
+                ovi_report: dict | None = None) -> bool:
     """
     Send a batch digest email.
-    alerts_by_type: {"UNUSUAL_VOL": [...], "GEX": [...], ...}
+    alerts_by_type: {"GEX": [...], "SKEW": [...], "POSITIONING": [...]}
     Returns True on success.
     """
     total = sum(len(v) for v in alerts_by_type.values())
-    if total == 0:
+    if total == 0 and not ovi_report:
         return False
 
     time_str = _now_et_str()
     if is_eod:
         subject = f"EOD Options Summary — {total} signals — {time_str}"
     else:
-        subject = f"Options Alert Digest — {total} signal{'s' if total != 1 else ''} — {time_str}"
+        subject = f"Options Alert Digest — {total} signal{'s' if total != 1 else ''} + OVI — {time_str}"
 
-    body = _build_digest_body(alerts_by_type)
+    body = _build_digest_body(alerts_by_type, ovi_report)
 
     if DRY_RUN:
         print("\n" + "=" * 60)
@@ -107,10 +148,11 @@ def send_digest(alerts_by_type: dict[str, list[str]], is_eod: bool = False) -> b
         return False
 
 
-def send_market_open_digest(alerts_by_type: dict[str, list[str]]) -> bool:
+def send_market_open_digest(alerts_by_type: dict[str, list[str]],
+                            ovi_report: dict | None = None) -> bool:
     total = sum(len(v) for v in alerts_by_type.values())
     subject = f"Market Open — Options Briefing — {total} signal{'s' if total != 1 else ''} — {_now_et_str()}"
-    body = "MARKET OPEN BRIEFING\n\n" + _build_digest_body(alerts_by_type)
+    body = "MARKET OPEN BRIEFING\n\n" + _build_digest_body(alerts_by_type, ovi_report)
 
     if DRY_RUN:
         print("\n" + "=" * 60)
@@ -136,13 +178,61 @@ def send_market_open_digest(alerts_by_type: dict[str, list[str]]) -> bool:
         return False
 
 
-def send_eod_summary(top_signals: list[str]) -> bool:
+def send_threshold_alert(alerts: list[dict]) -> bool:
+    """Send an immediate email for threshold breach alerts (GEX extreme, gamma flip, etc.)."""
+    if not alerts:
+        return False
+
+    severities = {a.get("severity", "MEDIUM") for a in alerts}
+    top_sev = "CRITICAL" if "CRITICAL" in severities else "HIGH"
+    time_str = _now_et_str()
+    subject = f"[{top_sev}] Options Threshold Alert — {len(alerts)} trigger(s) — {time_str}"
+
+    lines = [f"THRESHOLD ALERTS — {time_str}", "=" * 50, ""]
+    for a in alerts:
+        lines.append(f"[{a.get('severity','MEDIUM')}] {a['ticker']} | {a['alert_type']}")
+        lines.append(f"  {a['detail']}")
+        lines.append("")
+    lines += ["─" * 40, "Generated by Options Alert System — Threshold Monitor"]
+    body = "\n".join(lines)
+
+    if DRY_RUN:
+        print("\n" + "=" * 60)
+        print("DRY RUN — Threshold Alert not sent")
+        print(f"SUBJECT: {subject}")
+        print(body)
+        print("=" * 60 + "\n")
+        return True
+
+    try:
+        result = _mcp_call("tools/call", {
+            "name": "send_email",
+            "arguments": {
+                "to": ALERT_EMAIL_TO,
+                "subject": subject,
+                "body": body,
+            },
+        })
+        if "error" not in result:
+            print(f"[gmail] Threshold alert sent: {len(alerts)} trigger(s)")
+            return True
+        print(f"[gmail] Threshold alert MCP error: {result.get('error')}")
+        return False
+    except Exception as e:
+        print(f"[gmail] Threshold alert failed: {e}")
+        return False
+
+
+def send_eod_summary(top_signals: list[str], ovi_report: dict | None = None) -> bool:
     time_str = _now_et_str()
     subject = f"EOD Options Summary — {len(top_signals)} top signals — {time_str}"
     body = f"END OF DAY SUMMARY — {time_str}\n\n"
     body += "Top signals ranked by strength:\n"
     for i, sig in enumerate(top_signals, 1):
         body += f"  {i}. {sig}\n"
+    ovi_lines = _fmt_ovi_section(ovi_report or {})
+    if ovi_lines:
+        body += "\n" + "\n".join(ovi_lines)
     body += "\n" + "─" * 40 + "\nGenerated by Options Alert System"
 
     if DRY_RUN:
