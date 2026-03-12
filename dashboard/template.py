@@ -24,6 +24,7 @@ from db.database import (
     get_prior_snapshot,
     get_recent_alert_log,
     get_spy_gex_history_30d,
+    get_latest_iv_metrics_all,
 )
 
 ET = ZoneInfo("America/New_York")
@@ -146,6 +147,48 @@ def _pct_delta_html(curr_pct, prior_pct) -> str:
         f'<span class="intraday-delta" style="color:{color}">'
         f'{arrow}{abs(delta):.0f}pp</span>'
     )
+
+
+def _iv_tags_html(iv_row: dict | None) -> str:
+    """Render IV Rank and IV/RV ratio as small inline tags."""
+    if not iv_row:
+        return ""
+    parts = []
+    iv_rank = iv_row.get("iv_rank")
+    if iv_rank is not None:
+        # Color: high rank = expensive (orange/red), low rank = cheap (green)
+        if iv_rank >= 80:
+            rank_color = "#CC4444"
+        elif iv_rank >= 60:
+            rank_color = "#B46400"
+        elif iv_rank <= 20:
+            rank_color = "#1B7A1B"
+        else:
+            rank_color = "#555555"
+        suffix = "st" if iv_rank % 10 == 1 and iv_rank != 11 else (
+            "nd" if iv_rank % 10 == 2 and iv_rank != 12 else (
+            "rd" if iv_rank % 10 == 3 and iv_rank != 13 else "th"))
+        parts.append(
+            f'<span class="iv-tag" style="color:{rank_color}">'
+            f'IV Rank: {iv_rank:.0f}{suffix}</span>'
+        )
+    iv_rv = iv_row.get("iv_rv_ratio")
+    if iv_rv is not None and iv_rv > 0:
+        if iv_rv >= 1.5:
+            rv_color = "#CC4444"   # vol expensive
+        elif iv_rv >= 1.1:
+            rv_color = "#B46400"
+        elif iv_rv <= 0.8:
+            rv_color = "#1B7A1B"   # vol cheap
+        else:
+            rv_color = "#555555"
+        parts.append(
+            f'<span class="iv-tag" style="color:{rv_color}">'
+            f'IV/RV: {iv_rv:.1f}x</span>'
+        )
+    if not parts:
+        return ""
+    return " " + "".join(parts)
 
 
 # ── OVI helpers ───────────────────────────────────────────────────────────────
@@ -495,7 +538,8 @@ def _gex_commentary(ticker: str, pct: float, negative: bool, net_gex_m: float, s
                     f"watch for accelerated moves if key levels break")
 
 
-def _gex_extreme_rows(latest_gex: list[dict], prior_snap: dict | None = None) -> list[dict]:
+def _gex_extreme_rows(latest_gex: list[dict], prior_snap: dict | None = None,
+                      iv_metrics_map: dict | None = None) -> list[dict]:
     """Generate signal rows for ALL GEX tickers at extreme percentiles (>=90 or <=10).
 
     Operates on the raw latest_gex records (not the top-15 truncated gex_table)
@@ -533,6 +577,8 @@ def _gex_extreme_rows(latest_gex: list[dict], prior_snap: dict | None = None) ->
                             f' <span class="intraday-delta" style="color:{color}">'
                             f'was {prior_pct:.0f}th {arrow}{pct:.0f}th</span>'
                         )
+            # IV tags
+            iv_tags = _iv_tags_html((iv_metrics_map or {}).get(tk))
             alert_text = (
                 f"Net GEX ${net_gex_m:+.1f}M — {pct:.0f}th pctile (30d) | "
                 f"{commentary}"
@@ -540,7 +586,7 @@ def _gex_extreme_rows(latest_gex: list[dict], prior_snap: dict | None = None) ->
             rows.append({
                 "ticker": tk,
                 "alert_text": alert_text,
-                "delta_html": pct_traj,  # pre-built HTML injected without escaping
+                "delta_html": pct_traj + iv_tags,  # pre-built HTML injected without escaping
                 "time_str": "live",
                 "sentiment": "bullish" if not negative else "bearish",
                 "faded": False,
@@ -555,7 +601,7 @@ def _gex_extreme_rows(latest_gex: list[dict], prior_snap: dict | None = None) ->
     return rows
 
 
-def _skew_extreme_rows(latest_skew: list[dict]) -> list[dict]:
+def _skew_extreme_rows(latest_skew: list[dict], iv_metrics_map: dict | None = None) -> list[dict]:
     """Generate signal rows for ALL tickers with skew at extreme percentiles (>=90 or <=10).
 
     Requires at least 5 history points to avoid spurious signals from new tickers.
@@ -572,13 +618,16 @@ def _skew_extreme_rows(latest_skew: list[dict]) -> list[dict]:
         if pct >= 90 or pct <= 10:
             skew_vol = r["skew_value"] * 100
             level = "ELEVATED" if pct >= 90 else "COMPRESSED"
+            tk = r["ticker"]
+            iv_tags = _iv_tags_html((iv_metrics_map or {}).get(tk))
             alert_text = (
                 f"25d Skew {skew_vol:+.1f}vol — {pct:.0f}th pctile (30d) | "
                 f"{level} put premium"
             )
             rows.append({
-                "ticker": r["ticker"],
+                "ticker": tk,
                 "alert_text": alert_text,
+                "delta_html": iv_tags,  # pre-built HTML, injected without escaping
                 "time_str": "live",
                 "sentiment": "bearish" if pct >= 90 else "bullish",
                 "faded": False,
@@ -1836,15 +1885,21 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     except Exception:
         pass
 
+    # Load IV metrics for tags on GEX/Skew Extremes rows
+    try:
+        iv_metrics_map = get_latest_iv_metrics_all()
+    except Exception:
+        iv_metrics_map = {}
+
     # Augment GEX Extremes: scan ALL latest_gex tickers (not just top-15 gex_table)
     # so small-dollar but historically extreme tickers (e.g. AMD 99th pctile) are included.
-    gex_live_rows = _gex_extreme_rows(latest_gex, prior_snap)
+    gex_live_rows = _gex_extreme_rows(latest_gex, prior_snap, iv_metrics_map)
     seen_gex = {r["ticker"] for r in gex_live_rows}
     gex_rows = gex_live_rows + [r for r in gex_rows if r["ticker"] not in seen_gex]
 
     # Augment Skew Extremes: prepend live percentile-based rows, dedupe by ticker
     latest_skew = get_latest_skew_all()
-    skew_live_rows = _skew_extreme_rows(latest_skew)
+    skew_live_rows = _skew_extreme_rows(latest_skew, iv_metrics_map)
     seen_skew = {r["ticker"] for r in skew_live_rows}
     skew_rows = skew_live_rows + [r for r in skew_rows if r["ticker"] not in seen_skew]
 
@@ -2214,12 +2269,12 @@ function copyClientNote() {
       overflow: hidden;
     }}
     .card-header {{
-      background: #F7F7F7;
+      background: #FFFFFF;
       padding: 9px 14px;
       font-weight: 700;
       font-size: 11px;
       letter-spacing: .07em;
-      border-bottom: 1px solid #E0E0E0;
+      border-bottom: 1px solid #E8E8E8;
       border-left: 3px solid #1B3A6B;
       text-transform: uppercase;
       color: #1A1A1A;
@@ -2472,6 +2527,15 @@ function copyClientNote() {
     .intraday-delta {{
       font-size: 9px; font-weight: 700; letter-spacing: .04em;
       margin-left: 4px; white-space: nowrap; font-family: 'JetBrains Mono', monospace;
+    }}
+
+    /* ── IV Rank / IV/RV tags ────────────────────────── */
+    .iv-tag {{
+      display: inline-block; font-size: 9px; font-weight: 700;
+      font-family: 'JetBrains Mono', monospace; letter-spacing: .03em;
+      margin-left: 5px; padding: 1px 5px;
+      background: rgba(0,0,0,0.04); border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.10); white-space: nowrap;
     }}
 
     /* ── Client Note Generator (13F panel) ──────────── */

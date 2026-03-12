@@ -64,7 +64,9 @@ def time_to_expiry_years(expiration: str,
                                   minute=_MARKET_CLOSE_MIN,
                                   second=0, microsecond=0)
         hours_remaining = max(0.0, (close_et - now_et).total_seconds() / 3600.0)
-        return hours_remaining / (_TRADING_DAYS_PER_YEAR * _TRADING_HOURS_PER_DAY)
+        # Floor at 5 minutes so BS gamma can still compute after market close
+        _FLOOR_HOURS = 5.0 / 60.0
+        return max(hours_remaining, _FLOOR_HOURS) / (_TRADING_DAYS_PER_YEAR * _TRADING_HOURS_PER_DAY)
 
     return (exp_date - today).days / 365.0
 
@@ -129,11 +131,11 @@ def get_gamma(contract: dict, spot: float, rate: float = 0.05) -> float:
     # Fallback to vendor gamma
     if vendor_gamma != 0.0:
         _fallback_count += 1
-        if _fallback_count <= 20 or _fallback_count % 500 == 0:
+        if _fallback_count <= 5 or _fallback_count % 1000 == 0:
             reason = ("missing IV" if iv == 0.0
                       else "t=0 (0DTE after close)" if time_to_expiry_years(expiration) <= 0
                       else "BS failed")
-            print(f"  [greek_calc] fallback→vendor ({reason}): "
+            print(f"  [greek_calc] fallback->vendor ({reason}): "
                   f"{contract.get('ticker','')} {contract.get('option_type','')} "
                   f"K={contract['strike']} exp={expiration} "
                   f"iv={iv:.4f}")

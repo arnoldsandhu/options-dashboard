@@ -152,6 +152,19 @@ def init_db():
                 severity TEXT NOT NULL DEFAULT 'MEDIUM',
                 timestamp TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS iv_metrics (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ticker TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                atm_iv REAL NOT NULL,
+                rv_20d REAL,
+                iv_rank REAL,
+                iv_rv_ratio REAL
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_iv_metrics_ticker_ts
+                ON iv_metrics(ticker, timestamp);
         """)
     # Add new columns to ovi_history if they don't exist yet (idempotent)
     with get_conn() as conn:
@@ -787,3 +800,50 @@ def get_recent_alert_log(limit: int = 20) -> list[dict]:
 def get_spy_gex_history_30d() -> list[dict]:
     """Return 30-day SPY GEX history for the Net GEX History chart."""
     return get_gex_history("SPY", days=30)
+
+
+# ── IV Metrics ────────────────────────────────────────────────────────────────
+
+def save_iv_metrics(ticker: str, atm_iv: float, rv_20d: float | None,
+                   iv_rank: float | None, iv_rv_ratio: float | None) -> None:
+    """Persist ATM IV, 20d RV, IV Rank, and IV/RV ratio for a ticker."""
+    ts = datetime.utcnow().isoformat()
+    with get_conn() as conn:
+        conn.execute(
+            """INSERT INTO iv_metrics (ticker, timestamp, atm_iv, rv_20d, iv_rank, iv_rv_ratio)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (ticker, ts, atm_iv, rv_20d, iv_rank, iv_rv_ratio),
+        )
+        # Prune to 400 days of daily readings per ticker
+        cutoff = (datetime.utcnow() - timedelta(days=400)).isoformat()
+        conn.execute(
+            "DELETE FROM iv_metrics WHERE ticker = ? AND timestamp < ?",
+            (ticker, cutoff),
+        )
+
+
+def get_iv_history(ticker: str, days: int = 365) -> list[dict]:
+    """Return IV metrics history for rank computation."""
+    since = (datetime.utcnow() - timedelta(days=days)).isoformat()
+    with get_conn() as conn:
+        rows = conn.execute(
+            """SELECT * FROM iv_metrics WHERE ticker = ? AND timestamp >= ?
+               ORDER BY timestamp""",
+            (ticker, since),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_latest_iv_metrics_all() -> dict[str, dict]:
+    """Return the most recent IV metrics row for every ticker as {ticker: row}."""
+    with get_conn() as conn:
+        rows = conn.execute(
+            """SELECT iv.*
+               FROM iv_metrics iv
+               INNER JOIN (
+                   SELECT ticker, MAX(timestamp) AS max_ts
+                   FROM iv_metrics
+                   GROUP BY ticker
+               ) latest ON iv.ticker = latest.ticker AND iv.timestamp = latest.max_ts"""
+        ).fetchall()
+    return {row["ticker"]: dict(row) for row in rows}

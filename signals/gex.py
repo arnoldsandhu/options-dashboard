@@ -77,6 +77,13 @@ def check_gex(ticker: str) -> list[dict]:
 
     save_gex(ticker, net_gex, spot)
 
+    # Compute and store IV metrics using already-fetched chain (no extra API calls)
+    try:
+        from signals.iv_metrics import compute_and_store_iv_metrics
+        compute_and_store_iv_metrics(ticker, spot, raw_contracts)
+    except Exception as _iv_err:
+        print(f"  [gex] IV metrics error {ticker}: {_iv_err}")
+
     history = get_gex_history(ticker, GEX_HISTORY_DAYS)
     prev_row = history[-2] if len(history) >= 2 else None
     gex_values = [r["net_gex"] for r in history]
