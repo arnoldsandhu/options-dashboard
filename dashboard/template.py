@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 
 from config import WATCHLIST, DASHBOARD_TITLE, MARKET_OPEN_ET, MARKET_CLOSE_ET, POLL_TOKEN, NTFY_TOPIC
 from dashboard.match_13f import build_13f_matches
+from dashboard.alpha_signals import generate_alpha_signals
 from db.database import (
     get_today_alerts,
     get_latest_gex_all,
@@ -573,6 +574,39 @@ def _card_html(title: str, rows: list[dict], extra_html: str = "", extra_class: 
 
 def _watchlist_badges() -> str:
     return " ".join(f'<span class="ticker-badge wl-badge tk-{t}">{_e(t)}</span>' for t in WATCHLIST)
+
+
+def _alpha_panel_html(theses: list[dict]) -> str:
+    """Render the full-width ALPHA SIGNALS panel above the main grid."""
+    if not theses:
+        body = '<div class="alpha-empty">Synthesizing signals&hellip; Alpha theses will appear once sufficient cross-source data is available.</div>'
+    else:
+        rows = []
+        for i, t in enumerate(theses, 1):
+            expr_html = (
+                f'<div class="alpha-expr">{_e(t["expression"])}</div>'
+                if t.get("expression") else ""
+            )
+            rows.append(
+                f'<div class="alpha-thesis">'
+                f'<div class="alpha-num">THESIS {i}</div>'
+                f'<div class="alpha-name">{_e(t.get("name", ""))}</div>'
+                f'<div class="alpha-body">{_e(t.get("thesis", ""))}</div>'
+                f'{expr_html}'
+                f'</div>'
+            )
+        body = f'<div class="alpha-theses">{"".join(rows)}</div>'
+    return (
+        '<div class="alpha-panel">'
+        '<div class="alpha-panel-inner">'
+        '<div class="alpha-hdr">'
+        '<span class="alpha-hdr-title">&#128200; ALPHA SIGNALS</span>'
+        '<span class="alpha-hdr-sub">Cross-source synthesis &middot; OVI &times; GEX &times; Skew &times; 13F &middot; Claude AI</span>'
+        '</div>'
+        + body +
+        '</div>'
+        '</div>'
+    )
 
 
 def _13f_match_card_html(matches: list[dict]) -> str:
@@ -1431,7 +1465,8 @@ function drawHeatmap(elemId, ticker) {
 # ── Main renderer ─────────────────────────────────────────────────────────────
 
 def render(title: str | None = None, gex_chart_data: dict | None = None,
-           gex_heatmap_data: dict | None = None) -> str:
+           gex_heatmap_data: dict | None = None,
+           alpha_theses: list | None = None) -> str:
     title = title or DASHBOARD_TITLE
     now_et = _now_et()
     updated = now_et.strftime("%b %d %Y %H:%M ET")
@@ -1479,6 +1514,13 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
         list(dict.fromkeys(all_gex_tickers + all_skew_tickers)),
     )
     pos_card  = _13f_match_card_html(f13_matches)
+
+    # ── Alpha Signals — pre-generated in main.py before per-ticker API calls ─
+    # alpha_theses is passed in from publisher.py to avoid rate limits.
+    # If not provided (e.g. standalone render calls), generate inline as fallback.
+    if alpha_theses is None:
+        alpha_theses = generate_alpha_signals(ovi_report, gex_live_rows, skew_live_rows, f13_matches)
+    alpha_card = _alpha_panel_html(alpha_theses)
 
     wl_badges = _watchlist_badges()
 
@@ -2031,6 +2073,50 @@ function toggleCtx(evt) {
       border-radius: 3px; padding: 0px 5px;
     }}
 
+    /* ── Alpha Signals panel ─────────────────────── */
+    .alpha-panel {{
+      max-width: 1400px; margin: 12px auto 0; padding: 0 24px;
+    }}
+    .alpha-panel-inner {{
+      background: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 6px;
+      overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }}
+    .alpha-hdr {{
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 14px; background: #1B3A6B; color: #FFFFFF;
+    }}
+    .alpha-hdr-title {{
+      font-size: 10.5px; font-weight: 700; letter-spacing: .14em; color: #FFFFFF;
+    }}
+    .alpha-hdr-sub {{
+      font-size: 9px; color: rgba(255,255,255,0.55); margin-left: auto; letter-spacing: .04em;
+    }}
+    .alpha-theses {{
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }}
+    .alpha-thesis {{
+      padding: 10px 14px; border-right: 1px solid #E0E0E0;
+      display: flex; flex-direction: column; gap: 3px;
+    }}
+    .alpha-thesis:last-child {{ border-right: none; }}
+    .alpha-num {{
+      font-size: 8.5px; font-weight: 700; color: #1B3A6B; letter-spacing: .08em;
+      text-transform: uppercase;
+    }}
+    .alpha-name {{
+      font-size: 11.5px; font-weight: 700; color: #1A1A1A; line-height: 1.3;
+    }}
+    .alpha-body {{
+      font-size: 11px; color: #333333; line-height: 1.5; margin-top: 1px;
+    }}
+    .alpha-expr {{
+      font-size: 10px; color: #1B7A1B; font-style: italic; margin-top: 3px;
+    }}
+    .alpha-expr::before {{ content: "\\25B6  "; font-style: normal; font-size: 7.5px; }}
+    .alpha-empty {{
+      padding: 12px 16px; color: #999999; font-size: 11px; font-style: italic;
+    }}
+
     /* ── AI Analysis box (research note style) ─── */
     .ai-box {{
       margin-top: 12px; border: 1px solid #E0E0E0;
@@ -2251,6 +2337,7 @@ function toggleCtx(evt) {
 <body>
 
 {header_html}
+{alpha_card}
 
 <div class="grid">
   {ovi_card}
