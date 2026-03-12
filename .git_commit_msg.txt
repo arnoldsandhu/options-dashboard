@@ -1,0 +1,25 @@
+GEX Engine Institutional Overhaul — Stages 1–7
+
+- Stage 1: New gex_engine package (vendor_ingest, greek_calc, contract_model)
+  wired into signals/gex.py and dashboard/gex_chart.py
+- Stage 2: exposure_calc.py with labeled unit functions (gex_1pct, gex_1usd);
+  dashboard now shows Net GEX (1% move) as primary metric
+- Stage 3: sign_engine.py with 4 configurable modes (classic, customer_long,
+  heuristic, unsigned); all signed metrics labeled "estimated"
+- Stage 4: spot_scan.py — true spot-scan gamma flip via zero-crossing on
+  ±10% grid (replaces legacy strike-level approximation)
+- Stage 5: levels.py — top-3 call/put walls, magnet strike scoring,
+  improved regime classification with subflags
+- Stage 6: gex_metrics_history DB table for 30-day rolling snapshots;
+  granular percentiles and z-scores for net GEX, abs GEX, 0DTE share;
+  separate OI-based and volume-weighted 0DTE flow GEX metrics
+- Stage 7: Diagnostics panel in dashboard (collapsible), UI label cleanup
+  (Gamma Flip spot-scan, Top Call/Put Wall, Max |Γ| magnet, Net GEX 1% pctile);
+  34 unit tests (100% pass) covering BS gamma, TTE, spot scan, sign modes,
+  wall ranking, and regime classification
+
+Generated with [Claude Code](https://claude.ai/code)
+via [Happy](https://happy.engineering)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+Co-Authored-By: Happy <yesreply@happy.engineering>

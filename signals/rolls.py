@@ -87,6 +87,6 @@ def check_rolls(ticker: str) -> list[dict]:
             },
         })
 
-    # Sort by DTE ascending (most urgent first)
-    alerts.sort(key=lambda a: a["dte"])
-    return alerts
+    # Sort by OI descending (largest positions most likely to roll), take top 5
+    alerts.sort(key=lambda a: a["oi"], reverse=True)
+    return alerts[:5]

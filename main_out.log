@@ -1,0 +1,3125 @@
+[DB] Initialized database.
+
+======================================================================
+13F POSITIONING DATABASE — approximate values from public filings
+Source: SEC EDGAR Q3/Q4 2024 13F filings (verify before trading)
+======================================================================
+
+  AAPL (11 funds, 22.1M total shs):
+    LGIM                            15.0M shs  $3,150M
+    Millennium                       2.0M shs  $420M
+    Point72                          1.0M shs  $210M
+    Balyasny                         0.8M shs  $168M
+    Exodus Point                     0.8M shs  $168M
+    Schonfeld                        0.6M shs  $126M
+    HBK                              0.5M shs  $105M
+    Cohen & Steers                   0.5M shs  $105M
+    Moore Capital                    0.4M shs  $84M
+    Palestra                         0.4M shs  $84M
+    Yaupon                           0.1M shs  $21M
+
+  AMD (5 funds, 3.3M total shs):
+    LGIM                             2.0M shs  $272M
+    Millennium                       0.5M shs  $68M
+    Point72                          0.3M shs  $41M
+    Exodus Point                     0.3M shs  $41M
+    Schonfeld                        0.2M shs  $27M
+
+  AMZN (12 funds, 12.4M total shs):
+    LGIM                             8.0M shs  $1,760M
+    Millennium                       1.2M shs  $264M
+    Point72                          0.5M shs  $110M
+    Balyasny                         0.4M shs  $88M
+    Steadfast                        0.4M shs  $88M
+    Exodus Point                     0.4M shs  $88M
+    Schonfeld                        0.3M shs  $66M
+    Palestra                         0.3M shs  $66M
+    HBK                              0.3M shs  $66M
+    Cohen & Steers                   0.3M shs  $66M
+    Zimmer                           0.2M shs  $44M
+    Yaupon                           0.1M shs  $22M
+
+  ARM (2 funds, 1.2M total shs):
+    LGIM                             1.0M shs  $220M
+    Point72                          0.2M shs  $44M
+
+  COIN (3 funds, 1.0M total shs):
+    LGIM                             0.5M shs  $150M
+    Millennium                       0.3M shs  $90M
+    Schonfeld                        0.2M shs  $60M
+
+  GOOG (7 funds, 7.8M total shs):
+    LGIM                             6.0M shs  $1,080M
+    Millennium                       0.6M shs  $108M
+    Point72                          0.3M shs  $54M
+    Palestra                         0.3M shs  $54M
+    Balyasny                         0.2M shs  $36M
+    Steadfast                        0.2M shs  $36M
+    HBK                              0.2M shs  $36M
+
+  GS (7 funds, 3.4M total shs):
+    LGIM                             2.0M shs  $1,000M
+    Cohen & Steers                   0.4M shs  $200M
+    Millennium                       0.3M shs  $150M
+    Balyasny                         0.2M shs  $100M
+    Zimmer                           0.2M shs  $100M
+    Point72                          0.1M shs  $75M
+    HBK                              0.1M shs  $75M
+
+  JPM (5 funds, 6.5M total shs):
+    LGIM                             5.0M shs  $1,100M
+    Cohen & Steers                   0.5M shs  $110M
+    Millennium                       0.4M shs  $88M
+    Balyasny                         0.3M shs  $66M
+    Zimmer                           0.3M shs  $66M
+
+  META (9 funds, 8.0M total shs):
+    LGIM                             5.0M shs  $3,000M
+    Millennium                       0.8M shs  $480M
+    Point72                          0.4M shs  $240M
+    Palestra                         0.4M shs  $240M
+    Exodus Point                     0.4M shs  $240M
+    Balyasny                         0.3M shs  $180M
+    Schonfeld                        0.3M shs  $180M
+    Steadfast                        0.3M shs  $180M
+    Yaupon                           0.1M shs  $36M
+
+  MSFT (13 funds, 16.9M total shs):
+    LGIM                            12.0M shs  $5,100M
+    Millennium                       1.0M shs  $425M
+    Point72                          0.6M shs  $255M
+    Balyasny                         0.5M shs  $213M
+    Exodus Point                     0.5M shs  $213M
+    Schonfeld                        0.4M shs  $170M
+    HBK                              0.4M shs  $170M
+    Cohen & Steers                   0.4M shs  $170M
+    Moore Capital                    0.3M shs  $128M
+    Palestra                         0.3M shs  $128M
+    Steadfast                        0.2M shs  $85M
+    Zimmer                           0.1M shs  $64M
+    Yaupon                           0.1M shs  $43M
+
+  NFLX (6 funds, 1.7M total shs):
+    LGIM                             1.0M shs  $850M
+    Millennium                       0.2M shs  $170M
+    Point72                          0.1M shs  $128M
+    Schonfeld                        0.1M shs  $128M
+    Balyasny                         0.1M shs  $85M
+    Cohen & Steers                   0.1M shs  $85M
+
+  NVDA (11 funds, 15.3M total shs):
+    LGIM                            10.0M shs  $1,210M
+    Millennium                       1.5M shs  $181M
+    Point72                          0.8M shs  $97M
+    Balyasny                         0.6M shs  $73M
+    Exodus Point                     0.6M shs  $73M
+    Palestra                         0.5M shs  $61M
+    Schonfeld                        0.4M shs  $48M
+    HBK                              0.4M shs  $48M
+    Moore Capital                    0.3M shs  $36M
+    Steadfast                        0.1M shs  $18M
+    Yaupon                           0.1M shs  $10M
+
+  QQQ (2 funds, 3.3M total shs):
+    LGIM                             3.0M shs  $1,680M
+    Moore Capital                    0.3M shs  $168M
+
+  SPY (2 funds, 5.5M total shs):
+    LGIM                             5.0M shs  $2,800M
+    Moore Capital                    0.5M shs  $280M
+
+  TSLA (4 funds, 4.9M total shs):
+    LGIM                             4.0M shs  $1,280M
+    Millennium                       0.5M shs  $160M
+    Point72                          0.2M shs  $64M
+    Exodus Point                     0.2M shs  $64M
+
+  UBER (3 funds, 4.6M total shs):
+    LGIM                             3.0M shs  $216M
+    Millennium                       1.0M shs  $72M
+    Balyasny                         0.6M shs  $43M
+
+======================================================================
+
+[ntfy] Listening for remote triggers on topic: options-flow-3b7f19a4
+Scheduler started. Polling every 20 min.
+Market open bell: 09:35 ET | Close summary: 16:05 ET
+DRY_RUN = False
+Watchlist (20 tickers): SPY, QQQ, NVDA, AAPL, MSFT, META, GOOG, AMZN, TSLA, GS, JPM, XLF, XLK, XLE, IWM, COIN, AMD, NFLX, UBER, ARM
+
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 13:25 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 1 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 1 alerts
+  Checking JPM... 1 alerts
+  Checking XLF... 1 alerts
+  Checking XLK... 1 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 1 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 9 signals, 9 new
+  GEX: 2
+  SKEW: 7
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [13:29 ET]
+
+============================================================
+POLL CYCLE — 13:44 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 1 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 3 signals, 3 new
+  GEX: 2
+  SKEW: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [13:48 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 13:57 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 1 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 4 signals, 4 new
+  GEX: 1
+  SKEW: 3
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [14:01 ET]
+
+============================================================
+POLL CYCLE — 14:08 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 248 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 1 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 1
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [14:12 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 14:18 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 248 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 1 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 2 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 6 signals, 6 new
+  GEX: 1
+  SKEW: 1
+  POSITIONING: 4
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [14:23 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 14:30 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 248 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY...
+============================================================
+POLL CYCLE — 14:32 ET 
+============================================================
+[OVI] Scanning full watchlist...
+ 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS...  [news] Context compiled: 248 chars
+ 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM...  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+ 0 alerts
+  Checking NVDA...[dashboard] Pushed: Dashboard update [14:35 ET]
+ 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [14:36 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 14:48 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 248 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM...[ntfy] Poll already in progress — skipping.
+ 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 1 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 4 signals, 4 new
+  POSITIONING: 4
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [14:52 ET]
+
+============================================================
+POLL CYCLE — 14:56 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 248 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 1 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [15:02 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 15:07 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 350 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 1 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 1
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [15:11 ET]
+
+============================================================
+POLL CYCLE — 15:22 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META...
+    [gex] ERROR: database is locked
+ 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 1 alerts
+  Checking ARM... 1 alerts
+
+Poll complete — 5 signals, 5 new
+  GEX: 1
+  SKEW: 3
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [15:26 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 15:38 ET 
+============================================================
+[OVI] Scanning full watchlist...
+[ntfy] Poll already in progress — skipping.
+  [news] Context compiled: 274 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 1 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 1 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [15:43 ET]
+
+============================================================
+POLL CYCLE — 15:46 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 511 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [15:52 ET]
+
+============================================================
+POLL CYCLE — 16:05 ET [CLOSE BELL]
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 274 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 2
+[gmail] Failed to send EOD summary: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [16:07 ET]
+
+============================================================
+POLL CYCLE — 16:12 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 274 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [16:14 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 16:29 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [16:31 ET]
+
+============================================================
+POLL CYCLE — 16:34 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [16:36 ET]
+
+============================================================
+POLL CYCLE — 16:56 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [16:57 ET]
+
+============================================================
+POLL CYCLE — 17:17 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 1 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 1 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 1 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 5 signals, 5 new
+  GEX: 2
+  SKEW: 3
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [17:19 ET]
+
+============================================================
+POLL CYCLE — 17:39 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 3 signals, 3 new
+  SKEW: 3
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [17:40 ET]
+
+============================================================
+POLL CYCLE — 18:00 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 3 signals, 3 new
+  GEX: 1
+  SKEW: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [18:03 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 18:12 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 1 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 1
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [18:15 ET]
+
+============================================================
+POLL CYCLE — 18:23 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 2 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 1 alerts
+  Checking XLF...
+    [gex] ERROR: database is locked
+ 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 4 signals, 4 new
+  GEX: 2
+  POSITIONING: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [18:26 ET]
+
+============================================================
+POLL CYCLE — 18:46 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [18:49 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 18:52 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 3 signals, 3 new
+  POSITIONING: 3
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [18:54 ET]
+
+============================================================
+POLL CYCLE — 19:09 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [19:10 ET]
+
+============================================================
+POLL CYCLE — 19:30 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 1 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 1 alerts
+
+Poll complete — 3 signals, 3 new
+  GEX: 1
+  SKEW: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [19:32 ET]
+
+============================================================
+POLL CYCLE — 19:52 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 1 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 1
+  SKEW: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [19:53 ET]
+
+============================================================
+POLL CYCLE — 20:13 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 1 alerts
+  Checking XLK... 1 alerts
+  Checking XLE... 1 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 1 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 5 signals, 5 new
+  GEX: 3
+  SKEW: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [20:14 ET]
+
+============================================================
+POLL CYCLE — 20:34 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [20:36 ET]
+
+============================================================
+POLL CYCLE — 20:56 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [20:57 ET]
+
+============================================================
+POLL CYCLE — 21:17 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [21:18 ET]
+
+============================================================
+POLL CYCLE — 21:38 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 1 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 1
+  SKEW: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [21:40 ET]
+
+============================================================
+POLL CYCLE — 22:00 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 3 signals, 3 new
+  GEX: 1
+  SKEW: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [22:01 ET]
+
+============================================================
+POLL CYCLE — 22:21 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [22:22 ET]
+
+============================================================
+POLL CYCLE — 22:42 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 1 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  POSITIONING: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [22:44 ET]
+
+============================================================
+POLL CYCLE — 23:04 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 4 signals, 4 new
+  POSITIONING: 4
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [23:05 ET]
+
+============================================================
+POLL CYCLE — 23:25 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [23:26 ET]
+
+============================================================
+POLL CYCLE — 23:46 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [23:48 ET]
+[00:08] Weekend/holiday — skipping poll.
+[00:28] Weekend/holiday — skipping poll.
+[00:48] Weekend/holiday — skipping poll.
+[01:08] Weekend/holiday — skipping poll.
+[01:28] Weekend/holiday — skipping poll.
+[01:48] Weekend/holiday — skipping poll.
+[02:08] Weekend/holiday — skipping poll.
+[02:28] Weekend/holiday — skipping poll.
+[02:48] Weekend/holiday — skipping poll.
+[03:08] Weekend/holiday — skipping poll.
+[03:28] Weekend/holiday — skipping poll.
+[03:48] Weekend/holiday — skipping poll.
+[04:08] Weekend/holiday — skipping poll.
+[04:28] Weekend/holiday — skipping poll.
+[04:48] Weekend/holiday — skipping poll.
+[05:08] Weekend/holiday — skipping poll.
+[05:28] Weekend/holiday — skipping poll.
+[05:48] Weekend/holiday — skipping poll.
+[06:08] Weekend/holiday — skipping poll.
+[06:28] Weekend/holiday — skipping poll.
+[06:48] Weekend/holiday — skipping poll.
+[07:08] Weekend/holiday — skipping poll.
+[07:28] Weekend/holiday — skipping poll.
+[07:48] Weekend/holiday — skipping poll.
+[08:08] Weekend/holiday — skipping poll.
+[08:28] Weekend/holiday — skipping poll.
+[08:48] Weekend/holiday — skipping poll.
+[09:08] Weekend/holiday — skipping poll.
+[09:28] Weekend/holiday — skipping poll.
+[09:48] Weekend/holiday — skipping poll.
+[10:08] Weekend/holiday — skipping poll.
+[10:28] Weekend/holiday — skipping poll.
+[10:48] Weekend/holiday — skipping poll.
+[11:08] Weekend/holiday — skipping poll.
+[11:28] Weekend/holiday — skipping poll.
+[11:48] Weekend/holiday — skipping poll.
+[12:08] Weekend/holiday — skipping poll.
+[12:28] Weekend/holiday — skipping poll.
+[12:48] Weekend/holiday — skipping poll.
+[13:08] Weekend/holiday — skipping poll.
+[13:28] Weekend/holiday — skipping poll.
+[13:48] Weekend/holiday — skipping poll.
+[14:08] Weekend/holiday — skipping poll.
+[14:28] Weekend/holiday — skipping poll.
+[14:48] Weekend/holiday — skipping poll.
+[15:08] Weekend/holiday — skipping poll.
+[15:28] Weekend/holiday — skipping poll.
+[15:48] Weekend/holiday — skipping poll.
+[16:08] Weekend/holiday — skipping poll.
+[16:28] Weekend/holiday — skipping poll.
+[16:48] Weekend/holiday — skipping poll.
+[17:08] Weekend/holiday — skipping poll.
+[17:28] Weekend/holiday — skipping poll.
+[17:48] Weekend/holiday — skipping poll.
+[18:08] Weekend/holiday — skipping poll.
+[18:28] Weekend/holiday — skipping poll.
+[18:48] Weekend/holiday — skipping poll.
+[19:08] Weekend/holiday — skipping poll.
+[19:28] Weekend/holiday — skipping poll.
+[19:48] Weekend/holiday — skipping poll.
+[20:08] Weekend/holiday — skipping poll.
+[20:28] Weekend/holiday — skipping poll.
+[20:48] Weekend/holiday — skipping poll.
+[21:08] Weekend/holiday — skipping poll.
+[21:28] Weekend/holiday — skipping poll.
+[21:48] Weekend/holiday — skipping poll.
+[22:08] Weekend/holiday — skipping poll.
+[22:28] Weekend/holiday — skipping poll.
+[22:48] Weekend/holiday — skipping poll.
+[23:08] Weekend/holiday — skipping poll.
+[23:28] Weekend/holiday — skipping poll.
+[23:48] Weekend/holiday — skipping poll.
+[00:08] Weekend/holiday — skipping poll.
+[00:28] Weekend/holiday — skipping poll.
+[00:48] Weekend/holiday — skipping poll.
+[01:08] Weekend/holiday — skipping poll.
+[01:28] Weekend/holiday — skipping poll.
+[01:48] Weekend/holiday — skipping poll.
+[03:00] Weekend/holiday — skipping poll.
+[03:20] Weekend/holiday — skipping poll.
+[03:40] Weekend/holiday — skipping poll.
+[04:00] Weekend/holiday — skipping poll.
+[04:20] Weekend/holiday — skipping poll.
+[04:40] Weekend/holiday — skipping poll.
+[05:00] Weekend/holiday — skipping poll.
+[05:20] Weekend/holiday — skipping poll.
+[05:40] Weekend/holiday — skipping poll.
+[06:00] Weekend/holiday — skipping poll.
+[06:20] Weekend/holiday — skipping poll.
+[06:40] Weekend/holiday — skipping poll.
+[07:00] Weekend/holiday — skipping poll.
+[07:20] Weekend/holiday — skipping poll.
+[07:40] Weekend/holiday — skipping poll.
+[08:00] Weekend/holiday — skipping poll.
+[08:20] Weekend/holiday — skipping poll.
+[08:40] Weekend/holiday — skipping poll.
+[09:00] Weekend/holiday — skipping poll.
+[09:20] Weekend/holiday — skipping poll.
+[09:40] Weekend/holiday — skipping poll.
+[10:00] Weekend/holiday — skipping poll.
+[10:20] Weekend/holiday — skipping poll.
+[10:40] Weekend/holiday — skipping poll.
+[11:00] Weekend/holiday — skipping poll.
+[11:20] Weekend/holiday — skipping poll.
+[11:40] Weekend/holiday — skipping poll.
+[12:00] Weekend/holiday — skipping poll.
+[12:20] Weekend/holiday — skipping poll.
+[12:40] Weekend/holiday — skipping poll.
+[13:00] Weekend/holiday — skipping poll.
+[13:20] Weekend/holiday — skipping poll.
+[13:40] Weekend/holiday — skipping poll.
+[14:00] Weekend/holiday — skipping poll.
+[ntfy] Connection error: Response ended prematurely — retrying in 15s
+[ntfy] Connection error: HTTPSConnectionPool(host='ntfy.sh', port=443): Max retries exceeded with url: /options-flow-3b7f19a4/json?since=1772993798 (Caused by NewConnectionError("HTTPSConnection(host='ntfy.sh', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")) — retrying in 15s
+[14:20] Weekend/holiday — skipping poll.
+[14:40] Weekend/holiday — skipping poll.
+[15:00] Weekend/holiday — skipping poll.
+[15:20] Weekend/holiday — skipping poll.
+[15:40] Weekend/holiday — skipping poll.
+[16:00] Weekend/holiday — skipping poll.
+[16:20] Weekend/holiday — skipping poll.
+[16:40] Weekend/holiday — skipping poll.
+[17:00] Weekend/holiday — skipping poll.
+[17:20] Weekend/holiday — skipping poll.
+[17:40] Weekend/holiday — skipping poll.
+[18:00] Weekend/holiday — skipping poll.
+[18:20] Weekend/holiday — skipping poll.
+[18:40] Weekend/holiday — skipping poll.
+[19:00] Weekend/holiday — skipping poll.
+[19:20] Weekend/holiday — skipping poll.
+[19:40] Weekend/holiday — skipping poll.
+[20:00] Weekend/holiday — skipping poll.
+[20:20] Weekend/holiday — skipping poll.
+[20:40] Weekend/holiday — skipping poll.
+[21:00] Weekend/holiday — skipping poll.
+[21:20] Weekend/holiday — skipping poll.
+[21:40] Weekend/holiday — skipping poll.
+[22:00] Weekend/holiday — skipping poll.
+[22:20] Weekend/holiday — skipping poll.
+[22:40] Weekend/holiday — skipping poll.
+[23:00] Weekend/holiday — skipping poll.
+[23:20] Weekend/holiday — skipping poll.
+[23:40] Weekend/holiday — skipping poll.
+
+============================================================
+POLL CYCLE — 00:00 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 2 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 8 signals, 8 new
+  GEX: 4
+  SKEW: 4
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [00:02 ET]
+
+============================================================
+POLL CYCLE — 00:22 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [00:23 ET]
+
+============================================================
+POLL CYCLE — 00:43 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [00:44 ET]
+
+============================================================
+POLL CYCLE — 01:04 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [01:05 ET]
+
+============================================================
+POLL CYCLE — 01:25 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  SKEW: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [01:26 ET]
+
+============================================================
+POLL CYCLE — 01:46 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [01:47 ET]
+
+============================================================
+POLL CYCLE — 02:07 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 203 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [02:09 ET]
+
+============================================================
+POLL CYCLE — 02:29 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 203 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [02:30 ET]
+
+============================================================
+POLL CYCLE — 02:50 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 203 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [02:51 ET]
+
+============================================================
+POLL CYCLE — 03:11 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 203 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [03:12 ET]
+
+============================================================
+POLL CYCLE — 03:32 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [03:33 ET]
+
+============================================================
+POLL CYCLE — 03:53 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [03:54 ET]
+
+============================================================
+POLL CYCLE — 04:14 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 346 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 2 alerts
+  Checking MSFT... 2 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 2 alerts
+  Checking AMZN... 2 alerts
+  Checking TSLA... 2 alerts
+  Checking GS... 2 alerts
+  Checking JPM... 1 alerts
+  Checking XLF... 2 alerts
+  Checking XLK... 1 alerts
+  Checking XLE... 1 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 2 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 2 alerts
+  Checking UBER... 2 alerts
+  Checking ARM... 2 alerts
+
+Poll complete — 30 signals, 30 new
+  GEX: 11
+  SKEW: 19
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [04:20 ET]
+
+============================================================
+POLL CYCLE — 04:40 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 346 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [04:41 ET]
+
+============================================================
+POLL CYCLE — 05:01 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 346 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [05:02 ET]
+
+============================================================
+POLL CYCLE — 05:22 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 346 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [05:23 ET]
+
+============================================================
+POLL CYCLE — 05:43 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [05:44 ET]
+
+============================================================
+POLL CYCLE — 06:04 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [06:06 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 06:23 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [06:24 ET]
+
+============================================================
+POLL CYCLE — 06:26 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [06:27 ET]
+
+============================================================
+POLL CYCLE — 06:47 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [06:48 ET]
+
+============================================================
+POLL CYCLE — 07:08 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [07:09 ET]
+
+============================================================
+POLL CYCLE — 07:29 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [07:30 ET]
+
+============================================================
+POLL CYCLE — 07:50 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [07:51 ET]
+
+============================================================
+POLL CYCLE — 08:11 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 397 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [08:12 ET]
+
+============================================================
+POLL CYCLE — 08:32 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 397 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 1 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 1 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 2 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 2 alerts
+
+Poll complete — 8 signals, 8 new
+  GEX: 4
+  SKEW: 4
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [08:34 ET]
+
+============================================================
+POLL CYCLE — 08:54 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 397 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 1 alerts
+  Checking GS... 1 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 2 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 5 signals, 5 new
+  GEX: 2
+  SKEW: 3
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [08:55 ET]
+
+============================================================
+POLL CYCLE — 09:15 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 1 alerts
+  Checking XLK... 1 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 4 signals, 4 new
+  SKEW: 4
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [09:17 ET]
+
+============================================================
+POLL CYCLE — 09:35 ET [OPEN BELL]
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 1 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  SKEW: 1
+[gmail] Failed to send market open email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [09:38 ET]
+
+============================================================
+POLL CYCLE — 09:39 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 0 top calls, 0 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 1 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [09:43 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 09:56 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 2 alerts
+  Checking QQQ... 2 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL...[ntfy] Poll already in progress — skipping.
+ 2 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 2 alerts
+  Checking AMZN... 2 alerts
+  Checking TSLA... 1 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 1 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 1 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 17 signals, 17 new
+  SKEW: 7
+  POSITIONING: 10
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [10:02 ET]
+
+============================================================
+POLL CYCLE — 10:03 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 220 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 1 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [10:08 ET]
+
+============================================================
+POLL CYCLE — 10:28 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 1 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [10:34 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 10:46 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [10:50 ET]
+
+============================================================
+POLL CYCLE — 10:54 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK...[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 10:57 ET 
+============================================================
+[OVI] Scanning full watchlist...
+ 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [10:58 ET]
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS...2026-03-09 11:01:38,395 RESTClient ERROR: Error decoding json response: Expecting ',' delimiter: line 1 column 25301 (char 25300)
+ 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [11:02 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 11:11 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [11:14 ET]
+
+============================================================
+POLL CYCLE — 11:18 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [11:22 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 11:31 ET 
+============================================================
+[OVI] Scanning full watchlist...
+[OVI] ERROR: database is locked
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 1 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 2 signals, 2 new
+  GEX: 2
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [11:36 ET]
+
+============================================================
+POLL CYCLE — 11:42 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [11:47 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 11:51 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 113 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [11:55 ET]
+
+============================================================
+POLL CYCLE — 12:07 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 233 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 0 signals, 0 new
+No new alerts — skipping email.
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [12:10 ET]
+
+============================================================
+POLL CYCLE — 12:30 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 233 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 1 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 1 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 1 alerts
+
+Poll complete — 3 signals, 3 new
+  SKEW: 3
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [12:35 ET]
+
+============================================================
+POLL CYCLE — 12:55 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 233 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  GEX: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [12:58 ET]
+
+============================================================
+POLL CYCLE — 13:18 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 301 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 0 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 1 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 1 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 1 alerts
+
+Poll complete — 3 signals, 3 new
+  SKEW: 2
+  POSITIONING: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [13:22 ET]
+
+============================================================
+POLL CYCLE — 13:42 ET 
+============================================================
+[OVI] Scanning full watchlist...
+  [news] Context compiled: 301 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 0 alerts
+  Checking QQQ... 0 alerts
+  Checking NVDA... 0 alerts
+  Checking AAPL... 0 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 0 alerts
+  Checking AMZN... 0 alerts
+  Checking TSLA... 0 alerts
+  Checking GS... 0 alerts
+  Checking JPM... 0 alerts
+  Checking XLF... 0 alerts
+  Checking XLK... 0 alerts
+  Checking XLE... 0 alerts
+  Checking IWM... 0 alerts
+  Checking COIN... 0 alerts
+  Checking AMD... 0 alerts
+  Checking NFLX... 0 alerts
+  Checking UBER... 0 alerts
+  Checking ARM... 0 alerts
+
+Poll complete — 1 signals, 1 new
+  SKEW: 1
+[gmail] Failed to send email: Gmail MCP HTTP 403: {"error":"Forbidden: unsupported client"}
+[dashboard] Wrote C:\Users\Andrew Arnold\options-dashboard\docs\index.html
+[dashboard] Pushed: Dashboard update [13:45 ET]
+[ntfy] Remote poll triggered.
+
+============================================================
+POLL CYCLE — 14:02 ET 
+============================================================
+[OVI] Scanning full watchlist...
+[ntfy] Poll already in progress — skipping.
+  [news] Context compiled: 309 chars
+  OVI complete — 10 top calls, 10 top puts
+  Checking SPY... 1 alerts
+  Checking QQQ... 1 alerts
+  Checking NVDA... 1 alerts
+  Checking AAPL... 1 alerts
+  Checking MSFT... 0 alerts
+  Checking META... 1 alerts
+  Checking GOOG... 1 alerts
+  Checking AMZN... 1 alerts
+  Checking TSLA...
