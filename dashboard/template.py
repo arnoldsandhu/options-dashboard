@@ -1483,10 +1483,15 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     wl_badges = _watchlist_badges()
 
     # ── Header stat card computation ──────────────────────────────────────
-    spy_gex = next((r for r in gex_table if r["ticker"] == "SPY"), gex_table[0] if gex_table else None)
-    hdr_gex_val = f'${spy_gex["net_gex_m"]:+.1f}M' if spy_gex else "—"
-    hdr_gex_ctx = "put-dominated" if (spy_gex and spy_gex["negative"]) else "call-dominated"
-    hdr_gex_cls = "stat-neg" if (spy_gex and spy_gex["negative"]) else "stat-pos"
+    # Pull NET GEX from gex_chart_data (same source as GEX panel "classic" mode)
+    # so both stat cards always show the same number.
+    _spy_chart = (gex_chart_data or {}).get("SPY") or (
+        next(iter((gex_chart_data or {}).values()), None)
+    )
+    hdr_gex_m   = _spy_chart["net_gex_m"] if _spy_chart else None
+    hdr_gex_val = f'${hdr_gex_m:+.1f}M' if hdr_gex_m is not None else "—"
+    hdr_gex_ctx = "put-dominated" if (hdr_gex_m is not None and hdr_gex_m < 0) else "call-dominated"
+    hdr_gex_cls = "stat-neg" if (hdr_gex_m is not None and hdr_gex_m < 0) else "stat-pos"
 
     top_calls = ovi_report.get("top_calls", [])
     pc_vals = [r.get("pc_ratio") for r in top_calls if r.get("pc_ratio") is not None]
