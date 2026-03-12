@@ -17,6 +17,8 @@ from db.database import (
     get_latest_ovi_report,
     get_latest_skew_all,
     GEX_HISTORY_DAYS,
+    save_intraday_snapshot,
+    get_prior_snapshot,
 )
 
 ET = ZoneInfo("America/New_York")
@@ -97,6 +99,48 @@ def _gex_trend(history_gex: list[float]) -> str:
     if recent[-1] < recent[0] * 0.95:
         return "↓"
     return "→"
+
+
+# ── Intraday delta helpers ────────────────────────────────────────────────────
+
+def _delta_html(curr, prior, fmt: str = "{:.1f}", green_up: bool = True,
+                prefix: str = "", suffix: str = "", min_delta: float = 0.0) -> str:
+    """Return a small coloured delta badge. green_up=True means increase=green."""
+    if curr is None or prior is None:
+        return ""
+    delta = curr - prior
+    if abs(delta) < max(1e-9, min_delta):
+        return ""
+    up = delta > 0
+    if green_up:
+        color = "#1B7A1B" if up else "#CC4444"
+    else:
+        color = "#CC4444" if up else "#1B7A1B"
+    arrow = "↑" if up else "↓"
+    try:
+        mag = fmt.format(abs(delta))
+    except Exception:
+        mag = f"{abs(delta):.1f}"
+    return (
+        f'<span class="intraday-delta" style="color:{color}">'
+        f'{arrow}{prefix}{mag}{suffix}</span>'
+    )
+
+
+def _pct_delta_html(curr_pct, prior_pct) -> str:
+    """Delta for OVI %Chg column — shows change in spike intensity."""
+    if curr_pct is None or prior_pct is None:
+        return ""
+    delta = curr_pct - prior_pct
+    if abs(delta) < 1.0:
+        return ""
+    up = delta > 0
+    color = "#1B7A1B" if up else "#CC4444"
+    arrow = "↑" if up else "↓"
+    return (
+        f'<span class="intraday-delta" style="color:{color}">'
+        f'{arrow}{abs(delta):.0f}pp</span>'
+    )
 
 
 # ── OVI helpers ───────────────────────────────────────────────────────────────
@@ -182,7 +226,7 @@ def _idx_badges_html(r: dict) -> str:
     return "".join(parts)
 
 
-def _ovi_row_html(r: dict, side: str) -> str:
+def _ovi_row_html(r: dict, side: str, prior_ovi: dict | None = None) -> str:
     vol     = r["c_vol"]    if side == "call" else r["p_vol"]
     avg_vol = r.get("c_avg_vol") if side == "call" else r.get("p_avg_vol")
     vol_pct = r.get("c_vol_pct") if side == "call" else r.get("p_vol_pct")
@@ -198,10 +242,18 @@ def _ovi_row_html(r: dict, side: str) -> str:
     avg_oi_disp = _na if (avg_oi is None or int(avg_oi) == 0) else _fmt_k(avg_oi)
 
     def _tint(v) -> str:
-        """Return inline background style string for a % value (or '' if n/a)."""
         if v is None:
             return ""
         return "background:rgba(34,197,94,0.12);" if v >= 0 else "background:rgba(239,68,68,0.12);"
+
+    # Intraday delta for %Chg column
+    prior_pct = None
+    if prior_ovi:
+        pct_key = "c_vol_pct" if side == "call" else "p_vol_pct"
+        prior_row = prior_ovi.get(tk)
+        if prior_row:
+            prior_pct = prior_row.get(pct_key)
+    delta_html = _pct_delta_html(vol_pct, prior_pct)
 
     px_pct_chg = r.get("px_pct_chg")
     return (
@@ -209,7 +261,7 @@ def _ovi_row_html(r: dict, side: str) -> str:
         f'<td><span class="ticker-badge tk-{tk}">{_e(tk)}</span>{badges}</td>'
         f'<td>{_fmt_k(vol)}</td>'
         f'<td>{_fmt_k(avg_vol)}</td>'
-        f'<td style="{_tint(vol_pct)}">{_fmt_vol_pct(vol_pct)}</td>'
+        f'<td style="{_tint(vol_pct)}">{_fmt_vol_pct(vol_pct)}{delta_html}</td>'
         f'<td>{_fmt_pc(r.get("pc_ratio"))}</td>'
         f'<td>{price_str}</td>'
         f'<td style="{_tint(px_pct_chg)}">{_fmt_px_pct(px_pct_chg)}</td>'
@@ -221,14 +273,14 @@ def _ovi_row_html(r: dict, side: str) -> str:
     )
 
 
-def _ovi_table_html(rows: list[dict], side: str) -> str:
+def _ovi_table_html(rows: list[dict], side: str, prior_ovi: dict | None = None) -> str:
     vol_h = "C Vol" if side == "call" else "P Vol"
     oi_h  = "C OI"  if side == "call" else "P OI"
     if not rows:
         return '<p class="empty">No unusual activity exceeding threshold today.</p>'
     for i, r in enumerate(rows):
         r["_alt"] = bool(i % 2)
-    tbody = "".join(_ovi_row_html(r, side) for r in rows)
+    tbody = "".join(_ovi_row_html(r, side, prior_ovi) for r in rows)
     return (
         f'<div class="ovi-scroll"><table class="ovi-tbl">'
         f'<thead><tr>'
@@ -299,7 +351,7 @@ def _universe_coverage_html(ovi_report: dict) -> str:
     )
 
 
-def _ovi_card_html(ovi_report: dict, copy_ts: str) -> str:
+def _ovi_card_html(ovi_report: dict, copy_ts: str, prior_snap: dict | None = None) -> str:
     top_calls      = ovi_report.get("top_calls", [])
     top_puts       = ovi_report.get("top_puts", [])
     also_calls     = ovi_report.get("also_calls", [])
@@ -309,11 +361,13 @@ def _ovi_card_html(ovi_report: dict, copy_ts: str) -> str:
     market_context = ovi_report.get("market_context", "")
     extreme_alerts = ovi_report.get("extreme_alerts", [])
 
+    prior_ovi = (prior_snap or {}).get("ovi") if prior_snap else None
+
     extreme_html    = _extreme_alerts_html(extreme_alerts)
     coverage_html   = _universe_coverage_html(ovi_report)
-    calls_html      = _ovi_table_html(top_calls, "call")
+    calls_html      = _ovi_table_html(top_calls, "call", prior_ovi)
     also_calls_html = _also_notable_html(also_calls, "call")
-    puts_html       = _ovi_table_html(top_puts,  "put")
+    puts_html       = _ovi_table_html(top_puts,  "put",  prior_ovi)
     also_puts_html  = _also_notable_html(also_puts, "put")
     analysis_escaped = _e(analysis)
 
@@ -436,7 +490,7 @@ def _gex_commentary(ticker: str, pct: float, negative: bool, net_gex_m: float, s
                     f"watch for accelerated moves if key levels break")
 
 
-def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
+def _gex_extreme_rows(latest_gex: list[dict], prior_snap: dict | None = None) -> list[dict]:
     """Generate signal rows for ALL GEX tickers at extreme percentiles (>=90 or <=10).
 
     Operates on the raw latest_gex records (not the top-15 truncated gex_table)
@@ -445,6 +499,7 @@ def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
     Requires at least 5 history points to avoid spurious signals.
     """
     from db.database import get_gex_history
+    prior_gex = (prior_snap or {}).get("gex") if prior_snap else None
     rows = []
     for g in latest_gex:
         net_gex_m = g["net_gex"] / 1_000_000
@@ -456,11 +511,23 @@ def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
         pct = (below / len(values)) * 100.0
         if pct >= 90 or pct <= 10:
             negative = net_gex_m < 0
-            level = "ELEVATED" if pct >= 90 else "SUPPRESSED"
             spot = g.get("spot_price") or g.get("spot") or 0
             spot_str = f" near ${spot:,.0f}" if spot else ""
             tk = g["ticker"]
             commentary = _gex_commentary(tk, pct, negative, net_gex_m, spot_str)
+            # Intraday delta: add prior percentile trajectory
+            pct_traj = ""
+            if prior_gex and tk in prior_gex:
+                prior_pct = prior_gex[tk].get("pct")
+                if prior_pct is not None:
+                    d = pct - prior_pct
+                    if abs(d) >= 1.0:
+                        arrow = "↑" if d > 0 else "↓"
+                        color = "#CC4444" if abs(pct - 50) > abs(prior_pct - 50) else "#1B7A1B"
+                        pct_traj = (
+                            f' <span class="intraday-delta" style="color:{color}">'
+                            f'was {prior_pct:.0f}th {arrow}{pct:.0f}th</span>'
+                        )
             alert_text = (
                 f"Net GEX ${net_gex_m:+.1f}M — {pct:.0f}th pctile (30d) | "
                 f"{commentary}"
@@ -468,12 +535,15 @@ def _gex_extreme_rows(latest_gex: list[dict]) -> list[dict]:
             rows.append({
                 "ticker": tk,
                 "alert_text": alert_text,
+                "delta_html": pct_traj,  # pre-built HTML injected without escaping
                 "time_str": "live",
                 "sentiment": "bullish" if not negative else "bearish",
                 "faded": False,
                 "_pct_dist": abs(pct - 50),
+                "_pct": pct,
+                "_net_gex_m": net_gex_m,
             })
-    # Sort by percentile distance from 50 (most extreme first), store pct for dedup
+    # Sort by percentile distance from 50 (most extreme first)
     rows.sort(key=lambda r: r["_pct_dist"], reverse=True)
     for r in rows:
         r.pop("_pct_dist", None)
@@ -526,14 +596,15 @@ def _signal_row_html(row: dict) -> str:
     faded = ' style="opacity:0.45"' if row["faded"] else ""
     ticker = _e(row["ticker"])
     time_str = _e(row["time_str"])
-    # Split alert_text: ticker | rest | AI note (after last " | ")
+    # Split alert_text: main | AI note; delta_html is pre-built HTML (not escaped)
     parts = row["alert_text"].split(" | ", 1)
     main_text = _e(parts[0])
     ai_note = _e(parts[1]) if len(parts) > 1 else ""
+    delta_html = row.get("delta_html", "")  # raw HTML badge, not escaped
     return f"""
       <div class="sig-row {sentiment_cls}"{faded}>
         <span class="ticker-badge tk-{row['ticker']}">{ticker}</span>
-        <span class="sig-main">{main_text}</span>
+        <span class="sig-main">{main_text}{delta_html}</span>
         {f'<span class="ai-note">💬 {ai_note}</span>' if ai_note else ""}
         <span class="sig-time">{time_str}</span>
       </div>"""
@@ -1485,9 +1556,64 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     gex_table = _build_gex_table(latest_gex)
     gex_extra = _gex_table_html(gex_table)
 
+    ovi_report = get_latest_ovi_report() or {}
+    analysis_ts = _fmt_ts_short(ovi_report.get("analysis_ts", ""))
+
+    # ── Header GEX — compute early so snapshot uses the same source ──────
+    _spy_chart = (gex_chart_data or {}).get("SPY") or (
+        next(iter((gex_chart_data or {}).values()), None)
+    )
+    hdr_gex_m = _spy_chart["net_gex_m"] if _spy_chart else None
+
+    # ── Intraday snapshot: load prior, build current, save current ────────
+    prior_snap = get_prior_snapshot()
+
+    _spy_gex_now = None
+    for g in latest_gex:
+        if g["ticker"] == "SPY":
+            _spy_gex_now = g["net_gex"] / 1_000_000
+            break
+
+    _top_calls_now = ovi_report.get("top_calls", [])
+    _pc_vals_now = [r.get("pc_ratio") for r in _top_calls_now if r.get("pc_ratio") is not None]
+    _avg_pc_now = sum(_pc_vals_now) / len(_pc_vals_now) if _pc_vals_now else None
+
+    # Build per-ticker GEX percentiles for snapshot
+    _gex_snap: dict = {}
+    from db.database import get_gex_history
+    for g in latest_gex:
+        hist = get_gex_history(g["ticker"], days=GEX_HISTORY_DAYS)
+        if len(hist) >= 5:
+            values = [h["net_gex"] for h in hist]
+            below = sum(1 for v in values if v < g["net_gex"])
+            pct = (below / len(values)) * 100.0
+            _gex_snap[g["ticker"]] = {"pct": pct, "net_gex_m": g["net_gex"] / 1_000_000}
+
+    # Build per-ticker OVI for snapshot (calls and puts keyed by ticker)
+    _ovi_snap: dict = {}
+    for r in _top_calls_now:
+        tk = r.get("ticker", "")
+        if tk:
+            _ovi_snap[tk] = {**_ovi_snap.get(tk, {}), "c_vol_pct": r.get("c_vol_pct")}
+    for r in ovi_report.get("top_puts", []):
+        tk = r.get("ticker", "")
+        if tk:
+            _ovi_snap[tk] = {**_ovi_snap.get(tk, {}), "p_vol_pct": r.get("p_vol_pct")}
+
+    _curr_snap = {
+        "net_gex_m": hdr_gex_m if hdr_gex_m is not None else _spy_gex_now,
+        "pc_ratio": _avg_pc_now,
+        "gex": _gex_snap,
+        "ovi": _ovi_snap,
+    }
+    try:
+        save_intraday_snapshot(_curr_snap)
+    except Exception:
+        pass
+
     # Augment GEX Extremes: scan ALL latest_gex tickers (not just top-15 gex_table)
     # so small-dollar but historically extreme tickers (e.g. AMD 99th pctile) are included.
-    gex_live_rows = _gex_extreme_rows(latest_gex)
+    gex_live_rows = _gex_extreme_rows(latest_gex, prior_snap)
     seen_gex = {r["ticker"] for r in gex_live_rows}
     gex_rows = gex_live_rows + [r for r in gex_rows if r["ticker"] not in seen_gex]
 
@@ -1497,10 +1623,7 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     seen_skew = {r["ticker"] for r in skew_live_rows}
     skew_rows = skew_live_rows + [r for r in skew_rows if r["ticker"] not in seen_skew]
 
-    ovi_report = get_latest_ovi_report() or {}
-    analysis_ts = _fmt_ts_short(ovi_report.get("analysis_ts", ""))
-
-    ovi_card  = _ovi_card_html(ovi_report, analysis_ts)
+    ovi_card  = _ovi_card_html(ovi_report, analysis_ts, prior_snap)
     gex_panel = _gex_panel_html(gex_chart_data, gex_heatmap_data)
     gex_card  = _card_html("⚡ GEX EXTREMES", gex_rows, gex_extra)
     skew_card = _card_html("⚡ SKEW EXTREMES", skew_rows)
@@ -1525,15 +1648,15 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     wl_badges = _watchlist_badges()
 
     # ── Header stat card computation ──────────────────────────────────────
-    # Pull NET GEX from gex_chart_data (same source as GEX panel "classic" mode)
-    # so both stat cards always show the same number.
-    _spy_chart = (gex_chart_data or {}).get("SPY") or (
-        next(iter((gex_chart_data or {}).values()), None)
-    )
-    hdr_gex_m   = _spy_chart["net_gex_m"] if _spy_chart else None
+    # hdr_gex_m already computed above (before snapshot) for consistent source
     hdr_gex_val = f'${hdr_gex_m:+.1f}M' if hdr_gex_m is not None else "—"
     hdr_gex_ctx = "put-dominated" if (hdr_gex_m is not None and hdr_gex_m < 0) else "call-dominated"
     hdr_gex_cls = "stat-neg" if (hdr_gex_m is not None and hdr_gex_m < 0) else "stat-pos"
+    # GEX delta: higher = more bullish (green), lower = more bearish (red)
+    hdr_gex_delta = _delta_html(
+        hdr_gex_m, (prior_snap or {}).get("net_gex_m"),
+        fmt="{:.1f}M", green_up=True, prefix="$", min_delta=5.0
+    )
 
     top_calls = ovi_report.get("top_calls", [])
     pc_vals = [r.get("pc_ratio") for r in top_calls if r.get("pc_ratio") is not None]
@@ -1541,6 +1664,11 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
     hdr_pc_val = f"{avg_pc:.2f}" if avg_pc else "—"
     hdr_pc_ctx = "put bias" if (avg_pc and avg_pc > 1) else "call bias"
     hdr_pc_cls = "stat-neg" if (avg_pc and avg_pc > 1) else "stat-pos"
+    # P/C delta: higher P/C = more bearish (red), lower = more bullish (green)
+    hdr_pc_delta = _delta_html(
+        avg_pc, (prior_snap or {}).get("pc_ratio"),
+        fmt="{:.2f}", green_up=False
+    )
 
     new_signals = sum(1 for a in alerts if _age_secs(a["timestamp"]) < 3600)
 
@@ -1569,12 +1697,12 @@ def render(title: str | None = None, gex_chart_data: dict | None = None,
   <div class="hdr-stats">
     <div class="hdr-stat">
       <div class="hdr-stat-label">Net GEX (1% move, SPY)</div>
-      <div class="hdr-stat-val {hdr_gex_cls}">{_e(hdr_gex_val)}</div>
+      <div class="hdr-stat-val {hdr_gex_cls}">{_e(hdr_gex_val)}{hdr_gex_delta}</div>
       <div class="hdr-stat-ctx">{_e(hdr_gex_ctx)}</div>
     </div>
     <div class="hdr-stat">
       <div class="hdr-stat-label">Avg P/C Ratio</div>
-      <div class="hdr-stat-val {hdr_pc_cls}">{_e(hdr_pc_val)}</div>
+      <div class="hdr-stat-val {hdr_pc_cls}">{_e(hdr_pc_val)}{hdr_pc_delta}</div>
       <div class="hdr-stat-ctx">{_e(hdr_pc_ctx)}</div>
     </div>
     <div class="hdr-stat">
@@ -2071,6 +2199,12 @@ function toggleCtx(evt) {
     .f13-fund-count {{
       background: #F0F0F0; color: #888888; border: 1px solid #E0E0E0;
       border-radius: 3px; padding: 0px 5px;
+    }}
+
+    /* ── Intraday delta badges ────────────────────── */
+    .intraday-delta {{
+      font-size: 9px; font-weight: 700; letter-spacing: .04em;
+      margin-left: 4px; white-space: nowrap; font-family: 'JetBrains Mono', monospace;
     }}
 
     /* ── Alpha Signals panel ─────────────────────── */

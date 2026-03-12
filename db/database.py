@@ -137,6 +137,12 @@ def init_db():
 
             CREATE INDEX IF NOT EXISTS idx_gmh_ticker_ts
                 ON gex_metrics_history(ticker, timestamp);
+
+            CREATE TABLE IF NOT EXISTS intraday_snapshots (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT NOT NULL,
+                data_json TEXT NOT NULL
+            );
         """)
     # Add new columns to ovi_history if they don't exist yet (idempotent)
     with get_conn() as conn:
@@ -251,6 +257,32 @@ def get_skew_percentile(ticker: str, current_skew: float, days: int = 30) -> flo
         return 50.0
     below = sum(1 for v in values if v < current_skew)
     return (below / len(values)) * 100.0
+
+
+def get_latest_skew_all(days: int = 30) -> list[dict]:
+    """Most recent skew row for every ticker, with 30-day percentile attached."""
+    since = (datetime.utcnow() - timedelta(days=days)).isoformat()
+    with get_conn() as conn:
+        rows = conn.execute(
+            """
+            SELECT s.*
+            FROM skew_history s
+            INNER JOIN (
+                SELECT ticker, MAX(timestamp) AS max_ts
+                FROM skew_history
+                WHERE timestamp >= ?
+                GROUP BY ticker
+            ) latest ON s.ticker = latest.ticker AND s.timestamp = latest.max_ts
+            ORDER BY s.ticker
+            """,
+            (since,),
+        ).fetchall()
+    result = []
+    for r in rows:
+        d = dict(r)
+        d["percentile"] = get_skew_percentile(d["ticker"], d["skew_value"], days)
+        result.append(d)
+    return result
 
 
 # ── Positioning Matches ────────────────────────────────────────────────────────
@@ -675,3 +707,37 @@ def get_today_gex_snapshots(ticker: str) -> list[dict]:
             "strikes": strikes,
         })
     return result
+
+
+# ── Intraday Snapshots ────────────────────────────────────────────────────────
+
+def save_intraday_snapshot(data: dict) -> None:
+    """Save a dashboard snapshot (JSON blob). Keeps only the 3 most recent."""
+    ts = datetime.utcnow().isoformat()
+    with get_conn() as conn:
+        conn.execute(
+            "INSERT INTO intraday_snapshots (timestamp, data_json) VALUES (?, ?)",
+            (ts, json.dumps(data)),
+        )
+        # Prune to 3 most recent
+        conn.execute("""
+            DELETE FROM intraday_snapshots
+            WHERE id NOT IN (
+                SELECT id FROM intraday_snapshots
+                ORDER BY id DESC LIMIT 3
+            )
+        """)
+
+
+def get_prior_snapshot() -> dict | None:
+    """Return the second-most-recent snapshot, or None if only one exists."""
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT data_json FROM intraday_snapshots ORDER BY id DESC LIMIT 2"
+        ).fetchall()
+    if len(rows) < 2:
+        return None
+    try:
+        return json.loads(rows[1]["data_json"])
+    except Exception:
+        return None
